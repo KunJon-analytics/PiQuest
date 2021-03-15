@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
+from six import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from quiz.models import Question
@@ -56,7 +56,8 @@ class MCQuestion(Question):
 
 @python_2_unicode_compatible
 class Answer(models.Model):
-    question = models.ForeignKey(MCQuestion, verbose_name=_("Question"), on_delete=models.CASCADE)
+    question = models.ForeignKey(MCQuestion, verbose_name=_(
+        "Question"), on_delete=models.CASCADE)
 
     content = models.CharField(max_length=1000,
                                blank=False,

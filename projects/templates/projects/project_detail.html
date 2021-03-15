@@ -1,0 +1,59 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+{% block title %}{{ project.title }}{% endblock %}
+{% block content %}
+
+<article>
+
+  <h2>{{ project.title }}</h2>
+  <dl>
+    <dt>Date Added</dt>
+      <dd>{{ project.date_added|date:"F jS, Y" }}</dd>
+    <dt>Website</dt>
+      <dd>{{ project.website|urlize }}</dd>
+    <dt>Contact</dt>
+      <dd>{{ project.email }}</dd>
+
+      <dt>Categor{{ project.categories.count|pluralize:"y,ies" }}</dt>
+        {% for category in project.categories.all %}
+          <dd><a href="">
+            {{ category.category|title }}
+          </a></dd>
+        {% endfor %}
+
+  </dl>
+
+  {{ project.description|linebreaks }}
+
+  {% if project.quizzes.all %}
+          <section>
+            <h3>Quiz{{ project.quizzes.all|pluralize:'zes' }}</h3>
+            <ul>
+              {% for quiz in project.quizzes.all %}
+                <li>
+                  <a href="">
+                    {{ quiz.title|title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </section>
+      {% endif %}
+
+
+      {% if project.articles.all %}
+          <section>
+            <h3>Recent Articles</h3>
+            <ul>
+              {% for articlelink in project.articles.all %}
+                <li>
+                  <a href="{{ articlelink.link }}">
+                    {{ articlelink.title|title }}</a>
+                </li>
+                <li>{{ articlelink.summary|truncatewords:20}}</li>
+              {% endfor %}
+            </ul>
+          </section>
+      {% endif %}
+</article>
+
+
+{% endblock content %}

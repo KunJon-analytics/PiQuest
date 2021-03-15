@@ -7,6 +7,8 @@ from .views import QuizListView, CategoriesListView, \
     ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList, \
     QuizMarkingDetail, QuizDetailView, QuizTake
 
+app_name = 'quiz'
+
 urlpatterns = [
 
     url(r'^$',

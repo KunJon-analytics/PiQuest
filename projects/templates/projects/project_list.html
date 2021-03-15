@@ -1,0 +1,18 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+{% load i18n %}
+{% block title %}{% trans "Project List" %}{% endblock %}
+
+{% block content %}
+<h2>{% trans "Project list" %}</h2>
+<ul>
+  {% for project in project_list %}
+  <li>
+	<a href="">
+	  {{ project.title }}
+	</a>
+  </li>
+  {% empty %}
+  <li><em>There are currently no projects available</em></li>
+  {% endfor %}
+  </ul>
+{% endblock %}

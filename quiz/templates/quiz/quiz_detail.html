@@ -1,19 +1,62 @@
-{% extends 'base.html' %}
+{% extends parent_template|default:"quiz/base_quiz.html" %}
 {% load i18n %}
 {% block title %}
 {{ quiz.title }}
 {% endblock %}
 
 {% block content %}
+<article>
+<header>
+      <h2>{{ quiz.title|title }}</h2>
+      <p>
+        Created on
+        <time datetime="{{ quiz.pub_date|date:"Y-m-d" }}">
+          {{ quiz.pub_date|date:"l, F j, Y" }}
+        </time>
+      </p>
+    </header>
 <h2>{{ quiz.title }}</h2>
 <h3>{% trans "Category" %}: {{ quiz.category }}</h3>
 {% if quiz.single_attempt %}
   <h4>{% trans "You will only get one attempt at this quiz" %}.</h4>
 {% endif %}
-<p>{{ quiz.description }}</p>
+<p>{{ quiz.description|linebreaks }}</p>
 <p>
   <a href="{% url 'quiz_question' quiz_name=quiz.url %}">
 	{% trans "Start quiz" %}
   </a>
 </p>
+
+{% if quiz.projects.all or quiz.tags.all %}
+    <footer>
+
+      {% if quiz.projects.all %}
+          <section>
+            <h3>Project{{ quiz.projects.count|pluralize }}</h3>
+            <ul>
+              {% for project in quiz.projects.all %}
+                <li><a href="">
+                  {{ project.title }}
+                </a></li>
+              {% endfor %}
+            </ul>
+          </section>
+      {% endif %}
+
+      {% if quiz.tags.all %}
+          <section>
+            <h3>Categor{{ quiz.tags.count|pluralize:"y,ies" }}</h3>
+            <ul>
+              {% for category in quiz.tags.all %}
+                <li><a href="">
+                  {{ category.category|title }}
+                </a></li>
+              {% endfor %}
+            </ul>
+          </section>
+      {% endif %}
+
+    </footer>
+  {% endif %}
+</article>
 {% endblock %}

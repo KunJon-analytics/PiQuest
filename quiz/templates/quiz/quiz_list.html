@@ -1,10 +1,11 @@
-{% extends 'base.html' %}
+{% extends parent_template|default:"quiz/base_quiz.html" %}
 {% load i18n %}
 {% block title %}{% trans "All Quizzes" %}{% endblock %}
 
 {% block content %}
 <h2>{% trans "List of quizzes" %}</h2>
     {% if quiz_list %}
+	<article>
 		<table class="table table-bordered table-striped">
 
 		  <thead>
@@ -13,6 +14,7 @@
 			  <th>{% trans "Category" %}</th>
 			  <th>{% trans "Exam" %}</th>
 			  <th>{% trans "Single attempt" %}</th>
+			  <th>{% trans "Date created" %}</th>
 			  <th></th>
 			</tr>
 		  </thead>
@@ -26,6 +28,7 @@
 			  <td>{{ quiz.category }}</td>
 			  <td>{{ quiz.exam_paper }}</td>
 			  <td>{{ quiz.single_attempt }}</td>
+			  <td>{{ quiz.pub_date|date:"Y-m-d" }}</td>
 			  <td>
 				<a href="{% url 'quiz_start_page' slug=quiz.url %}">
 				  {% trans "View details" %}
@@ -36,7 +39,7 @@
 		  </tbody>
 
 		</table>
-
+	</article>
 	{% else %}
         <p>{% trans "There are no available quizzes" %}.</p>
     {% endif %}

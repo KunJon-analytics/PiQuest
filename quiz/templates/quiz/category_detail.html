@@ -1,0 +1,32 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+{% block title %}{{ category.category }}{% endblock %}
+{% block content %}
+
+    <h2>{{ category.category|title }}</h2>
+    {% if category.projects.all %}
+    <section>
+        <p>Category is associated with {{ category.projects.count }} project{{ category.projects.count|pluralize }}</p>
+        <h3>Project{{ category.projects.count|pluralize }}</h3>
+        <ul>
+            {% for project in category.projects.all %}
+                <li><a href="">{{ project.title|title }}</a></li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+    {% if category.quizzes.all %}
+    <section>
+        <h3>Quiz{{ category.quizzes.count|pluralize:"zes" }}</h3>
+        <ul>
+            {% for quiz in category.quizzes.all %}
+                <li><a href="">{{ quiz.title|title }}</a></li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+    {% if not category.projects.all and not category.quizzes.all %}
+    <p>This category is not related to any content.</p>
+    {% endif %}
+
+
+{% endblock content %}

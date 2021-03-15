@@ -9,17 +9,19 @@ from django.core.validators import (
 )
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
-from django.utils.encoding import python_2_unicode_compatible
+from six import python_2_unicode_compatible
 from django.conf import settings
 
 from model_utils.managers import InheritanceManager
+
+import projects.models
 
 
 class CategoryManager(models.Manager):
 
     def new_category(self, category):
         new_category = self.create(category=re.sub('\s+', '-', category)
-                                   .lower())
+                                   .lower(), url='')
 
         new_category.save()
         return new_category
@@ -33,14 +35,20 @@ class Category(models.Model):
         max_length=250, blank=True,
         unique=True, null=True)
 
+    url = models.SlugField(
+        max_length=31, blank=False, unique=True,
+        help_text=_("a user friendly url"),
+        verbose_name=_("user friendly url"))
+
     objects = CategoryManager()
 
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
+        ordering = ['category']
 
     def __str__(self):
-        return self.category
+        return self.category.title()
 
 
 @python_2_unicode_compatible
@@ -48,20 +56,26 @@ class SubCategory(models.Model):
 
     sub_category = models.CharField(
         verbose_name=_("Sub-Category"),
-        max_length=250, blank=True, null=True)
+        max_length=31, blank=True, null=True, unique=True)
 
     category = models.ForeignKey(
         Category, null=True, blank=True,
         verbose_name=_("Category"), on_delete=models.CASCADE)
+
+    url = models.SlugField(
+        max_length=31, blank=False, unique=True,
+        help_text=_("a user friendly url"),
+        verbose_name=_("user friendly url"))
 
     objects = CategoryManager()
 
     class Meta:
         verbose_name = _("Sub-Category")
         verbose_name_plural = _("Sub-Categories")
+        ordering = ['sub_category']
 
     def __str__(self):
-        return self.sub_category + " (" + self.category.category + ")"
+        return self.sub_category.title() + " (" + self.category.category.title() + ")"
 
 
 @python_2_unicode_compatible
@@ -80,9 +94,15 @@ class Quiz(models.Model):
         help_text=_("a user friendly url"),
         verbose_name=_("user friendly url"))
 
+    pub_date = models.DateField('date created', auto_now_add=True)
+
     category = models.ForeignKey(
         Category, null=True, blank=True,
         verbose_name=_("Category"), on_delete=models.CASCADE)
+
+    tags = models.ManyToManyField(Category, related_name='quizzes')
+
+    projects = models.ManyToManyField('projects.Project', related_name='quizzes')
 
     random_order = models.BooleanField(
         blank=False, default=False,
@@ -154,9 +174,11 @@ class Quiz(models.Model):
     class Meta:
         verbose_name = _("Quiz")
         verbose_name_plural = _("Quizzes")
+        ordering = ['-pub_date', 'title']
+        get_latest_by = 'pub_date'
 
     def __str__(self):
-        return self.title
+        return "{} on {}" .format(self.title, self.pub_date.strftime('%Y-%M-%D'))
 
     def get_questions(self):
         return self.question_set.all().select_subclasses()
@@ -192,7 +214,8 @@ class Progress(models.Model):
     Data stored in csv using the format:
         category, score, possible, category, score, possible, ...
     """
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
 
     score = models.CharField(max_length=1024,
                              verbose_name=_("Score"),
@@ -340,7 +363,7 @@ class SittingManager(models.Manager):
         if quiz.single_attempt is True and self.filter(user=user,
                                                        quiz=quiz,
                                                        complete=True)\
-                                               .exists():
+                .exists():
             return False
 
         try:
@@ -371,9 +394,11 @@ class Sitting(models.Model):
     with the answer the user gave.
     """
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             verbose_name=_("User"), on_delete=models.CASCADE)
 
-    quiz = models.ForeignKey(Quiz, verbose_name=_("Quiz"), on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, verbose_name=_(
+        "Quiz"), on_delete=models.CASCADE)
 
     question_order = models.CharField(
         max_length=1024,
