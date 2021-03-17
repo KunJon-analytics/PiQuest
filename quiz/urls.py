@@ -3,9 +3,9 @@ try:
 except ImportError:
     from django.urls import re_path as url
 
-from .views import QuizListView, CategoriesListView, \
-    ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList, \
-    QuizMarkingDetail, QuizDetailView, QuizTake
+from .views import QuizListView, ViewQuizListByCategory, \
+    QuizUserProgressView, QuizMarkingList, \
+    QuizMarkingDetail, QuizDetailView, QuizTake 
 
 app_name = 'quiz'
 
@@ -14,10 +14,6 @@ urlpatterns = [
     url(r'^$',
         view=QuizListView.as_view(),
         name='quiz_index'),
-
-    url(r'^category/$',
-        view=CategoriesListView.as_view(),
-        name='quiz_category_list_all'),
 
     url(r'^category/(?P<category_name>[\w|\W-]+)/$',
         view=ViewQuizListByCategory.as_view(),

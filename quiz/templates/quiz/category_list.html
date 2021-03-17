@@ -1,4 +1,4 @@
-{% extends parent_template|default:"projects/base_projects.html" %}
+{% extends parent_template|default:"projects/base_projects.html" %} 
 {% load i18n %}
 {% block title %}{% trans "Category List" %}{% endblock %}
 
@@ -7,7 +7,7 @@
 <ul>
   {% for cat in category_list %}
   <li>
-	<a href="{% url 'quiz_category_list_matching' category_name=cat.category %}">
+	<a href="{% url 'main:category_detail' cat.url %}">
 	  {{ cat.category|title }}
 	</a>
   </li>
@@ -16,3 +16,4 @@
   {% endfor %}
   </ul>
 {% endblock %}
+ 

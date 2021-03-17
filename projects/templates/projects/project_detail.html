@@ -30,7 +30,7 @@
             <ul>
               {% for quiz in project.quizzes.all %}
                 <li>
-                  <a href="">
+                  <a href="{% url 'quiz:quiz_start_page' slug=quiz.url %}">
                     {{ quiz.title|title }}</a>
                 </li>
               {% endfor %}

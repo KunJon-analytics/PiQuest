@@ -4,15 +4,16 @@
 
 {% block content %}
 <h2>{% trans "Project list" %}</h2>
-<ul>
+<ul> 
   {% for project in project_list %}
   <li>
-	<a href="">
+	<a href="{% url 'project:project_detail' url=project.url %}"> 
 	  {{ project.title }}
 	</a>
-  </li>
+  </li> 
   {% empty %}
   <li><em>There are currently no projects available</em></li>
   {% endfor %}
   </ul>
 {% endblock %}
+ 

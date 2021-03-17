@@ -1,5 +1,5 @@
 from django.db import models
-from quiz.models import Category
+from quiz.models import Category 
 
 # Create your models here.
 class Project(models.Model):

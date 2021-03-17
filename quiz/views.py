@@ -1,10 +1,12 @@
 import random
 
+from django.http.response import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView, ListView, TemplateView, FormView
+from django.template import Context, loader
 
 from .forms import QuestionForm, EssayForm
 from .models import Quiz, Category, Progress, Sitting, Question
@@ -52,6 +54,11 @@ class QuizDetailView(DetailView):
 
 class CategoriesListView(ListView):
     model = Category
+
+
+def category_detail(request, url):
+    category = get_object_or_404(Category, url__iexact=url)
+    return render(request,'quiz/category_detail.html', {'category': category})
 
 
 class ViewQuizListByCategory(ListView):
