@@ -1,0 +1,44 @@
+{% extends parent_template|default:"quiz/base_quiz.html" %}
+{% load i18n %}
+{% block title %}
+Question
+{% endblock %}
+
+{% block content %}
+<article>
+<h2>{{ question.title }}</h2>
+<h3>{% trans "Category" %}: {{ question.category }}</h3>
+<p>{{ question.content }}</p>
+<p>{{ question.explanation }}</p>
+
+{% if question.quiz.all or question.sub_category.all %}
+    <footer>
+
+      {% if question.quiz.all %}
+          <section>
+            <h3>Quiz{{ question.quiz.count|pluralize:'zes' }}</h3>
+            <ul>
+              {% for quiz in question.quiz.all %}
+                <li><a href="{{ quiz.get_absolute_url }}">
+                  {{ quiz.title }}
+                </a></li>
+              {% endfor %}
+            </ul>
+          </section>
+      {% endif %}
+
+      {% if question.sub_category.all %}
+          <section>
+            <h3>Sub-Categor{{ question.sub_category.count|pluralize:"y,ies" }}</h3>
+            <ul>
+              {% for sub_category in question.sub_category.all %}
+                <li>{{ sub_category.sub_category|title }}</li>
+              {% endfor %}
+            </ul>
+          </section>
+      {% endif %}
+
+    </footer>
+  {% endif %}
+</article>
+{% endblock %}

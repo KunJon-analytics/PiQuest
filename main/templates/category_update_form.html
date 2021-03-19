@@ -1,0 +1,17 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+
+{% block title %}
+Update {{ category.category }}
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form action="{{ category.get_update_url }}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Update Category</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+
+{% block title %}
+Create Project
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form action="{% url 'project:project_create' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Create Project</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

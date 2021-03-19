@@ -35,7 +35,7 @@
             <h3>Project{{ quiz.projects.count|pluralize }}</h3>
             <ul>
               {% for project in quiz.projects.all %}
-                <li><a href="">
+                <li><a href="{{ project.get_absolute_url }}">
                   {{ project.title }}
                 </a></li>
               {% endfor %}
@@ -48,7 +48,7 @@
             <h3>Categor{{ quiz.tags.count|pluralize:"y,ies" }}</h3>
             <ul>
               {% for category in quiz.tags.all %}
-                <li><a href="">
+                <li><a href="{{ category.get_absolute_url }}">
                   {{ category.category|title }}
                 </a></li>
               {% endfor %}

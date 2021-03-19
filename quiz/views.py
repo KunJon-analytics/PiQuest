@@ -3,12 +3,12 @@ import random
 from django.http.response import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView, ListView, TemplateView, FormView
+from django.views.generic import DetailView, ListView, TemplateView, FormView, View
 from django.template import Context, loader
 
-from .forms import QuestionForm, EssayForm
+from .forms import QuestionForm, EssayForm, CategoryForm, QuizCUForm
 from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
 
@@ -56,6 +56,46 @@ class CategoriesListView(ListView):
     model = Category
 
 
+class CategoryCreate(View):
+    form_class = CategoryForm
+    template_name = 'category_create_form.html'
+
+    def get(self, request):
+        return render(request, self.template_name, {'form': self.form_class()})
+
+    def post(self, request):
+        bound_form = self.form_class(request.POST)
+        if bound_form.is_valid():
+            new_category = bound_form.save()
+            return redirect(new_category)
+        else:
+            return render(request, self.template_name,{'form': bound_form})
+
+
+class QuestionListView(ListView):
+    model = Question
+    template_name = 'quiz/question_list.html'
+
+class QuestionDetailView(DetailView):
+    model = Question
+    template_name = 'quiz/question_detail.html'
+
+class QuestionCreateView(View):
+    form_class = QuestionForm
+    template_name = 'quiz/question_create_form.html'
+
+    def get(self, request):
+        return render(request, self.template_name, {'form': self.form_class()})
+
+    def post(self, request):
+        bound_form = self.form_class(request.POST)
+        if bound_form.is_valid():
+            new_question = bound_form.save()
+            return redirect(new_question)
+        else:
+            return render(request, self.template_name,{'form': bound_form})
+
+
 def category_detail(request, url):
     category = get_object_or_404(Category, url__iexact=url)
     return render(request,'quiz/category_detail.html', {'category': category})
@@ -84,6 +124,22 @@ class ViewQuizListByCategory(ListView):
     def get_queryset(self):
         queryset = super(ViewQuizListByCategory, self).get_queryset()
         return queryset.filter(category=self.category, draft=False)
+
+
+class QuizCreateView(View):
+    form_class = QuizCUForm
+    template_name = 'quiz/quiz_create_form.html'
+
+    def get(self, request):
+        return render(request, self.template_name, {'form': self.form_class()})
+
+    def post(self, request):
+        bound_form = self.form_class(request.POST)
+        if bound_form.is_valid():
+            new_quiz = bound_form.save()
+            return redirect(new_quiz)
+        else:
+            return render(request, self.template_name,{'form': bound_form})
 
 
 class QuizUserProgressView(TemplateView):

@@ -1,5 +1,6 @@
 from django.db import models
 from quiz.models import Category 
+from django.urls import reverse
 
 # Create your models here.
 class Project(models.Model):
@@ -17,6 +18,9 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('project:project_detail', kwargs={'url': self.url})
         
 
 
@@ -25,7 +29,7 @@ class ArticleLink(models.Model):
     title = models.CharField(max_length=50)
     link = models.URLField(max_length=255)
     summary = models.TextField()
-    projects = models.ManyToManyField(Project, related_name='articles')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='articles')
     pub_date = models.DateField('date published')
 
     class Meta:
@@ -35,3 +39,7 @@ class ArticleLink(models.Model):
 
     def __str__(self):
         return "{}:{}" .format(self.project, self.title)
+
+    def get_absolute_url(self):
+        return self.project.get_absolute_url()
+

@@ -1,0 +1,17 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+
+{% block title %}
+Update {{ article.title|title }}
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form action="{{ article.get_update_url }}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Update {{ article.title|title }} Article</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

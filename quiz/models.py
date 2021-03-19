@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError, ImproperlyConfigured
 from django.core.validators import (
     MaxValueValidator, validate_comma_separated_integer_list,
 )
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 from six import python_2_unicode_compatible
@@ -32,7 +33,7 @@ class Category(models.Model):
 
     category = models.CharField(
         verbose_name=_("Category"),
-        max_length=250, blank=True,
+        max_length=31, blank=True,
         unique=True, null=True)
 
     url = models.SlugField(
@@ -49,6 +50,10 @@ class Category(models.Model):
 
     def __str__(self):
         return self.category.title()
+
+    def get_absolute_url(self):
+        return reverse('main:category_detail',
+                       kwargs={'url': self.url})
 
 
 @python_2_unicode_compatible
@@ -179,6 +184,10 @@ class Quiz(models.Model):
 
     def __str__(self):
         return "{} on {}" .format(self.title, self.pub_date.strftime('%Y-%M-%D'))
+
+    def get_absolute_url(self):
+        return reverse('quiz:quiz_start_page',
+                       kwargs={'slug': self.url})
 
     def get_questions(self):
         return self.question_set.all().select_subclasses()
@@ -583,11 +592,9 @@ class Question(models.Model):
                                  null=True,
                                  on_delete=models.CASCADE)
 
-    sub_category = models.ForeignKey(SubCategory,
+    sub_category = models.ManyToManyField(SubCategory,
                                      verbose_name=_("Sub-Category"),
-                                     blank=True,
-                                     null=True,
-                                     on_delete=models.CASCADE)
+                                     blank=True, related_name="question")
 
     figure = models.ImageField(upload_to='uploads/%Y/%m/%d',
                                blank=True,
@@ -616,3 +623,7 @@ class Question(models.Model):
 
     def __str__(self):
         return self.content
+
+    def get_absolute_url(self):
+        return reverse('quiz:question_detail_page',
+                       kwargs={'pk': self.id})

@@ -4,10 +4,13 @@
 
 {% block content %}
 <h2>{% trans "Category list" %}</h2>
+<div>
+  <a href="{% url 'main:category_create' %}">Create New Category</a>
+</div>
 <ul>
   {% for cat in category_list %}
   <li>
-	<a href="{% url 'main:category_detail' cat.url %}">
+	<a href="{{ cat.get_absolute_url }}">
 	  {{ cat.category|title }}
 	</a>
   </li>

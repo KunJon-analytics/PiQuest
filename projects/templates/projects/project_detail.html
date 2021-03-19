@@ -15,7 +15,7 @@
 
       <dt>Categor{{ project.categories.count|pluralize:"y,ies" }}</dt>
         {% for category in project.categories.all %}
-          <dd><a href="">
+          <dd><a href="{{ category.get_absolute_url }}">
             {{ category.category|title }}
           </a></dd>
         {% endfor %}
@@ -30,7 +30,7 @@
             <ul>
               {% for quiz in project.quizzes.all %}
                 <li>
-                  <a href="{% url 'quiz:quiz_start_page' slug=quiz.url %}">
+                  <a href="{{ quiz.get_absolute_url }}">
                     {{ quiz.title|title }}</a>
                 </li>
               {% endfor %}
@@ -38,10 +38,13 @@
           </section>
       {% endif %}
 
+      <div>
+        <a href="{% url 'project:article_create' %}">Add Link to project Article</a>
+      </div>
 
       {% if project.articles.all %}
           <section>
-            <h3>Recent Articles</h3>
+            <h3>Recent Article{{ project.categories.count|pluralize }}</h3>
             <ul>
               {% for articlelink in project.articles.all %}
                 <li>
@@ -49,6 +52,7 @@
                     {{ articlelink.title|title }}</a>
                 </li>
                 <li>{{ articlelink.summary|truncatewords:20}}</li>
+                <li>{{ articlelink.pub_date|date:"F jS, Y"}}</li>
               {% endfor %}
             </ul>
           </section>

@@ -1,0 +1,17 @@
+{% extends parent_template|default:"quiz/base_quiz.html" %}
+
+{% block title %}
+Create Quiz
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form action="{% url 'quiz:quiz_create' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Create Quiz</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

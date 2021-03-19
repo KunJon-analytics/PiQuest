@@ -1,0 +1,18 @@
+{% extends parent_template|default:"quiz/base_quiz.html" %}
+
+{% block title %}
+Delete Quiz
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form action="{{ quiz.get_delete_url }}" method="post">
+            {% csrf_token %}
+            <p>Are you sure you want to delete quiz: {{ quiz.title }}</p>
+            <a href="{{ quiz.get_absolute_url }}">Cancel</a>
+            <button type="submit">Delete Quiz</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

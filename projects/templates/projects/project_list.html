@@ -4,10 +4,13 @@
 
 {% block content %}
 <h2>{% trans "Project list" %}</h2>
+<div>
+  <a href="{% url 'project:project_create' %}">Create New Project</a>
+</div>
 <ul> 
   {% for project in project_list %}
   <li>
-	<a href="{% url 'project:project_detail' url=project.url %}"> 
+	<a href="{{ project.get_absolute_url }}"> 
 	  {{ project.title }}
 	</a>
   </li> 

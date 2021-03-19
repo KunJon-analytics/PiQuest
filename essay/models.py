@@ -22,6 +22,7 @@ class Essay_Question(Question):
     def __str__(self):
         return self.content
 
+
     class Meta:
         verbose_name = _("Essay style question")
         verbose_name_plural = _("Essay style questions")

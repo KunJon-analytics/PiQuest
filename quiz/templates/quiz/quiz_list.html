@@ -4,6 +4,9 @@
 
 {% block content %}
 <h2>{% trans "List of quizzes" %}</h2>
+<div>
+  <a href="{% url 'quiz:quiz_create' %}">Create a New Quiz</a>
+</div>
     {% if quiz_list %}
 	<article>
 		<table class="table table-bordered table-striped">
@@ -30,7 +33,7 @@
 			  <td>{{ quiz.single_attempt }}</td>
 			  <td>{{ quiz.pub_date|date:"Y-m-d" }}</td>
 			  <td>
-				<a href="{% url 'quiz:quiz_start_page' slug=quiz.url %}">
+				<a href="{{ quiz.get_absolute_url }}">
 				  {% trans "View details" %}
 				</a>
 			</tr>

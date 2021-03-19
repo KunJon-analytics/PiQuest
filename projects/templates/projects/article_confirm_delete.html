@@ -1,0 +1,18 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+
+{% block title %}
+Delete Article
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form action="{{ article.get_delete_url }}" method="post">
+            {% csrf_token %}
+            <p>Are you sure you want to delete article {{ article.title }}</p>
+            <a href="{{ article.get_absolute_url }}">Cancel</a>
+            <button type="submit">Delete Article</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

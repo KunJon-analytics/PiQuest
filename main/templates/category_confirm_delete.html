@@ -1,0 +1,18 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+
+{% block title %}
+Delete Category
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form action="{{ category.get_delete_url }}" method="post">
+            {% csrf_token %}
+            <p>Are you sure you want to delete category {{ category.category }}</p>
+            <a href="{{ category.get_absolute_url }}">Cancel</a>
+            <button type="submit">Delete Category</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

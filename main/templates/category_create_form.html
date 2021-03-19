@@ -1,0 +1,17 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+
+{% block title %}
+Create Category
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form action="{% url 'main:category_create' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Create Category</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

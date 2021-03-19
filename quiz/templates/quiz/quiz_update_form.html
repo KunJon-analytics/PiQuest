@@ -1,0 +1,17 @@
+{% extends parent_template|default:"quiz/base_quiz.html" %}
+
+{% block title %}
+Update {{ quiz.title|title }}
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <form action="{{ quiz.get_update_url }}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Update Quiz</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
