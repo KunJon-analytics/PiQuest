@@ -5,6 +5,10 @@
 <article>
 
   <h2>{{ project.title }}</h2>
+  <ul>
+    <li><a href="{{ project.get_update_url }}">Edit Project</a></a></li>
+    <li><a href="{{ project.get_delete_url }}">Delete Project</a></a></li>
+  </ul>
   <dl>
     <dt>Date Added</dt>
       <dd>{{ project.date_added|date:"F jS, Y" }}</dd>
@@ -39,7 +43,7 @@
       {% endif %}
 
       <div>
-        <a href="{% url 'project:article_create' %}">Add Link to project Article</a>
+        <a href="{{ project.get_articlelink_create_url }}">Add Article</a>
       </div>
 
       {% if project.articles.all %}
@@ -48,11 +52,12 @@
             <ul>
               {% for articlelink in project.articles.all %}
                 <li>
-                  <a href="{{ articlelink.link }}">
-                    {{ articlelink.title|title }}</a>
+                  <a href="{{ articlelink.link }}">{{ articlelink.title|title }}</a>
                 </li>
                 <li>{{ articlelink.summary|truncatewords:20}}</li>
                 <li>{{ articlelink.pub_date|date:"F jS, Y"}}</li>
+                <li><a href="{{ articlelink.get_update_url }}">Edit Article link</a></li>
+                <li><a href="{{ articlelink.get_delete_url }}">Delete Article link</a></li>
               {% endfor %}
             </ul>
           </section>

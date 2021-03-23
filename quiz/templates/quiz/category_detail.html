@@ -3,6 +3,11 @@
 {% block content %}
 
     <h2>{{ category.category|title }}</h2>
+    <p>{{ category.description }}</p>
+    <ul>
+        <li><a href="{{ category.get_update_url }}">Edit Category</a></a></li>
+        <li><a href="{{ category.get_delete_url }}">Delete Category</a></a></li>
+    </ul>
     {% if category.projects.all %}
     <section>
         <p>{{ category.category|title }} is associated with {{ category.projects.count }} project{{ category.projects.count|pluralize }}</p>

@@ -1,16 +1,17 @@
 {% extends parent_template|default:"projects/base_projects.html" %}
+{% load tailwind_filters %}
 
 {% block title %}
 Update {{ project.title|title }}
 {% endblock %}
 
 {% block content %}
-<div>
+<div class="max-w-lg mx-auto">
     <div>
         <form action="{{ project.get_update_url }}" method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Update {{ project.title|title }} Project</button>
+            {{ form|crispy }}
+            <button class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md" type="submit">Update {{ project.title|title }} Project</button>
         </form>
     </div>
 </div>

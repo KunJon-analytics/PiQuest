@@ -14,9 +14,12 @@
 	  {{ project.title }}
 	</a>
   </li> 
+  <li><a href="{{ project.get_update_url }}">Edit Project</a></a></li>
+  <li><a href="{{ project.get_delete_url }}">Delete Project</a></a></li>
   {% empty %}
   <li><em>There are currently no projects available</em></li>
   {% endfor %}
   </ul>
 {% endblock %}
- 
+
+{% include "content_footer.html" %}

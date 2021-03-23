@@ -37,7 +37,7 @@ class QuizCUForm(CleanUrlMixin, forms.ModelForm):
         fields = '__all__'
 
     def clean_url(self):
-        new_url = (self.cleaned_data['url'].lower())
-        if new_url == ['create', 'progress', 'marking', 'category', 'question']:
+        new_slug = (self.cleaned_data['url'].lower())
+        if new_slug == ['create', 'progress', 'marking', 'category', 'question']:
             raise ValidationError('You are not allowed to use this URL.')
-        return new_url
+        return new_slug

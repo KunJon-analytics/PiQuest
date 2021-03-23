@@ -8,6 +8,10 @@
 <article>
 <header>
       <h2>{{ quiz.title|title }}</h2>
+      <ul>
+        <li><a href="{{ quiz.get_update_url }}"> Edit Quiz</a></li>
+        <li><a href="{{ quiz.get_delete_url }}"> Delete Quiz</a></li>
+      </ul>
       <p>
         Created on
         <time datetime="{{ quiz.pub_date|date:"Y-m-d" }}">

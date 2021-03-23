@@ -16,6 +16,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -24,17 +25,22 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
     'django.contrib.staticfiles',
 
     # Created Apps
     'main',
     'projects',
+    'contact',
+    'user',
 
     # Third-Party Apps
     'quiz',
     'multichoice',
     'true_false',
     'essay',
+    'crispy_forms',
+    'crispy_tailwind',
     'tailwind',
     'theme',
 ]
@@ -124,3 +130,54 @@ TAILWIND_APP_NAME = 'theme'
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
 AUTH_USER_MODEL = 'main.User'
+
+# Logging
+# https://docs.djangoproject.com/en/1.8/topics/logging/
+
+from .log_filters import ManagementFilter
+
+verbose = (
+    "[%(asctime)s] %(levelname)s "
+    "[%(name)s:%(lineno)s] %(message)s")
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'remove_migration_sql': {
+            '()': ManagementFilter,
+        },
+    },
+    'handlers': {
+        'console': {
+            'filters': ['remove_migration_sql'],
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'formatters': {
+        'verbose': {
+            'format': verbose,
+            'datefmt': "%Y-%b-%d %H:%M:%S"
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'formatter': 'verbose'
+        },
+    },
+}
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SERVER_EMAIL = 'contact@piquest.com'
+DEFAULT_FROM_EMAIL = 'no-reply@piquest.com'
+EMAIL_SUBJECT_PREFIX = '[PiQuest] '
+MANAGERS = (
+    ('Us', 'ourselves@piquest.com'),
+)
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+
+CRISPY_TEMPLATE_PACK = 'tailwind'

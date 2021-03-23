@@ -19,6 +19,8 @@
 			  <th>{% trans "Single attempt" %}</th>
 			  <th>{% trans "Date created" %}</th>
 			  <th></th>
+			  <th></th>
+			  <th></th>
 			</tr>
 		  </thead>
 
@@ -32,10 +34,10 @@
 			  <td>{{ quiz.exam_paper }}</td>
 			  <td>{{ quiz.single_attempt }}</td>
 			  <td>{{ quiz.pub_date|date:"Y-m-d" }}</td>
+			  <td><a href="{{ quiz.get_absolute_url }}">{% trans "View details" %}</a></td>
+			  <td><a href="{{ quiz.get_update_url }}">{% trans "Update Quiz" %}</a></td>
+			  <td><a href="{{ quiz.get_delete_url }}">{% trans "Delete Quiz" %}</a></td>
 			  <td>
-				<a href="{{ quiz.get_absolute_url }}">
-				  {% trans "View details" %}
-				</a>
 			</tr>
 
         {% endfor %}
@@ -44,6 +46,6 @@
 		</table>
 	</article>
 	{% else %}
-        <p>{% trans "There are no available quizzes" %}.</p>
+        <p><em>{% trans "There are no available quizzes" %}.</em></p>
     {% endif %}
 {% endblock %}

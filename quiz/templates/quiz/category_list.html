@@ -3,20 +3,37 @@
 {% block title %}{% trans "Category List" %}{% endblock %}
 
 {% block content %}
-<h2>{% trans "Category list" %}</h2>
-<div>
-  <a href="{% url 'main:category_create' %}">Create New Category</a>
-</div>
-<ul>
-  {% for cat in category_list %}
-  <li>
-	<a href="{{ cat.get_absolute_url }}">
-	  {{ cat.category|title }}
-	</a>
-  </li>
-  {% empty %}
-  <li><em>There are currently no categories available</em></li>
-  {% endfor %}
-  </ul>
+ <section class="text-gray-600 body-font">
+  <div class="px-5 mx-auto flex flex-wrap justify-around">
+      <h2 class="text-gray-700 text-3xl">{% trans "Category list" %}</h2>
+      {% include "content_footer.html" %}
+      <a class="" href="{% url 'main:category_create' %}">Create New Category</a>
+  </div>
+  <div class="container px-5 py-10 mx-auto flex flex-wrap">
+    <div class="flex flex-wrap -m-4">
+      {% for cat in category_list %}
+      <div class="p-4 lg:w-1/2 md:w-full">
+        <div class="flex border-2 rounded-lg border-gray-200 border-opacity-50 p-8 sm:flex-row flex-col">
+          <div class="w-16 h-16 sm:mr-8 sm:mb-0 mb-4 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 flex-shrink-0">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-8 h-8" viewBox="0 0 24 24">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <div class="flex-grow">
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">{{ cat.category|title }}</h2>
+            <p class="leading-relaxed text-base">{{ cat.description|linebreaks|truncatewords:20 }}</p>
+            <a href="{{ cat.get_absolute_url }}" class="mt-3 text-indigo-500 inline-flex items-center">See Details
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <em>There are currently no categories available</em>
+      {% endfor %}
+    </div>
+  </div>
+</section>
 {% endblock %}
- 

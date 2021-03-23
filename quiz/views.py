@@ -2,15 +2,20 @@ import random
 
 from django.http.response import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
+from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404, render, redirect
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.shortcuts import get_object_or_404, render, redirect, reverse
+from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
-from django.views.generic import DetailView, ListView, TemplateView, FormView, View
+from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView, TemplateView, FormView, View
 from django.template import Context, loader
 
+from main.utils import PageLinksMixin
 from .forms import QuestionForm, EssayForm, CategoryForm, QuizCUForm
 from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
+
 
 
 class QuizMarkerMixin(object):
@@ -52,24 +57,71 @@ class QuizDetailView(DetailView):
         return self.render_to_response(context)
 
 
-class CategoriesListView(ListView):
+class QuizCreateView(CreateView):
+    form_class = QuizCUForm
+    template_name = 'quiz/quiz_create_form.html'
+    model = Quiz
+
+
+class QuizUpdate(UpdateView):
+    form_class = QuizCUForm
+    model = Quiz
+    template_name = 'quiz/quiz_update_form.html'
+
+    def get_object(self, slug):
+        return get_object_or_404(self.model, url__iexact=slug)
+
+    def get(self, request, slug):
+        quiz = self.get_object(slug)
+        context = {'form': self.form_class(instance=quiz),'quiz': quiz,}
+        return render(request, self.template_name, context)
+
+    def post(self, request, slug):
+        quiz = self.get_object(slug)
+        bound_form = self.form_class(request.POST, instance=quiz)
+        if bound_form.is_valid():
+            new_quiz = bound_form.save()
+            return redirect(new_quiz)
+        else:
+            context = {'form': bound_form, 'quiz': quiz,}
+            return render(request, self.template_name, context)
+
+
+class QuizDelete(DeleteView):
+
+    model = Quiz
+    success_url = reverse_lazy('quiz:quiz_index')
+    template_name = 'quiz/quiz_confirm_delete.html'
+
+
+
+class CategoryDetail(DetailView):
     model = Category
+    template_name = 'quiz/category_detail.html'
 
 
-class CategoryCreate(View):
+
+class CategoriesListView(PageLinksMixin, ListView):
+    model = Category
+    page_kwarg = 'page'
+    paginate_by = 5 # 5 items per page
+    template_name = 'quiz/category_list.html'
+
+
+class CategoryCreate(CreateView):
     form_class = CategoryForm
     template_name = 'category_create_form.html'
 
-    def get(self, request):
-        return render(request, self.template_name, {'form': self.form_class()})
 
-    def post(self, request):
-        bound_form = self.form_class(request.POST)
-        if bound_form.is_valid():
-            new_category = bound_form.save()
-            return redirect(new_category)
-        else:
-            return render(request, self.template_name,{'form': bound_form})
+class CategoryUpdate(UpdateView):
+    form_class = CategoryForm
+    model = Category
+    template_name = 'category_update_form.html'
+
+class CategoryDelete(DeleteView):
+    model = Category
+    success_url = reverse_lazy('main:category_list')
+    template_name = 'category_confirm_delete.html'
 
 
 class QuestionListView(ListView):
@@ -80,25 +132,41 @@ class QuestionDetailView(DetailView):
     model = Question
     template_name = 'quiz/question_detail.html'
 
-class QuestionCreateView(View):
+class QuestionCreateView(CreateView):
     form_class = QuestionForm
     template_name = 'quiz/question_create_form.html'
 
-    def get(self, request):
-        return render(request, self.template_name, {'form': self.form_class()})
+class QuestionDelete(View):
 
-    def post(self, request):
-        bound_form = self.form_class(request.POST)
+    def get(self, request, pk):
+        question = get_object_or_404(Question, pk=pk)
+        return render(request, 'project/article_confirm_delete.html', {'question': question})
+
+    def post(self, request, pk):
+        question = get_object_or_404(Question, pk=pk)
+        quiz = question.quiz
+        question.delete()
+        return redirect(quiz)
+
+class QuestionUpdate(View):
+    form_class = QuestionForm
+    model = Question
+    template_name = 'quiz/question_update_form.html'
+
+    def get(self, request, pk):
+        question = get_object_or_404(self.model, pk=pk)
+        context = {'form': self.form_class(instance=question),self.model.__name__.lower(): question,}
+        return render(request, self.template_name, context)
+
+    def post(self, request, pk):
+        obj = get_object_or_404(self.model, pk=pk)
+        bound_form = self.form_class(request.POST, instance=question)
         if bound_form.is_valid():
             new_question = bound_form.save()
             return redirect(new_question)
         else:
-            return render(request, self.template_name,{'form': bound_form})
-
-
-def category_detail(request, url):
-    category = get_object_or_404(Category, url__iexact=url)
-    return render(request,'quiz/category_detail.html', {'category': category})
+            context = {'form': bound_form, self.model.__name__.lower(): question,}
+            return render(request, self.template_name, context)
 
 
 class ViewQuizListByCategory(ListView):
@@ -124,22 +192,6 @@ class ViewQuizListByCategory(ListView):
     def get_queryset(self):
         queryset = super(ViewQuizListByCategory, self).get_queryset()
         return queryset.filter(category=self.category, draft=False)
-
-
-class QuizCreateView(View):
-    form_class = QuizCUForm
-    template_name = 'quiz/quiz_create_form.html'
-
-    def get(self, request):
-        return render(request, self.template_name, {'form': self.form_class()})
-
-    def post(self, request):
-        bound_form = self.form_class(request.POST)
-        if bound_form.is_valid():
-            new_quiz = bound_form.save()
-            return redirect(new_quiz)
-        else:
-            return render(request, self.template_name,{'form': bound_form})
 
 
 class QuizUserProgressView(TemplateView):

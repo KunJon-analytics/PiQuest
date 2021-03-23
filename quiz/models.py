@@ -22,7 +22,7 @@ class CategoryManager(models.Manager):
 
     def new_category(self, category):
         new_category = self.create(category=re.sub('\s+', '-', category)
-                                   .lower(), url='')
+                                   .lower(), slug='', description='')
 
         new_category.save()
         return new_category
@@ -36,10 +36,12 @@ class Category(models.Model):
         max_length=31, blank=True,
         unique=True, null=True)
 
-    url = models.SlugField(
+    slug = models.SlugField(
         max_length=31, blank=False, unique=True,
         help_text=_("a user friendly url"),
         verbose_name=_("user friendly url"))
+
+    description = models.TextField()
 
     objects = CategoryManager()
 
@@ -52,8 +54,13 @@ class Category(models.Model):
         return self.category.title()
 
     def get_absolute_url(self):
-        return reverse('main:category_detail',
-                       kwargs={'url': self.url})
+        return reverse('main:category_detail', kwargs={'slug': self.slug})
+
+    def get_update_url(self):
+        return reverse('main:category_update', kwargs={'slug': self.slug})
+
+    def get_delete_url(self):
+        return reverse('main:category_delete', kwargs={'slug': self.slug})
 
 
 @python_2_unicode_compatible
@@ -67,7 +74,7 @@ class SubCategory(models.Model):
         Category, null=True, blank=True,
         verbose_name=_("Category"), on_delete=models.CASCADE)
 
-    url = models.SlugField(
+    slug = models.SlugField(
         max_length=31, blank=False, unique=True,
         help_text=_("a user friendly url"),
         verbose_name=_("user friendly url"))
@@ -105,9 +112,9 @@ class Quiz(models.Model):
         Category, null=True, blank=True,
         verbose_name=_("Category"), on_delete=models.CASCADE)
 
-    tags = models.ManyToManyField(Category, related_name='quizzes')
+    tags = models.ManyToManyField(Category, blank=True, related_name='quizzes')
 
-    projects = models.ManyToManyField('projects.Project', related_name='quizzes')
+    projects = models.ManyToManyField('projects.Project', blank=True, related_name='quizzes')
 
     random_order = models.BooleanField(
         blank=False, default=False,
@@ -186,8 +193,13 @@ class Quiz(models.Model):
         return "{} on {}" .format(self.title, self.pub_date.strftime('%Y-%M-%D'))
 
     def get_absolute_url(self):
-        return reverse('quiz:quiz_start_page',
-                       kwargs={'slug': self.url})
+        return reverse('quiz:quiz_start_page', kwargs={'slug': self.url})
+
+    def get_update_url(self):
+        return reverse('quiz:quiz_update', kwargs={'slug': self.url})
+
+    def get_delete_url(self):
+        return reverse('quiz:quiz_delete', kwargs={'slug': self.url})
 
     def get_questions(self):
         return self.question_set.all().select_subclasses()
@@ -625,5 +637,10 @@ class Question(models.Model):
         return self.content
 
     def get_absolute_url(self):
-        return reverse('quiz:question_detail_page',
-                       kwargs={'pk': self.id})
+        return reverse('quiz:question_detail_page', kwargs={'pk': self.id})
+
+    def get_update_url(self):
+        return reverse('quiz:question_update', kwargs={'pk': self.id})
+
+    def get_delete_url(self):
+        return reverse('quiz:question_delete', kwargs={'pk': self.id})

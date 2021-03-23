@@ -1,4 +1,5 @@
 {% extends parent_template|default:"projects/base_projects.html" %}
+{% load tailwind_filters %}
 
 {% block title %}
 Create Article
@@ -6,11 +7,11 @@ Create Article
 
 {% block content %}
 <div>
-    <div>
-        <form action="{% url 'project:article_create' %}" method="post">
+    <div class="max-w-lg mx-auto">
+        <form action="{{ project.get_articlelink_create_url }}" method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Create Article</button>
+            {{ form|crispy }}
+            <button class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md" type="submit">Create Article</button>
         </form>
     </div>
 </div>
