@@ -1,0 +1,25 @@
+{% extends parent_template|default:"user/base_user.html" %}
+{% load tailwind_filters %}
+
+{% block title %}
+Create Account
+{% endblock %}
+
+{% block content %}
+  <div>
+    <div class="center">
+        <a href="{% url 'piquest-auth:resend_activation' %}">
+          Lost Activation E-Mail?</a>
+      </div>
+    <div class="max-w-lg mx-auto">
+      <form
+          action="{% url 'piquest-auth:create' %}"
+          method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md" type="submit">
+          Create New Account</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -16,23 +16,16 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+SITE_ID=1
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.sites',
-    'django.contrib.staticfiles',
-
     # Created Apps
+    'user',
     'main',
     'projects',
     'contact',
-    'user',
 
     # Third-Party Apps
     'quiz',
@@ -43,6 +36,15 @@ INSTALLED_APPS = [
     'crispy_tailwind',
     'tailwind',
     'theme',
+
+    # Django Apps
+    'django.contrib.auth',
+    'django.contrib.admin',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.sites',
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
@@ -129,45 +131,45 @@ TAILWIND_APP_NAME = 'theme'
 
 NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
-AUTH_USER_MODEL = 'main.User'
+AUTH_USER_MODEL = 'user.User'
 
 # Logging
 # https://docs.djangoproject.com/en/1.8/topics/logging/
 
-from .log_filters import ManagementFilter
+# from .log_filters import ManagementFilter
 
-verbose = (
-    "[%(asctime)s] %(levelname)s "
-    "[%(name)s:%(lineno)s] %(message)s")
+# verbose = (
+#     "[%(asctime)s] %(levelname)s "
+#     "[%(name)s:%(lineno)s] %(message)s")
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'filters': {
-        'remove_migration_sql': {
-            '()': ManagementFilter,
-        },
-    },
-    'handlers': {
-        'console': {
-            'filters': ['remove_migration_sql'],
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'formatters': {
-        'verbose': {
-            'format': verbose,
-            'datefmt': "%Y-%b-%d %H:%M:%S"
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'formatter': 'verbose'
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'filters': {
+#         'remove_migration_sql': {
+#             '()': ManagementFilter,
+#         },
+#     },
+#     'handlers': {
+#         'console': {
+#             'filters': ['remove_migration_sql'],
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'formatters': {
+#         'verbose': {
+#             'format': verbose,
+#             'datefmt': "%Y-%b-%d %H:%M:%S"
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#             'formatter': 'verbose'
+#         },
+#     },
+# }
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -181,3 +183,9 @@ MANAGERS = (
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 
 CRISPY_TEMPLATE_PACK = 'tailwind'
+
+from django.urls import reverse_lazy
+
+LOGIN_REDIRECT_URL = reverse_lazy('quiz:quiz_index')
+LOGIN_URL = reverse_lazy('piquest-auth:login')
+LOGOUT_URL = reverse_lazy('piquest-auth:logout')

@@ -11,56 +11,36 @@ app_name = 'quiz'
 
 urlpatterns = [
 
-    url(r'^$',
-        view=QuizListView.as_view(),
-        name='quiz_index'),
+    url('', view=QuizListView.as_view(), name='quiz_index'),
 
-    url(r'^question/$',
-        view=QuestionListView.as_view(),
-        name='question_index'),
+    url('question/', view=QuestionListView.as_view(), name='question_index'),
 
-    url(r'^question/(?P<pk>[\d.]+)/$',
-        view=QuestionDetailView.as_view(),
-        name='question_detail_page'),
+    url('question/<int:pk>/', view=QuestionDetailView.as_view(), name='question_detail_page'),
 
-    url(r'^question/(?P<pk>[\d.]+)/update/$',
-        view=QuestionUpdate.as_view(),
-        name='question_update'),
+    url('question/<int:pk>/update/', view=QuestionUpdate.as_view(), name='question_update'),
 
 
-    url(r'^question/(?P<pk>[\d.]+)/delete/$',
-        view=QuestionDelete.as_view(),
-        name='question_delete'),
+    url('question/<int:pk>/delete/', view=QuestionDelete.as_view(), name='question_delete'),
 
-    url(r'^category/(?P<category_name>[\w|\W-]+)/$',
-        view=ViewQuizListByCategory.as_view(),
-        name='quiz_category_list_matching'),
+    url('category/<slug:category_name>/', view=ViewQuizListByCategory.as_view(), name='quiz_category_list_matching'),
 
-    url(r'^progress/$',
-        view=QuizUserProgressView.as_view(),
-        name='quiz_progress'),
+    url('progress/', view=QuizUserProgressView.as_view(), name='quiz_progress'),
 
-    url(r'^marking/$',
-        view=QuizMarkingList.as_view(),
-        name='quiz_marking'),
+    url('marking/', view=QuizMarkingList.as_view(), name='quiz_marking'),
 
-    url(r'^marking/(?P<pk>[\d.]+)/$',
-        view=QuizMarkingDetail.as_view(),
-        name='quiz_marking_detail'),
+    url('marking/<int:pk>/', view=QuizMarkingDetail.as_view(), name='quiz_marking_detail'),
 
-    url(r'^create/$', QuizCreateView.as_view(), name='quiz_create'),
+    url('create/', QuizCreateView.as_view(), name='quiz_create'),
 
-    url(r'^question/create/$', QuestionCreateView.as_view(), name='question_create'),
+    url('question/create/', QuestionCreateView.as_view(), name='question_create'),
 
 
     #  passes variable 'quiz_name' to quiz_take view
-    url(r'^(?P<slug>[\w-]+)/$', view=QuizDetailView.as_view(), name='quiz_start_page'),
+    url('<slug>/', view=QuizDetailView.as_view(), name='quiz_start_page'),
 
-    url(r'^(?P<slug>[\w-]+)/update/$', view=QuizUpdate.as_view(), name='quiz_update'),
+    url('<slug>/update/', view=QuizUpdate.as_view(), name='quiz_update'),
 
-    url(r'^(?P<slug>[\w-]+)/delete/$', view=QuizDelete.as_view(), name='quiz_delete'),
+    url('<slug>/delete/', view=QuizDelete.as_view(), name='quiz_delete'),
 
-    url(r'^(?P<quiz_name>[\w-]+)/take/$',
-        view=QuizTake.as_view(),
-        name='quiz_question'),
+    url('<slug:quiz_name>/take/', view=QuizTake.as_view(), name='quiz_question'),
 ]

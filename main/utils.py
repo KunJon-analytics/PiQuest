@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.http import Http404, HttpResponseRedirect
 
 from projects.models import ArticleLink, Project
 
@@ -65,3 +66,10 @@ class ArticleLinkGetObjectMixin():
         project_slug = self.kwargs.get(self.project_slug_url_kwarg)
         articlelink_slug = self.kwargs.get(self.slug_url_kwarg)
         return get_object_or_404(ArticleLink, slug__iexact=articlelink_slug, project__slug__iexact=project_slug)
+
+
+class PostFormValidMixin:
+
+    def form_valid(self, form):
+        self.object = form.save(self.request)
+        return HttpResponseRedirect(self.get_success_url())

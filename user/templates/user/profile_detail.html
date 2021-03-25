@@ -1,0 +1,48 @@
+{% extends parent_template|default:"user/base_user.html" %}
+
+{% block title %}
+{{ block.super }} -
+{{ profile.user.get_full_name }}'s Profile
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+      {% if user.pk == profile.user.pk %}
+        <div class="offset-by-two five columns">
+      {% else %}
+        <div class="offset-by-two eight columns">
+      {% endif%}
+
+    <h2>About {{ profile.user.get_full_name }}</h2>
+    {{ profile.about|default:"No Profile"|linebreaks }}
+
+    {% if profile.user.quizzes.all %}
+      <section>
+        <h3>Blog Post{{ profile.user.quizzes.count|pluralize }}</h3>
+        <ul>
+          {% for quiz in profile.user.quizzes.all %}
+            <li><a href="{{ quiz.get_absolute_url }}">
+              {{ quiz.title|title }}
+            </a></li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+    </div><!-- columns -->
+
+      {% if user.pk == profile.user.pk %}
+      <div class="three columns">
+        <ul class="task-list">
+            <li><a href="{{ profile.get_update_url }}">
+            Edit Your Profile</a></li>
+            <li><a href="{% url 'pw_change' %}">
+            Change Password</a></li>
+            <li><a href="{% url 'piquest-auth:disable' %}">
+            Disable Account</a></li>
+        </ul>
+      </div>
+      {% endif%}
+
+  </div><!-- row -->
+{% endblock %}

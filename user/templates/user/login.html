@@ -1,0 +1,21 @@
+{% extends parent_template|default:"user/base_user.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="offset-by-two five columns">
+      {% include "user/login_form.html" %}
+    </div>
+    <div class="three columns">
+      <ul class="task-list">
+        <li><a href="{% url 'piquest-auth:create' %}">
+          Register New Account</a></li>
+        <li><a href="{% url 'reset-password' %}">
+          Forgotten password?</a></li>
+        <li><a href="{% url 'piquest-auth:resend_activation' %}">
+          Lost Activation E-Mail?</a></li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

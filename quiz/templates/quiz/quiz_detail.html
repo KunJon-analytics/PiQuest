@@ -17,6 +17,9 @@
         <time datetime="{{ quiz.pub_date|date:"Y-m-d" }}">
           {{ quiz.pub_date|date:"l, F j, Y" }}
         </time>
+         by
+        <a href="{{ quiz.master.get_absolute_url }}">
+          {{ quiz.master.profile.name }}</a>
       </p>
     </header>
 <h2>{{ quiz.title }}</h2>

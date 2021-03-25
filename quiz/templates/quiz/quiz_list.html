@@ -18,6 +18,7 @@
 			  <th>{% trans "Exam" %}</th>
 			  <th>{% trans "Single attempt" %}</th>
 			  <th>{% trans "Date created" %}</th>
+			  <th>Master</th>
 			  <th></th>
 			  <th></th>
 			  <th></th>
@@ -34,6 +35,7 @@
 			  <td>{{ quiz.exam_paper }}</td>
 			  <td>{{ quiz.single_attempt }}</td>
 			  <td>{{ quiz.pub_date|date:"Y-m-d" }}</td>
+			  <td><a href="{{ quiz.master.get_absolute_url }}">{{ quiz.master.profile.name }}</a></td>
 			  <td><a href="{{ quiz.get_absolute_url }}">{% trans "View details" %}</a></td>
 			  <td><a href="{{ quiz.get_update_url }}">{% trans "Update Quiz" %}</a></td>
 			  <td><a href="{{ quiz.get_delete_url }}">{% trans "Delete Quiz" %}</a></td>

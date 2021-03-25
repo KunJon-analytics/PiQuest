@@ -4,9 +4,7 @@ import json
 
 from django.db import models
 from django.core.exceptions import ValidationError, ImproperlyConfigured
-from django.core.validators import (
-    MaxValueValidator, validate_comma_separated_integer_list,
-)
+from django.core.validators import MaxValueValidator, validate_comma_separated_integer_list
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
@@ -100,6 +98,8 @@ class Quiz(models.Model):
     description = models.TextField(
         verbose_name=_("Description"),
         blank=True, help_text=_("a description of the quiz"))
+
+    master = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='quizzes', on_delete=models.CASCADE)
 
     url = models.SlugField(
         max_length=60, blank=False,

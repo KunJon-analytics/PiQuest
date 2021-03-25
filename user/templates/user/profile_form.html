@@ -1,0 +1,22 @@
+{% extends parent_template|default:"user/base_user.html" %}
+{% load tailwind_filters %}
+
+{% block title %}
+Update Profile
+{% endblock %}
+
+
+{% block content %}
+  <div class="row">
+    <div class="max-w-lg mx-auto">
+      <form
+          action="{{ profile.get_update_url }}"
+          method="post">
+        {% csrf_token %}
+        {{ form|crispy}}
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md">
+          Update Profile</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

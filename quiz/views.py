@@ -8,10 +8,11 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
+from user.decorators import class_login_required, require_authenticated_permission
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView, TemplateView, FormView, View
 from django.template import Context, loader
 
-from main.utils import PageLinksMixin
+from main.utils import PageLinksMixin, PostFormValidMixin
 from .forms import QuestionForm, EssayForm, CategoryForm, QuizCUForm
 from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
@@ -57,13 +58,15 @@ class QuizDetailView(DetailView):
         return self.render_to_response(context)
 
 
-class QuizCreateView(CreateView):
+@require_authenticated_permission('quiz.add_quiz')
+class QuizCreateView(PostFormValidMixin, CreateView):
     form_class = QuizCUForm
     template_name = 'quiz/quiz_create_form.html'
     model = Quiz
 
 
-class QuizUpdate(UpdateView):
+@require_authenticated_permission('quiz.change_quiz')
+class QuizUpdate(PostFormValidMixin, UpdateView):
     form_class = QuizCUForm
     model = Quiz
     template_name = 'quiz/quiz_update_form.html'
@@ -87,9 +90,11 @@ class QuizUpdate(UpdateView):
             return render(request, self.template_name, context)
 
 
+@require_authenticated_permission('quiz.delete_quiz')
 class QuizDelete(DeleteView):
 
     model = Quiz
+    slug_field = 'url'
     success_url = reverse_lazy('quiz:quiz_index')
     template_name = 'quiz/quiz_confirm_delete.html'
 
@@ -108,16 +113,20 @@ class CategoriesListView(PageLinksMixin, ListView):
     template_name = 'quiz/category_list.html'
 
 
+@require_authenticated_permission('quiz.add_category')
 class CategoryCreate(CreateView):
     form_class = CategoryForm
     template_name = 'category_create_form.html'
 
 
+@require_authenticated_permission('quiz.change_category')
 class CategoryUpdate(UpdateView):
     form_class = CategoryForm
     model = Category
     template_name = 'category_update_form.html'
 
+
+@require_authenticated_permission('quiz.delete_category')
 class CategoryDelete(DeleteView):
     model = Category
     success_url = reverse_lazy('main:category_list')
@@ -132,10 +141,12 @@ class QuestionDetailView(DetailView):
     model = Question
     template_name = 'quiz/question_detail.html'
 
+@require_authenticated_permission('quiz.add_question')
 class QuestionCreateView(CreateView):
     form_class = QuestionForm
     template_name = 'quiz/question_create_form.html'
 
+@require_authenticated_permission('quiz.delete_question')
 class QuestionDelete(View):
 
     def get(self, request, pk):
@@ -148,6 +159,7 @@ class QuestionDelete(View):
         question.delete()
         return redirect(quiz)
 
+@require_authenticated_permission('quiz.change_question')
 class QuestionUpdate(View):
     form_class = QuestionForm
     model = Question
