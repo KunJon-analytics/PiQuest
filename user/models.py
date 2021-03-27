@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db.models.signals import post_save
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, AbstractUser, PermissionsMixin
 from django.db import models
 from django.urls import reverse
 from datetime import date
@@ -23,51 +24,10 @@ class Profile(models.Model):
         return reverse('piquest-auth:profile_update')
 
 
-class UserManager(BaseUserManager):
-    use_in_migrations = True
-
-    def _create_user(self, email, password, **kwargs):
-        email = self.normalize_email(email)
-        is_staff = kwargs.pop('is_staff', False)
-        is_superuser = kwargs.pop('is_superuser', False)
-        user = self.model(
-            email=email,
-            is_active=True,
-            is_staff=is_staff,
-            is_superuser=is_superuser, **kwargs)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_user(self, email, password=None,**extra_fields):
-        return self._create_user(email, password, **extra_fields)
-
-    def create_superuser(self, email, password, **extra_fields):
-        return self._create_user(
-            email, password,
-            is_staff=True, is_superuser=True,
-            **extra_fields)
-
-
-class User(AbstractBaseUser, PermissionsMixin):
+class User(AbstractUser):
+    is_taker = models.BooleanField(default=True)
+    is_master = models.BooleanField(default=False)
     email = models.EmailField('email address', max_length=254, unique=True)
-    is_staff = models.BooleanField(
-        'staff status',
-        default=False,
-        help_text=(
-            'Designates whether the user can '
-            'log into this admin site.'))
-    is_active = models.BooleanField(
-        'active',
-        default=True,
-        help_text=(
-            'Designates whether this user should '
-            'be treated as active. Unselect this '
-            'instead of deleting accounts.'))
-
-    USERNAME_FIELD = 'email'
-
-    objects = UserManager()
 
     def __str__(self):
         return self.email
@@ -83,3 +43,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def published_quizzes(self):
         return self.quizzes.filter(pub_date__lt=date.today())
+
+
+def post_user_created_signal(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+
+post_save.connect(post_user_created_signal, sender=User)

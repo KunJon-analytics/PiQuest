@@ -197,11 +197,16 @@ CRISPY_TEMPLATE_PACK = 'tailwind'
 from django.urls import reverse_lazy
 
 LOGIN_REDIRECT_URL = reverse_lazy('quiz:quiz_index')
-LOGIN_URL = reverse_lazy('piquest-auth:login')
-LOGOUT_URL = reverse_lazy('piquest-auth:logout')
+LOGIN_URL = reverse_lazy('account_login')
+LOGOUT_URL = reverse_lazy('account_logout')
 
 INTERNAL_IPS = [
     # ...
     '127.0.0.1',
     # ...
 ]
+
+ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_MAX_EMAIL_ADDRESSES = 3
+

@@ -11,11 +11,11 @@
       {% if user.is_authenticated %}
       <div class="flex justify-center">
         <button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"><a href="{% url 'quiz:quiz_progress' %}">See Progress</a></button>
-        <button class="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg"><a href="{% url 'piquest-auth:logout' %}?next={{ request.path }}">Log Out</a></button>
+        <button class="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg"><a href="{% url 'account_logout' %}?next={{ request.path }}">Log Out</a></button>
       </div>
       {% else %}
       <div class="flex justify-center">
-        <button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"><a href="{% url 'piquest-auth:login' %}?next={{ request.path }}">Log In</a></button>
+        <button class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"><a href="{% url 'account_login' %}?next={{ request.path }}">Log In</a></button>
         <button class="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg"><a href="{% url 'quiz:quiz_index' %}">Take Quiz</a></button>
       </div>
       {% endif %}
