@@ -1,3 +1,5 @@
+import debug_toolbar
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView, TemplateView
@@ -9,6 +11,9 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetCompleteView
 )
+
+admin.site.site_header = 'PiQuest Admin'
+admin.site.site_title = 'PiQuest Site Admin'
 
 urlpatterns = [
     path('', include('user.urls', namespace='piquest-auth')),
@@ -24,6 +29,8 @@ urlpatterns = [
     path('change-password/', PasswordChangeView.as_view(), name='pw_change'),
     path('password-change-done/', PasswordChangeDoneView.as_view(), name='pw_change_done'),
     path('admin/', admin.site.urls),
+    path('__debug__/', include(debug_toolbar.urls)),
+    path('accounts/', include('allauth.urls')),
 ]
 
 

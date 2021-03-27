@@ -16,8 +16,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-SITE_ID=1
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -27,16 +25,6 @@ INSTALLED_APPS = [
     'projects',
     'contact',
 
-    # Third-Party Apps
-    'quiz',
-    'multichoice',
-    'true_false',
-    'essay',
-    'crispy_forms',
-    'crispy_tailwind',
-    'tailwind',
-    'theme',
-
     # Django Apps
     'django.contrib.auth',
     'django.contrib.admin',
@@ -45,9 +33,26 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+
+    # Third-Party Apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'quiz',
+    'multichoice',
+    'true_false',
+    'essay',
+    'crispy_forms',
+    'crispy_tailwind',
+    'tailwind',
+    'theme',
+    'debug_toolbar',
 ]
 
+SITE_ID=1
+
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,10 +64,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'PiQuest.urls'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -189,3 +199,9 @@ from django.urls import reverse_lazy
 LOGIN_REDIRECT_URL = reverse_lazy('quiz:quiz_index')
 LOGIN_URL = reverse_lazy('piquest-auth:login')
 LOGOUT_URL = reverse_lazy('piquest-auth:logout')
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]

@@ -116,21 +116,21 @@ class CategoriesListView(PageLinksMixin, ListView):
 @require_authenticated_permission('quiz.add_category')
 class CategoryCreate(CreateView):
     form_class = CategoryForm
-    template_name = 'category_create_form.html'
+    template_name = 'main/category_create_form.html'
 
 
 @require_authenticated_permission('quiz.change_category')
 class CategoryUpdate(UpdateView):
     form_class = CategoryForm
     model = Category
-    template_name = 'category_update_form.html'
+    template_name = 'main/category_update_form.html'
 
 
 @require_authenticated_permission('quiz.delete_category')
 class CategoryDelete(DeleteView):
     model = Category
     success_url = reverse_lazy('main:category_list')
-    template_name = 'category_confirm_delete.html'
+    template_name = 'main/category_confirm_delete.html'
 
 
 class QuestionListView(ListView):

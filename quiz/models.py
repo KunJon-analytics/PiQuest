@@ -14,6 +14,7 @@ from django.conf import settings
 from model_utils.managers import InheritanceManager
 
 import projects.models
+from user.models import Profile
 
 
 class CategoryManager(models.Manager):
