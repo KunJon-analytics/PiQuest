@@ -1,13 +1,12 @@
 {% extends "account/base.html" %}
+{% load tailwind_filters %}
 
 {% load i18n %}
 {% load account socialaccount %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
-{% block content %}
-
-<h1>{% trans "Sign In" %}</h1>
+{% block account_content %}
 
 {% get_providers as socialaccount_providers %}
 
@@ -29,18 +28,25 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
 {% include "socialaccount/snippets/login_extra.html" %}
 
 {% else %}
-<p>{% blocktrans %}If you have not created an account yet, then please
-<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+<main class="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
+        <section>
+            <h3 class="font-bold text-2xl">Welcome to PiQuest</h3>
+            <p class="text-gray-600 pt-2">Sign in to your account.</p>
+        </section>
 {% endif %}
 
-<form class="login" method="POST" action="{% url 'account_login' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-  <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
-</form>
 
+    <section class="mt-10">
+      <form class="flex flex-col" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <div class="flex justify-end">
+        <a href="{% url 'account_reset_password' %}" class="text-sm text-gray-600 hover:text-purple-700 hover:underline mb-6">{% trans "Forgot your Password?" %}</a>
+        </div>
+        <button class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200" type="submit">{% trans "Sign In" %}</button>
+      </form>
+    </section>      
 {% endblock %}

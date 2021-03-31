@@ -1,6 +1,6 @@
 from django.urls import path, include
 from django.conf.urls import url
-from .views import (ProjectDetail, ProjectList, ArticleLinkCreate, ArticleDelete,
+from .views import (ProjectDetail, ProjectList, ArticleLinkCreate, ArticleDelete, 
 ProjectCreate, ArticleUpdate, ProjectUpdate, ProjectDelete)
 
 app_name = 'project'

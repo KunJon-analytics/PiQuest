@@ -16,7 +16,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import DetailView, View, UpdateView
 from .decorators import class_login_required
 
-from .forms import ResendActivationEmailForm, UserCreationForm
+from .forms import ResendActivationEmailForm, UserCreationForm, ProfileUpdateForm
 from .models import Profile
 from .utils import MailContextViewMixin, ProfileGetObjectMixin
 
@@ -110,8 +110,8 @@ class ProfileDetail(ProfileGetObjectMixin, DetailView):
 
 @class_login_required
 class ProfileUpdate(ProfileGetObjectMixin, UpdateView):
-    fields = ('about',)
     model = Profile
+    form_class = ProfileUpdateForm
 
 class PublicProfileDetail(DetailView):
     model = Profile

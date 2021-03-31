@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import Http404, HttpResponseRedirect
 
+
 from projects.models import ArticleLink, Project
 
 class PageLinksMixin:
@@ -73,3 +74,4 @@ class PostFormValidMixin:
     def form_valid(self, form):
         self.object = form.save(self.request)
         return HttpResponseRedirect(self.get_success_url())
+

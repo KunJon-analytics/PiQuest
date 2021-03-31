@@ -8,7 +8,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
-from user.decorators import class_login_required, require_authenticated_permission
+from user.decorators import class_login_required, require_authenticated_permission, staff_required, master_required
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView, TemplateView, FormView, View
 from django.template import Context, loader
 
@@ -58,14 +58,14 @@ class QuizDetailView(DetailView):
         return self.render_to_response(context)
 
 
-@require_authenticated_permission('quiz.add_quiz')
+@method_decorator([login_required, master_required], name='dispatch')
 class QuizCreateView(PostFormValidMixin, CreateView):
     form_class = QuizCUForm
     template_name = 'quiz/quiz_create_form.html'
     model = Quiz
 
 
-@require_authenticated_permission('quiz.change_quiz')
+@method_decorator([login_required, master_required], name='dispatch')
 class QuizUpdate(PostFormValidMixin, UpdateView):
     form_class = QuizCUForm
     model = Quiz
@@ -90,7 +90,7 @@ class QuizUpdate(PostFormValidMixin, UpdateView):
             return render(request, self.template_name, context)
 
 
-@require_authenticated_permission('quiz.delete_quiz')
+@method_decorator([login_required, master_required], name='dispatch')
 class QuizDelete(DeleteView):
 
     model = Quiz
@@ -113,40 +113,43 @@ class CategoriesListView(PageLinksMixin, ListView):
     template_name = 'quiz/category_list.html'
 
 
-@require_authenticated_permission('quiz.add_category')
+@method_decorator([login_required, staff_required], name='dispatch')
 class CategoryCreate(CreateView):
     form_class = CategoryForm
     template_name = 'main/category_create_form.html'
 
 
-@require_authenticated_permission('quiz.change_category')
+@method_decorator([login_required, staff_required], name='dispatch')
 class CategoryUpdate(UpdateView):
     form_class = CategoryForm
     model = Category
     template_name = 'main/category_update_form.html'
 
 
-@require_authenticated_permission('quiz.delete_category')
+@method_decorator([login_required, staff_required], name='dispatch')
 class CategoryDelete(DeleteView):
     model = Category
     success_url = reverse_lazy('main:category_list')
     template_name = 'main/category_confirm_delete.html'
 
 
+@method_decorator([login_required, master_required], name='dispatch')
 class QuestionListView(ListView):
     model = Question
     template_name = 'quiz/question_list.html'
 
+@method_decorator([login_required, master_required], name='dispatch')
 class QuestionDetailView(DetailView):
     model = Question
     template_name = 'quiz/question_detail.html'
 
-@require_authenticated_permission('quiz.add_question')
+@method_decorator([login_required, master_required], name='dispatch')
 class QuestionCreateView(CreateView):
     form_class = QuestionForm
     template_name = 'quiz/question_create_form.html'
 
-@require_authenticated_permission('quiz.delete_question')
+
+@method_decorator([login_required, master_required], name='dispatch')
 class QuestionDelete(View):
 
     def get(self, request, pk):
@@ -159,7 +162,8 @@ class QuestionDelete(View):
         question.delete()
         return redirect(quiz)
 
-@require_authenticated_permission('quiz.change_question')
+
+@method_decorator([login_required, master_required], name='dispatch')
 class QuestionUpdate(View):
     form_class = QuestionForm
     model = Question
@@ -222,7 +226,8 @@ class QuizUserProgressView(TemplateView):
         return context
 
 
-class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
+@method_decorator([login_required, master_required], name='dispatch')
+class QuizMarkingList(SittingFilterTitleMixin, ListView):
     model = Sitting
 
     def get_queryset(self):
@@ -236,6 +241,7 @@ class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
         return queryset
 
 
+@method_decorator([login_required, master_required], name='dispatch')
 class QuizMarkingDetail(QuizMarkerMixin, DetailView):
     model = Sitting
 

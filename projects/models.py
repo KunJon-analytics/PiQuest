@@ -1,12 +1,17 @@
 from django.db import models
 from quiz.models import Category, Quiz
 from django.urls import reverse
+from django.conf import settings
+from user.models import User
+from django.forms.widgets import TextInput
+
 
 # Create your models here.
 class Project(models.Model):
     title = models.CharField(max_length=31, db_index=True)
     slug = models.SlugField(max_length=31, unique=True, help_text='A label for URL config.', verbose_name=("user friendly url"))
     description = models.TextField()
+    lead = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='projects', on_delete=models.CASCADE)
     email = models.EmailField()
     website = models.URLField(help_text='Project website', max_length=255)
     categories = models.ManyToManyField(Category, blank=True, related_name='projects')
@@ -31,6 +36,9 @@ class Project(models.Model):
 
     def get_articlelink_create_url(self):
         return reverse('project:articlelink_create', kwargs={'project_slug': self.slug})
+
+    def get_chosen_category(self):
+        return self.categories.all().first()
         
 
 

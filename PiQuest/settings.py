@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'debug_toolbar',
+    'guardian',
 ]
 
 SITE_ID=1
@@ -67,6 +68,7 @@ ROOT_URLCONF = 'PiQuest.urls'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend',
 ]
 
 TEMPLATES = [

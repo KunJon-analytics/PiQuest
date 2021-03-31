@@ -72,3 +72,18 @@ class UserCreationForm(ActivationMailFormMixin, BaseUserCreationForm):
         if send_mail:
             self.send_mail(user=user, **kwargs)
         return user
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta():
+        model = Profile
+        fields = ('name', 'about')
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        disallowed = ('activate','create','disable','login','logout','password','profile',)
+        if name in disallowed:
+            raise ValidationError(
+                "A user with that name"
+                " already exists.")
+        return name
