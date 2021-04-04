@@ -77,7 +77,7 @@ class UserCreationForm(ActivationMailFormMixin, BaseUserCreationForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta():
         model = Profile
-        fields = ('name', 'about')
+        fields = ('name', 'about', 'image')
 
     def clean_name(self):
         name = self.cleaned_data['name']

@@ -3,51 +3,72 @@
 {% block title %}{% trans "All Quizzes" %}{% endblock %}
 
 {% block content %}
-<h2>{% trans "List of quizzes" %}</h2>
-<div>
-  <a href="{% url 'quiz:quiz_create' %}">Create a New Quiz</a>
-</div>
-    {% if quiz_list %}
-	<article>
-		<table class="table table-bordered table-striped">
-
-		  <thead>
-			<tr>
-			  <th>{% trans "Title" %}</th>
-			  <th>{% trans "Category" %}</th>
-			  <th>{% trans "Exam" %}</th>
-			  <th>{% trans "Single attempt" %}</th>
-			  <th>{% trans "Date created" %}</th>
-			  <th>Master</th>
-			  <th></th>
-			  <th></th>
-			  <th></th>
-			</tr>
-		  </thead>
-
-		  <tbody>
-
-        {% for quiz in quiz_list %}
-
-  			<tr>
-			  <td>{{ quiz.title }}</td>
-			  <td>{{ quiz.category }}</td>
-			  <td>{{ quiz.exam_paper }}</td>
-			  <td>{{ quiz.single_attempt }}</td>
-			  <td>{{ quiz.pub_date|date:"Y-m-d" }}</td>
-			  <td><a href="{{ quiz.master.get_absolute_url }}">{{ quiz.master.profile.name }}</a></td>
-			  <td><a href="{{ quiz.get_absolute_url }}">{% trans "View details" %}</a></td>
-			  <td><a href="{{ quiz.get_update_url }}">{% trans "Update Quiz" %}</a></td>
-			  <td><a href="{{ quiz.get_delete_url }}">{% trans "Delete Quiz" %}</a></td>
-			  <td>
-			</tr>
-
-        {% endfor %}
-		  </tbody>
-
-		</table>
-	</article>
-	{% else %}
-        <p><em>{% trans "There are no available quizzes" %}.</em></p>
-    {% endif %}
+<article class="antialiased bg-gray-100 font-sans">
+    <div class="max-w-6xl mx-auto">
+	<section class="text-gray-600 body-font">
+			<div class="container px-5 py-10 mx-auto">
+				<div class="flex flex-col text-center w-full mb-5">
+				<h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">{% trans "Explore Quizzes" %}</h1>
+				<p class="lg:w-2/3 mx-auto leading-relaxed text-base">Connect with creators of disruptive projects and educators to earn cryptoassets by testing your knowledge.</p>
+				</div>
+			</div>
+			</section>
+		{% comment %} <a href="{% url 'quiz:quiz_create' %}">Create a New Quiz</a> {% endcomment %}
+        <div class="flex items-center justify-center min-h-screen">
+		{% if quiz_list %}
+        {% include "main/content_footer.html" %}
+		{% for quiz in quiz_list %}
+            <div class="max-w-sm w-full sm:w-1/2 lg:w-1/3 py-6 px-5">
+                <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+                    <div class="bg-cover bg-center h-56 p-4" style="background-image: url(https://images.unsplash.com/photo-1475855581690-80accde3ae2b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80)">
+                        {% if quiz.single_attempt %}
+						<div class="flex justify-end">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
+								<path fill="#fff" d="M12 14l9-5-9-5-9 5 9 5z" />
+								<path fill="#fff" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
+							</svg>
+                        </div>
+						{% endif %}
+                    </div>
+                    <div class="p-4">
+                        <p class="uppercase tracking-wide text-sm font-bold text-gray-700 hover:text-blue-600"><a href="{{ quiz.get_absolute_url }}">{{ quiz.title }} • {{ quiz.pub_date|date:"Y-m-d" }}<a></p>
+                        <p class="text-3xl text-gray-900">&pi;750,000</p>
+                        <p class="text-gray-700">{{ quiz.category }}</p>
+                    </div>
+                    <div class="flex p-4 border-t border-gray-300 text-gray-700">
+                        <div class="flex-1 inline-flex items-center">
+                            <svg class="h-6 w-6 text-gray-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+							</svg>
+                            <p><span class="text-gray-900 font-bold">{{ quiz.total_takers.count }}</span> Takers</p>
+                        </div>
+                        <div class="flex-1 inline-flex items-center">
+                            <svg class="h-6 w-6 text-gray-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+							</svg>
+                            <p><span class="text-gray-900 font-bold">{{ quiz.get_questions.count }}</span> Questions</p>
+                        </div>
+                    </div>
+                    <div class="px-4 pt-3 pb-4 border-t border-gray-300 bg-gray-100">
+                        <div class="text-xs uppercase font-bold text-gray-600 tracking-wide">Master</div>
+                        <div class="flex items-center pt-2">
+                            <div class="bg-cover bg-center w-10 h-10 rounded-full mr-3" style="background-image: url({{ quiz.master.get_image_url }})">
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-900"><a href="{{ quiz.master.get_absolute_url }}">{{ quiz.master.profile.name }}</a></p>
+                                <p class="text-sm text-gray-700">{{ quiz.master.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+			{% endfor %}
+			{% else %}
+			<p><em>{% trans "There are no available quizzes" %}.</em></p>
+			{% endif %}
+        </div>
+    </div>
+</article>
+	
 {% endblock %}

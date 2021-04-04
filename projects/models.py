@@ -16,6 +16,7 @@ class Project(models.Model):
     website = models.URLField(help_text='Project website', max_length=255)
     categories = models.ManyToManyField(Category, blank=True, related_name='projects')
     date_added = models.DateField('date added', auto_now_add=True)
+    image = models.ImageField(default='project_default.jpg', upload_to='project_pic')
 
     class Meta:
         verbose_name = 'Project'

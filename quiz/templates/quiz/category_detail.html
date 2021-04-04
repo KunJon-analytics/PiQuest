@@ -2,38 +2,136 @@
 {% block title %}{{ category.category }}{% endblock %}
 {% block content %}
 
-    <h2>{{ category.category|title }}</h2>
-    <p>{{ category.description }}</p>
-    <ul>
-        {% if perms.quiz.change_category or perms.quiz.delete_category %}
-            <li><a href="{{ category.get_update_url }}">Edit Category</a></a></li>
-            <li><a href="{{ category.get_delete_url }}">Delete Category</a></a></li>
-        {% endif %}
-    </ul>
-    {% if category.projects.all %}
-    <section>
-        <p>{{ category.category|title }} is associated with {{ category.projects.count }} project{{ category.projects.count|pluralize }}</p>
-        <h3>Project{{ category.projects.count|pluralize }}</h3>
-        <ul>
-            {% for project in category.projects.all %}
-                <li><a href="{{ project.get_absolute_url }}">{{ project.title|title }}</a></li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-    {% if category.quizzes.all %}
-    <section>
-        <h3>Quiz{{ category.quizzes.count|pluralize:"zes" }}</h3>
-        <ul>
-            {% for quiz in category.quizzes.all %}
-                <li><a href="{{ quiz.get_absolute_url }}">{{ quiz.title|title }}</a></li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-    {% if not category.projects.all and not category.quizzes.all %}
-    <p>This category is not related to any content.</p>
-    {% endif %}
+<section class="text-gray-600 body-font">
+  <div class="container px-5 py-24 mx-auto flex flex-wrap">
+    <div class="flex flex-wrap -mx-4 mt-auto mb-auto lg:w-1/2 sm:w-2/3 content-start sm:pr-10">
+      <div class="w-full sm:p-4 px-4 mb-6">
+        <h1 class="title-font font-medium text-xl mb-2 text-gray-900">{{ category.category|title }}</h1>
+        <div class="leading-relaxed">{{ category.description }}</div>
+      </div>
+      <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+        <h2 class="title-font font-medium text-3xl text-gray-900">{{ category.total_takers.count }}</h2>
+        <p class="leading-relaxed">Users</p>
+      </div>
+      <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+        <h2 class="title-font font-medium text-3xl text-gray-900">1.75k</h2>
+        <p class="leading-relaxed">Rewards</p>
+      </div>
+      <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+        <h2 class="title-font font-medium text-3xl text-gray-900">{{ category.quizzes.count }}</h2>
+        <p class="leading-relaxed">Quiz{{ category.quizzes.count|pluralize:"zes" }}</p>
+      </div>
+      <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
+        <h2 class="title-font font-medium text-3xl text-gray-900">{{ category.projects.count }}</h2>
+        <p class="leading-relaxed">Project{{ category.projects.count|pluralize }}</p>
+      </div>
+    </div>
+    <div class="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
+      <img class="object-cover object-center w-full h-full" src="https://dummyimage.com/600x300" alt="stats">
+    </div>
+  </div>
+</section>
+{% if category.projects.all %}
+<section>
+<div class="w-full bg-white p-12">
+    <div class="header flex items-end justify-between mb-12">
+        <div class="title">
+            <p class="text-4xl font-bold text-gray-600 mb-4">
+                Latest Project{{ category.projects.count|pluralize }}
+            </p>
+            <p class="text-2xl font-light text-gray-400">
+                {{ category.category|title }} is associated with {{ category.projects.count }} project{{ category.projects.count|pluralize }}
+            </p>
+        </div>
+        </div>
+        {% for project in category.projects.all %}
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
+            <div class="overflow-hidden shadow-lg rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto">
+                <a href="#" class="w-full block h-full">
+                    <img alt="project photo" src="/images/blog/1.jpg" class="max-h-40 w-full object-cover"/>
+                    <div class="bg-white dark:bg-gray-800 w-full p-4">
+                        <p class="text-indigo-500 text-md font-medium">
+                            {{ quiz.get_chosen_project }}
+                        </p>
+                        <p class="text-gray-800 dark:text-white text-xl font-medium mb-2">
+                            <a href="{{ project.get_absolute_url }}">{{ project.title|title }}</a>
+                        </p>
+                        <p class="text-gray-400 dark:text-gray-300 font-light text-md">
+                            {{ project.description|truncatewords:20 }}
+                        </p>
+                        <div class="flex items-center mt-4">
+                            <a href="#" class="block relative">
+                                <img alt="profil" src="/images/person/6.jpg" class="mx-auto object-cover rounded-full h-10 w-10 "/>
+                            </a>
+                            <div class="flex flex-col justify-between ml-4 text-sm">
+                                <p class="text-gray-800 dark:text-white">
+                                    {{ project.lead.get_short_name|title }}
+                                </p>
+                                <p class="text-gray-400 dark:text-gray-300">
+                                    {{ project.date_added }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
 
+{% if category.quizzes.all %}
+<section>
+<div class="w-full bg-white p-12">
+    <div class="header flex items-end justify-between mb-12">
+        <div class="title">
+            <p class="text-4xl font-bold text-gray-600 mb-4">
+                Latest Quiz{{ category.quizzes.count|pluralize:"zes" }}
+            </p>
+            <p class="text-2xl font-light text-gray-400">
+                See various quizzes in {{category.category}}
+            </p>
+        </div>
+        </div>
+        {% for quiz in category.quizzes.all %}
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
+            <div class="overflow-hidden shadow-lg rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto">
+                <a href="#" class="w-full block h-full">
+                    <img alt="quiz photo" src="/images/blog/1.jpg" class="max-h-40 w-full object-cover"/>
+                    <div class="bg-white dark:bg-gray-800 w-full p-4">
+                        <p class="text-indigo-500 text-md font-medium">
+                            {{ quiz.get_chosen_project }}
+                        </p>
+                        <p class="text-gray-800 dark:text-white text-xl font-medium mb-2">
+                            <a href="{{ quiz.get_absolute_url }}">{{ quiz.title|title }}</a>
+                        </p>
+                        <p class="text-gray-400 dark:text-gray-300 font-light text-md">
+                            {{ quiz.description|truncatewords:20 }}
+                        </p>
+                        <div class="flex items-center mt-4">
+                            <a href="#" class="block relative">
+                                <img alt="profil" src="/images/person/6.jpg" class="mx-auto object-cover rounded-full h-10 w-10 "/>
+                            </a>
+                            <div class="flex flex-col justify-between ml-4 text-sm">
+                                <p class="text-gray-800 dark:text-white">
+                                    {{ quiz.master.get_short_name|title }}
+                                </p>
+                                <p class="text-gray-400 dark:text-gray-300">
+                                    {{ quiz.pub_date }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</section>
+    {% endif %}
+{% if not category.projects.all and not category.quizzes.all %}
+    <p>This category is not related to any content.</p>
+{% endif %}
 
 {% endblock content %}

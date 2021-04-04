@@ -5,9 +5,10 @@
 Contact Us!
 {% endblock %}
 
-{% block form_content %} 
 {% block form_heading %}Contact Us{% endblock %}
 {% block form_sub_heading %}Fill up the form below to send us a message.{% endblock form_sub_heading %}
+
+{% block form_content %} 
   <form action="{% url 'contact:contact' %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}

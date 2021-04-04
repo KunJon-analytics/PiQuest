@@ -61,6 +61,14 @@ class Category(models.Model):
     def get_delete_url(self):
         return reverse('main:category_delete', kwargs={'slug': self.slug})
 
+    def total_takers(self):
+        """
+        Finds the previous quizzes marked as 'exam papers'.
+        Returns a queryset of complete exams.
+        """
+        return Sitting.objects.filter(quiz__category__category=self.category)
+
+
 
 @python_2_unicode_compatible
 class SubCategory(models.Model):
@@ -101,6 +109,8 @@ class Quiz(models.Model):
         blank=True, help_text=_("a description of the quiz"))
 
     master = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='quizzes', on_delete=models.CASCADE)
+
+    image = models.ImageField(default='quiz_default.jpg', upload_to='quiz_pic')
 
     url = models.SlugField(
         max_length=60, blank=False,
@@ -191,7 +201,7 @@ class Quiz(models.Model):
         get_latest_by = 'pub_date'
 
     def __str__(self):
-        return "{} on {}" .format(self.title, self.pub_date.strftime('%Y-%M-%D'))
+        return "{} on {}" .format(self.title, self.pub_date.strftime('%Y-%M-%D')) 
 
     def get_absolute_url(self):
         return reverse('quiz:quiz_start_page', kwargs={'slug': self.url})
@@ -205,6 +215,9 @@ class Quiz(models.Model):
     def get_questions(self):
         return self.question_set.all().select_subclasses()
 
+    def get_chosen_project(self):
+        return self.projects.all().first()
+
     @property
     def get_max_score(self):
         return self.get_questions().count()
@@ -217,6 +230,13 @@ class Quiz(models.Model):
 
     def anon_q_data(self):
         return str(self.id) + "_data"
+
+    def total_takers(self):
+        """
+        Finds the total people who have completed
+        a quiz.
+        """
+        return Sitting.objects.filter(quiz__title=self.title)
 
 
 class ProgressManager(models.Manager):

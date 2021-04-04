@@ -6,81 +6,99 @@
 {% block title %} {% trans "Progress Page" %} {% endblock %}
 {% block description %} {% trans "User Progress Page" %} {% endblock %}
 
+
 {% block content %}
 
-  {% if cat_scores %}
-
-  <h1>{% trans "Your progress so far!!!" %}</h1>
-
-  <table class="table table-bordered table-striped">
-
-	<thead>
-	  <tr>
-		<th>{% trans "Category" %}</th>
-		<th>{% trans "Correctly answered" %}</th>
-		<th>{% trans "Incorrect" %}</th>
-		<th>%</th>
-	  </tr>
-	</thead>
-
-	<tbody>
+{% if cat_scores %}
+<section class="text-gray-600 body-font bg-gray-50">
+	<div class="container px-5 py-10 mx-auto">
+		<h1 class="sm:text-3xl text-2xl font-medium title-font text-center text-gray-900 mb-5">{% trans "Your progress so far!!!" %}
+			<br class="hidden sm:block">{{ user.get_full_name}}
+		</h1>
+	</div>
 
 
-	  {% for cat, value in cat_scores.items %}
-	  <tr>
-		<td>{{ cat }}</td>
-		<td>{{ value.0 }}</td>
-		<td>{{ value.1 }}</td>
-		<td>{{ value.2 }}</td>
-	  </tr>
 
-	  {% endfor %}
 
-	</tbody>
 
-  </table>
+
+	<div class="flex flex-wrap flex-col md:flex-row justify-centre">
+        <div class="md:w-5">
+            <div class="flex flex-col md:flex-row space-x-8">
+			{% for cat, value in cat_scores.items %}
+                <div class="shadow-md p-4">
+                    <div class="">
+                        <div class="flex flex-col">
+                            <div class="flex space-x-8 w-56">
+                                <div class="">
+                                    <div class="uppercase text-sm text-gray-400">
+                                        {{ cat }}
+                                    </div>
+                                <div class="mt-1">
+                                        <div class="flex space-x-2 items-center">
+                                            <div class="text-2xl">
+                                                {{ value.0|add:value.1 }}
+                                            </div>
+                                            <div class="text-xs text-green-800 bg-green-200 rounded-md p-1">
+                                                {{ value.2 }}%
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <svg class="h-16 w-20 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				{% endfor %}
+            </div>
+        </div>
+    </div>
+
 
 
   {% endif %}
 
   {% if exams %}
+  
 
-  <hr>
-
-  <h1>{% trans "Previous exam papers" %}</h1>
-  <p class="lead">
+<!-- component -->
+<div class="text-gray-900 bg-gray-200">
+    <div class="p-4 flex flex-col">
+        <h1 class="text-3xl">
+            {% trans "Previous exam papers" %}
+        </h1>
+		<p class="">
 	{% trans "Below are the results of exams that you have sat." %}
-  </p>
+  		</p>
+    </div>
+    <div class="px-3 py-4 flex justify-center">
+        <table class="w-full text-md bg-white shadow-md rounded mb-4">
+            <tbody>
+                <tr class="border-b">
+                    <th class="text-left p-3 px-5">{% trans "Quiz Title" %}</th>
+                    <th class="text-left p-3 px-5">{% trans "Score" %}</th>
+                    <th class="text-left p-3 px-5">{% trans "Possible Score" %}</th>
+                    <th>%</th>
+                </tr>
+				{% for exam in exams %}
+                <tr class="border-b hover:bg-orange-100 bg-gray-100">
+                    <td class="p-3 px-5">{{ exam.quiz.title }}</td>
+                    <td class="p-3 px-5">{{ exam.current_score }}</td>
+                    <td class="p-3 px-5">{{ exam.get_max_score }}</td>
+                    <td class="p-3 px-5 flex justify-end">{{ exam.get_percent_correct }}</td>
+                </tr>
+				{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</section>
 
-  <table class="table table-bordered table-striped">
-
-	<thead>
-	  <tr>
-		<th>{% trans "Quiz Title" %}</th>
-		<th>{% trans "Score" %}</th>
-		<th>{% trans "Possible Score" %}</th>
-		<th>%</th>
-	  </tr>
-	</thead>
-
-	<tbody>
-
-	  {% for exam in exams %}
-
-	  <tr>
-		<td>{{ exam.quiz.title }}</td>
-		<td>{{ exam.current_score }}</td>
-		<td>{{ exam.get_max_score }}</td>
-		<td>{{ exam.get_percent_correct }}</td>
-	  </tr>
-
-	  {% endfor %}
-
-	</tbody>
-
-  </table>
-
-  {% endif %}
-
+{% endif %}
 
 {% endblock %}

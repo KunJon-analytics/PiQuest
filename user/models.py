@@ -11,6 +11,7 @@ from datetime import date
 class User(AbstractUser):
     is_taker = models.BooleanField(default=True)
     is_master = models.BooleanField(default=False)
+    is_project_manager = models.BooleanField(default=False)
     email = models.EmailField('email address', max_length=254, unique=True)
 
     def __str__(self):
@@ -24,6 +25,9 @@ class User(AbstractUser):
 
     def get_short_name(self):
         return self.profile.name
+    
+    def get_image_url(self):
+        return self.profile.image.url
 
     def published_quizzes(self):
         return self.quizzes.filter(pub_date__lt=date.today())
@@ -31,6 +35,7 @@ class User(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+    image = models.ImageField(default='profile_default.jpg', upload_to='profile_pics')
     slug = models.SlugField(max_length=30, unique=True)
     about = models.TextField()
     joined = models.DateTimeField("Date Joined", auto_now_add=True)
@@ -46,7 +51,7 @@ class Profile(models.Model):
         return reverse('piquest-auth:profile_update')
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(self.user.get_username())
         super().save(*args, **kwargs)
 
 

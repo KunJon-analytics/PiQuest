@@ -16,7 +16,7 @@ class ProjectDetail(DetailView):
 
 class ProjectList(PageLinksMixin, ListView):
     page_kwarg = 'page'
-    paginate_by = 5 # 5 items per page
+    paginate_by = 12 # 5 items per page
     template_name = 'projects/project_list.html'
     model = Project
 

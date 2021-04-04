@@ -2,6 +2,7 @@ import random
 
 from django.http.response import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -38,6 +39,7 @@ class SittingFilterTitleMixin(object):
 
 class QuizListView(ListView):
     model = Quiz
+    paginate_by = 12
 
     def get_queryset(self):
         queryset = super(QuizListView, self).get_queryset()
@@ -66,37 +68,51 @@ class QuizCreateView(PostFormValidMixin, CreateView):
 
 
 @method_decorator([login_required, master_required], name='dispatch')
-class QuizUpdate(PostFormValidMixin, UpdateView):
+class QuizUpdate(PostFormValidMixin, UserPassesTestMixin, UpdateView):
     form_class = QuizCUForm
     model = Quiz
+    slug_field = 'url'
     template_name = 'quiz/quiz_update_form.html'
 
-    def get_object(self, slug):
-        return get_object_or_404(self.model, url__iexact=slug)
+    def test_func(self):
+        quiz = self.get_object()
+        if self.request.user == quiz.master:
+            return True
+        return False
 
-    def get(self, request, slug):
-        quiz = self.get_object(slug)
-        context = {'form': self.form_class(instance=quiz),'quiz': quiz,}
-        return render(request, self.template_name, context)
 
-    def post(self, request, slug):
-        quiz = self.get_object(slug)
-        bound_form = self.form_class(request.POST, instance=quiz)
-        if bound_form.is_valid():
-            new_quiz = bound_form.save()
-            return redirect(new_quiz)
-        else:
-            context = {'form': bound_form, 'quiz': quiz,}
-            return render(request, self.template_name, context)
+    # def get_object(self, slug):
+    #     return get_object_or_404(self.model, url__iexact=slug)
+
+    # def get(self, request, slug):
+    #     quiz = self.get_object(slug)
+    #     context = {'form': self.form_class(instance=quiz),'quiz': quiz,}
+    #     return render(request, self.template_name, context)
+
+    # def post(self, request, slug):
+    #     quiz = self.get_object(slug)
+    #     bound_form = self.form_class(request.POST, instance=quiz)
+    #     if bound_form.is_valid():
+    #         new_quiz = bound_form.save()
+    #         return redirect(new_quiz)
+    #     else:
+    #         context = {'form': bound_form, 'quiz': quiz,}
+    #         return render(request, self.template_name, context)
 
 
 @method_decorator([login_required, master_required], name='dispatch')
-class QuizDelete(DeleteView):
+class QuizDelete(UserPassesTestMixin, DeleteView):
 
     model = Quiz
     slug_field = 'url'
     success_url = reverse_lazy('quiz:quiz_index')
     template_name = 'quiz/quiz_confirm_delete.html'
+
+    def test_func(self):
+        quiz = self.get_object()
+        if self.request.user == quiz.master:
+            return True
+        return False
 
 
 
@@ -109,7 +125,7 @@ class CategoryDetail(DetailView):
 class CategoriesListView(PageLinksMixin, ListView):
     model = Category
     page_kwarg = 'page'
-    paginate_by = 5 # 5 items per page
+    paginate_by = 16 # 16 items per page
     template_name = 'quiz/category_list.html'
 
 
@@ -223,6 +239,7 @@ class QuizUserProgressView(TemplateView):
         progress, c = Progress.objects.get_or_create(user=self.request.user)
         context['cat_scores'] = progress.list_all_cat_scores
         context['exams'] = progress.show_exams()
+        context['user'] = progress.user
         return context
 
 
@@ -236,7 +253,7 @@ class QuizMarkingList(SittingFilterTitleMixin, ListView):
 
         user_filter = self.request.GET.get('user_filter')
         if user_filter:
-            queryset = queryset.filter(user__username__icontains=user_filter)
+            queryset = queryset.filter(user__profile__name__icontains=user_filter)
 
         return queryset
 
