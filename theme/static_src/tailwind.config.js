@@ -12,6 +12,14 @@ module.exports = {
     darkMode: false, // or 'media' or 'class'
     theme: {
         extend: {
+            colors: {
+                'myrtle-green': '#317773',
+                'myrtle-green-light': '#51b8b3',
+                'languid-lavender': '#e2d1f9',
+                'languid-lavender-dark': '#d2b7f6',
+                'old-lavender': '#735D78',
+                'light-yellow': '#F8FCDA',
+            },
             width: {
                 '1/10': '10%',
                 '2/10': '20',
@@ -23,11 +31,14 @@ module.exports = {
                 '8/10': '80%',
                 '9/10': '90%',
                 '10/10': '100%',
-            }
+            },
         },
     },
     variants: {
         extend: {},
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/forms'),
+        // ...
+    ],
 }

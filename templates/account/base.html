@@ -18,36 +18,43 @@
     <meta name="author" content="" />
 
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        .body-bg {
-            background-color: #9921e8;
-            background-image: linear-gradient(315deg, #9921e8 0%, #5f72be 74%);
-        }
-    </style>
     {% block extra_head %}
-{% endblock %}
+    {% endblock %}
   </head>
-   <div class="max-w-7xl mx-auto">
-       {% if messages %}
-    <div>
-      <strong>Messages:</strong>
-      <ul>
-        {% for message in messages %}
-        <li>{{message}}</li>
-        {% endfor %}
-      </ul>
-    </div>
+  <body class="bg-languid-lavender"
+  {% include "main/navbar.html" %}
+      {% if messages %}
+      {% for message in messages %}
+      <div class="rounded-md flex items-center jusitfy-between px-5 py-4 mb-2 border border-myrtle-green text-myrtle-green">
+          <div class="w-full flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class=" w-6 h-6 mr-2" viewBox="0 0 1792 1792">
+                  <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
+                  </path>
+              </svg>
+              {{message}}
+          </div>
+          <button type="button" class="-mr-1 flex-shrink-0 flex p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-myrtle-green sm:-mr-2">
+              <span class="sr-only">
+                  Dismiss
+              </span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="h-6 w-6 text-myrtle-green" viewBox="0 0 1792 1792">
+                  <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z">
+                  </path>
+              </svg>
+          </button>
+      </div>
+      {% endfor %}
     {% endif %}
-  <body class="body-bg min-h-screen pt-12 md:pt-20 pb-6 px-2 md:px-0" style="font-family:'Lato',sans-serif;">
-    <header class="max-w-lg mx-auto">
-        <a href="{% url 'main:home_page' %}">
-            <h1 class="text-4xl font-bold text-white text-center">PiQuest</h1>
-        </a>
-    </header>
+    <section class="bg-white">
+  <!-- component -->
 
-    <main class="bg-white max-w-lg mx-auto p-8 md:p-12 my-10 rounded-lg shadow-2xl">
-    <section class="mt-10">
+    <!-- url('/img/hero-pattern.svg') -->
+    <div class="container flex min-h-screen bg-white">
+
+        <div class="w-1/2 bg-cover md:block hidden" style="background-image:  url(https://images.unsplash.com/photo-1520243947988-b7b79f7873e9?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NDd8fGJsYWNrJTIwZm9yZXN0fGVufDB8fDB8eWVsbG93&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=60)"></div>
+        <!-- <div class="bg-no-repeat bg-right bg-cover max-w-max max-h-8 h-12 overflow-hidden">
+            <img src="log_in.webp" alt="hey">
+        </div> -->
     {% block content %} 
     {% block body %}
     {% block account_content %}
@@ -55,28 +62,16 @@
     {% endblock %}
     {% block extra_body %}
     {% endblock %}
-      {% endblock content %}
-    </section>
-    </main>
-      
-       <footer class="max-w-lg mx-auto flex justify-center text-white">
-        <a href="{% url 'contact:contact' %}" class="hover:underline">Contact</a>
-        <span class="mx-3">•</span>
-        <a href="{% url 'piquest-auth:profile' %}" class="hover:underline">Profile</a>
-        <span class="mx-3">•</span>
-        {% if user.is_authenticated %}
-        <a href="{% url 'account_email' %}" class="hover:underline">Change E-mail</a>
-        <span class="mx-3">•</span>
-        <a href="{% url 'account_logout' %}" class="hover:underline">Sign Out</a>
-        {% else %}
-        <a href="{% url 'account_login' %}" class="hover:underline">Sign In</a>
-        <span class="mx-3">•</span>
-        <a href="{% url 'account_signup' %}" class="hover:underline">Sign Up</a>
-        {% endif %}
-    </footer>
+    {% endblock content %}
+    </div>
+  </div>
+  </section>
+  {% include "main/footer.html" %}
   </body>
 </html>
     
 
+
     
+  
     

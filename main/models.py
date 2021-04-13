@@ -1,8 +1,31 @@
-# from django.db import models
 # from django.contrib.auth.models import AbstractUser
+from django.db import models
+from pinax.badges.base import Badge, BadgeAwarded
+from pinax.badges.registry import badges
+import quiz.models as qm
 
 
-# # Create your models here.
+# Create your models here.
+class WinnerBadge(Badge):
+    slug = "winnings"
+    levels = ["Winner",]
+    events = [
+        "mark_quiz_complete",
+    ]
+    multiple = True
+
+    def award(self, **state):
+        user = state["user"]
+        if_passed = qm.Sitting.objects.get(user=user).check_if_passed
+        if_complete = qm.Sitting.objects.get(user=user).complete
+        if(if_passed and if_complete):
+            return BadgeAwarded()
+
+badges.register(WinnerBadge)
+
+
+
+
 # class User(AbstractUser):
 #     pass
 

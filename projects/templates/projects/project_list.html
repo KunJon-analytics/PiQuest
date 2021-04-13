@@ -3,55 +3,56 @@
 {% block title %}{% trans "Project List" %}{% endblock %}
 
 {% block content %}
-<div class="px-5 mx-auto flex flex-wrap justify-around">
-    <h2 class="text-gray-700 text-3xl">{% trans "Project list" %}</h2>
-    {% include "main/content_footer.html" %}
-    <a class="hover:text-blue-700" href="{% url 'project:project_create' %}">Create New Project</a>
-</div>
-
-<section class="text-gray-600 body-font">
+<section class="text-gray-600 body-font bg-gray-100">
+    <div class="px-5 mx-auto flex flex-wrap justify-around p-5">
+        <h2 class="text-gray-700 text-3xl">{% trans "Projects" %}</h2>
+        {% include "main/content_footer.html" %}
+    </div>
     <div class="container px-5 py-10 mx-auto">
     <div class="flex flex-wrap -m-4">
     {% for project in project_list %}
     <div class="p-4 lg:w-1/2 md:w-1/3">
     <div class="h-full max-w-sm px-4 py-3 mx-auto bg-white rounded-md shadow-md dark:bg-gray-800">
             <div class="flex items-center justify-between">
-                <span class="text-sm font-light text-gray-800 dark:text-gray-400">Projects</span>
+                <a href=""><span class="text-sm font-light text-myrtle-green hover:text-languid-lavender dark:text-gray-400">{{ project.lead.get_short_name }}</span></a>
                 {% if project.categories.all %}
-                <span class="px-3 py-1 text-xs text-indigo-800 uppercase bg-indigo-200 rounded-full dark:bg-indigo-300 dark:text-indigo-900"><p>{{ project.get_chosen_category }}</p></span>
+                <span class="px-3 py-1 text-xs text-myrtle-green uppercase bg-languid-lavender rounded-full dark:bg-indigo-300 dark:text-indigo-900"><p><a href="{{ project.get_chosen_category.get_absolute_url }}">{{ project.get_chosen_category }}</a></p></span>
                 {% endif %}
             </div>
 
             <div>
-                <h1 class="mt-2 text-lg font-semibold text-gray-800 dark:text-white hover:text-blue-700 hover:underline"><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></h1>
+                <h1 class="mt-2 text-lg font-semibold text-gray-800 dark:text-white hover:text-languid-lavender hover:underline"><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></h1>
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">{{ project.description|truncatewords:20 }}</p>
             </div>
 
             <div>
                 <div class="flex items-center mt-2 text-gray-700 dark:text-gray-200">
                     <span>See more:</span>
-                    <a class="mx-2 text-blue-600 hover:text-blue-500 cursor-pointer dark:text-blue-400 hover:underline">{{ project.website|urlize }}</a>
+                    <a href="{{ project.website }}" target="_blank" class="mx-2 text-myrtle-green hover:text-languid-lavender cursor-pointer dark:text-blue-400 hover:underline">{{ project.website }}</a>
                 </div>
 
                 <div class="flex items-center justify-center mt-4">
-                    <a class="mr-2 text-gray-800 cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                        <svg class="w-5 h-5 fill-current" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
-                            <path d='M496,109.5a201.8,201.8,0,0,1-56.55,15.3,97.51,97.51,0,0,0,43.33-53.6,197.74,197.74,0,0,1-62.56,23.5A99.14,99.14,0,0,0,348.31,64c-54.42,0-98.46,43.4-98.46,96.9a93.21,93.21,0,0,0,2.54,22.1,280.7,280.7,0,0,1-203-101.3A95.69,95.69,0,0,0,36,130.4C36,164,53.53,193.7,80,211.1A97.5,97.5,0,0,1,35.22,199v1.2c0,47,34,86.1,79,95a100.76,100.76,0,0,1-25.94,3.4,94.38,94.38,0,0,1-18.51-1.8c12.51,38.5,48.92,66.5,92.05,67.3A199.59,199.59,0,0,1,39.5,405.6,203,203,0,0,1,16,404.2,278.68,278.68,0,0,0,166.74,448c181.36,0,280.44-147.7,280.44-275.8,0-4.2-.11-8.4-.31-12.5A198.48,198.48,0,0,0,496,109.5Z'/>
+                    <a  href="https://{{ project.get_telegram_url }}" target="_blank" class="mr-2 text-myrtle-green cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-myrtle-green" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512.004 512.004" style="enable-background:new 0 0 512.004 512.004;" xml:space="preserve" width="512" height="512">
+                            <path d="M508.194,20.517c-4.43-4.96-11.42-6.29-17.21-3.76l-482,211c-5.34,2.34-8.85,7.57-8.98,13.41  c-0.13,5.83,3.14,11.21,8.38,13.79l115.09,56.6l28.68,172.06c0.93,6.53,6.06,11.78,12.74,12.73c4.8,0.69,9.57-1,12.87-4.4  l90.86-90.86l129.66,92.62c4.16,2.96,9.52,3.61,14.24,1.74c4.73-1.87,8.19-6.02,9.19-11.01l90-451  C512.604,28.967,511.454,24.177,508.194,20.517z M135.354,283.967l-84.75-41.68l334.82-146.57L135.354,283.967z M182.294,328.557  l-13.95,69.75l-15.05-90.3l183.97-138.49l-150.88,151.39C184.264,323.027,182.854,325.787,182.294,328.557z M191.424,435.857  l15.74-78.67l36.71,26.22L191.424,435.857z M396.834,455.797l-176.73-126.23l252.47-253.31L396.834,455.797z"/>
                         </svg>
                     </a>
 
-                    <a class="mr-2 text-gray-800 cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                        <svg class="w-5 h-5 fill-current" xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><g><path d="m491.638 33.873-491.638 198.879v28.747l140.811 43.47 44.533 142.87 35.549-.006 57.315-58.642 120.991 88.869 23.55-8.96 89.185-418.193zm-93.388 406.267-159.347-117.041-17.76 24.178 32.646 23.979-46.372 46.58-36.387-116.734 210.759-125.839-15.379-25.758-213.86 127.69-103.462-31.939 427.614-172.979z"></path></g></svg>
+                    <a href="mailto: {{ project.email }}" target="_blank" class="mr-2 text-myrtle-green cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                        </svg>
                     </a>
                 </div>
             </div>
         </div>
         </div>
+        {% empty %}
+        <p><em>There are currently no projects available</em></p>
+        {% endfor %}
         </div>
     </div>
-    {% empty %}
-    <p><em>There are currently no projects available</em></p>
-    {% endfor %}
 </section>
 {% endblock %}
 

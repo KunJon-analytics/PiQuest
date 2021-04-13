@@ -3,38 +3,45 @@
 {% block title %}{% trans "All Quizzes" %}{% endblock %}
 
 {% block content %}
-<article class="antialiased bg-gray-100 font-sans">
+{% if quiz_list %}
+<article class="antialiased bg-gray-100 font-sans border-2 border-languid-lavender">
     <div class="max-w-6xl mx-auto">
-	<section class="text-gray-600 body-font">
+	    <section class="text-gray-600 body-font">
 			<div class="container px-5 py-10 mx-auto">
 				<div class="flex flex-col text-center w-full mb-5">
-				<h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">{% trans "Explore Quizzes" %}</h1>
-				<p class="lg:w-2/3 mx-auto leading-relaxed text-base">Connect with creators of disruptive projects and educators to earn cryptoassets by testing your knowledge.</p>
+				    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">{% trans "Explore Quizzes" %}</h1>
+				    <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Connect with creators of disruptive projects and educators to earn cryptoassets by testing your knowledge.</p>
 				</div>
 			</div>
-			</section>
+		</section>
+    </div>
 		{% comment %} <a href="{% url 'quiz:quiz_create' %}">Create a New Quiz</a> {% endcomment %}
-        <div class="flex items-center justify-center min-h-screen">
-		{% if quiz_list %}
         {% include "main/content_footer.html" %}
-		{% for quiz in quiz_list %}
+        
+    <div class="container px-5 py-24 mx-auto">
+        <div class="flex flex-wrap -m-4">
+            {% for quiz in quiz_list %}
             <div class="max-w-sm w-full sm:w-1/2 lg:w-1/3 py-6 px-5">
                 <div class="bg-white shadow-xl rounded-lg overflow-hidden">
-                    <div class="bg-cover bg-center h-56 p-4" style="background-image: url(https://images.unsplash.com/photo-1475855581690-80accde3ae2b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=750&q=80)">
+                    <div class="bg-cover bg-center h-56 p-4" style="background-image: url({{ quiz.get_image_url }})">
                         {% if quiz.single_attempt %}
 						<div class="flex justify-end">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
-								<path fill="#fff" d="M12 14l9-5-9-5-9 5 9 5z" />
-								<path fill="#fff" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+								<path fill="" d="M12 14l9-5-9-5-9 5 9 5z" />
+								<path fill="" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
 								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
 							</svg>
                         </div>
 						{% endif %}
                     </div>
                     <div class="p-4">
-                        <p class="uppercase tracking-wide text-sm font-bold text-gray-700 hover:text-blue-600"><a href="{{ quiz.get_absolute_url }}">{{ quiz.title }} • {{ quiz.pub_date|date:"Y-m-d" }}<a></p>
-                        <p class="text-3xl text-gray-900">&pi;750,000</p>
-                        <p class="text-gray-700">{{ quiz.category }}</p>
+                        <p class="uppercase tracking-wide text-sm font-bold text-gray-700 hover:text-languid-lavender"><a href="{{ quiz.get_absolute_url }}">{{ quiz.title }} • {{ quiz.pub_date|date:"Y-m-d" }}<a></p>
+                        {% if quiz.reward and quiz.number_of_winners %}
+                        <p class="text-3xl text-gray-900">WART{{ quiz.reward }} <span class="text-sm text-gray-700">for {{ quiz.number_of_winners }} winners.</span></p>
+                        {% else %}
+                        <p class="text-3xl text-gray-900">&pi;10 <span class="text-sm text-gray-700">for 3 winners (coming soon).</span></p>
+                        {% endif %}
+                        <p class="text-gray-700"><a href="{% url 'quiz:quiz_category_list_matching' quiz.category.category %}">{{ quiz.category }}</a></p>
                     </div>
                     <div class="flex p-4 border-t border-gray-300 text-gray-700">
                         <div class="flex-1 inline-flex items-center">
@@ -56,19 +63,19 @@
                             <div class="bg-cover bg-center w-10 h-10 rounded-full mr-3" style="background-image: url({{ quiz.master.get_image_url }})">
                             </div>
                             <div>
-                                <p class="font-bold text-gray-900"><a href="{{ quiz.master.get_absolute_url }}">{{ quiz.master.profile.name }}</a></p>
+                                <p class="font-bold text-gray-900 hover:text-languid-lavender"><a href="{{ quiz.master.get_absolute_url }}">{{ quiz.master.profile.name }}</a></p>
                                 <p class="text-sm text-gray-700">{{ quiz.master.email }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-			{% endfor %}
-			{% else %}
-			<p><em>{% trans "There are no available quizzes" %}.</em></p>
-			{% endif %}
+            </div> 
+            {% endfor %} 
         </div>
     </div>
 </article>
+{% else %}
+			<p><em>{% trans "There are no available quizzes" %}.</em></p>
+			{% endif %}
 	
 {% endblock %}

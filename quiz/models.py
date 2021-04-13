@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
 from six import python_2_unicode_compatible
 from django.conf import settings
+from pinax.badges.registry import badges
 
 from model_utils.managers import InheritanceManager
 
@@ -21,7 +22,7 @@ class CategoryManager(models.Manager):
 
     def new_category(self, category):
         new_category = self.create(category=re.sub('\s+', '-', category)
-                                   .lower(), slug='', description='')
+                                   .lower(), slug='', description='', image='')
 
         new_category.save()
         return new_category
@@ -41,6 +42,8 @@ class Category(models.Model):
         verbose_name=_("user friendly url"))
 
     description = models.TextField()
+
+    image = models.ImageField(default='category_default.jpg', upload_to='category_pic')
 
     objects = CategoryManager()
 
@@ -67,6 +70,18 @@ class Category(models.Model):
         Returns a queryset of complete exams.
         """
         return Sitting.objects.filter(quiz__category__category=self.category)
+
+    def get_total_reward(self):
+        quiz_list = Quiz.objects.filter(category__category=self.category, reward__isnull=False)
+        first_sum = 0
+        second_sum = 0
+        for quiz in quiz_list:
+            first_sum = first_sum + quiz.reward
+            second_sum = second_sum + quiz.number_of_winners
+        return first_sum * second_sum
+
+    def get_image_url(self):
+        return self.image.url
 
 
 
@@ -111,6 +126,10 @@ class Quiz(models.Model):
     master = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='quizzes', on_delete=models.CASCADE)
 
     image = models.ImageField(default='quiz_default.jpg', upload_to='quiz_pic')
+
+    reward = models.FloatField(null=True, blank=True)
+
+    number_of_winners = models.IntegerField(null=True, blank=True)
 
     url = models.SlugField(
         max_length=60, blank=False,
@@ -218,6 +237,9 @@ class Quiz(models.Model):
     def get_chosen_project(self):
         return self.projects.all().first()
 
+    def get_image_url(self):
+        return self.image.url
+
     @property
     def get_max_score(self):
         return self.get_questions().count()
@@ -237,6 +259,7 @@ class Quiz(models.Model):
         a quiz.
         """
         return Sitting.objects.filter(quiz__title=self.title)
+
 
 
 class ProgressManager(models.Manager):
@@ -529,6 +552,7 @@ class Sitting(models.Model):
         self.complete = True
         self.end = now()
         self.save()
+        badges.possibly_award_badge("mark_quiz_complete", user=self.user)
 
     def add_incorrect_question(self, question):
         """

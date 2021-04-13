@@ -77,7 +77,7 @@ class UserCreationForm(ActivationMailFormMixin, BaseUserCreationForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta():
         model = Profile
-        fields = ('name', 'about', 'image')
+        fields = ('name', 'about', 'image', 'wallet_address', 'telegram_id')
 
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -87,3 +87,9 @@ class ProfileUpdateForm(forms.ModelForm):
                 "A user with that name"
                 " already exists.")
         return name
+
+    def clean_wallet_address(self):
+        wallet_address = self.cleaned_data['wallet_address']
+        if len(wallet_address) < 35:
+            raise ValidationError("Waves wallet address must be 35 characters long")
+        return wallet_address

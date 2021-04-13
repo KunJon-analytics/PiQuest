@@ -1,18 +1,21 @@
 from pathlib import Path
 import os
 
+import environ
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+READ_DOT_ENV_FILE = env.bool('READ_DOT_ENV_FILE', default=False)
+if READ_DOT_ENV_FILE:
+    environ.Env.read_env()
+
+DEBUG = env('DEBUG')
+SECRET_KEY = env('SECRET_KEY')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+ctwre7(k%f7yz#i1y(0ataq2%9wh^8z442qpwfr-lt*r0=!el'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -33,7 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.sites',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     # Third-Party Apps
     'allauth',
@@ -49,7 +54,8 @@ INSTALLED_APPS = [
     'theme',
     'debug_toolbar',
     'guardian',
-    'mathfilters'
+    'mathfilters',
+    'pinax.badges',
 ]
 
 SITE_ID=1
@@ -57,6 +63,7 @@ SITE_ID=1
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -97,8 +104,12 @@ WSGI_APPLICATION = 'PiQuest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env("DB_NAME"),
+        'USER': env("DB_USER"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env("DB_HOST"),
+        'PORT': env("DB_PORT"),
     }
 }
 
@@ -142,7 +153,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = "static_root"
 MEDIA_URL = '/media/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 TAILWIND_APP_NAME = 'theme'
 
@@ -213,7 +226,8 @@ INTERNAL_IPS = [
     # ...
 ]
 
-ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_MAX_EMAIL_ADDRESSES = 3
-
+ACCOUNT_USERNAME_BLACKLIST = ['activate','create','disable','login','logout','password','profile',]

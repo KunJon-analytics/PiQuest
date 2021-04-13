@@ -81,24 +81,6 @@ class QuizUpdate(PostFormValidMixin, UserPassesTestMixin, UpdateView):
         return False
 
 
-    # def get_object(self, slug):
-    #     return get_object_or_404(self.model, url__iexact=slug)
-
-    # def get(self, request, slug):
-    #     quiz = self.get_object(slug)
-    #     context = {'form': self.form_class(instance=quiz),'quiz': quiz,}
-    #     return render(request, self.template_name, context)
-
-    # def post(self, request, slug):
-    #     quiz = self.get_object(slug)
-    #     bound_form = self.form_class(request.POST, instance=quiz)
-    #     if bound_form.is_valid():
-    #         new_quiz = bound_form.save()
-    #         return redirect(new_quiz)
-    #     else:
-    #         context = {'form': bound_form, 'quiz': quiz,}
-    #         return render(request, self.template_name, context)
-
 
 @method_decorator([login_required, master_required], name='dispatch')
 class QuizDelete(UserPassesTestMixin, DeleteView):
@@ -239,7 +221,6 @@ class QuizUserProgressView(TemplateView):
         progress, c = Progress.objects.get_or_create(user=self.request.user)
         context['cat_scores'] = progress.list_all_cat_scores
         context['exams'] = progress.show_exams()
-        context['user'] = progress.user
         return context
 
 
@@ -248,8 +229,9 @@ class QuizMarkingList(SittingFilterTitleMixin, ListView):
     model = Sitting
 
     def get_queryset(self):
+        user = self.request.user
         queryset = super(QuizMarkingList, self).get_queryset()\
-                                               .filter(complete=True)
+                                               .filter(complete=True, quiz__master=user)
 
         user_filter = self.request.GET.get('user_filter')
         if user_filter:

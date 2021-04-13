@@ -23,19 +23,21 @@
   <body>
     <div class="max-w-7xl mx-auto">
       {% include "main/navbar.html" %}
-      {% if messages %}
-        <div>
-          <div>
-            <ul>
-              {% for message in messages %}
-                {% if message.tags %}
-                  <li class="{{ message.tags }}">
-                {% else %}
-                  <li>
-                {% endif %}
-                {{ message }}</li>
-              {% endfor %}
-        </ul></div></div>
+      {% if messages %}    
+      {% for message in messages %}  
+      <div class="bg-green-200 border-green-600 text-green-600 border-l-4 p-4" role="alert">
+        {% if message.tags %}
+          <p class="font-bold {{ message.tags }}">
+        {% else %}
+          <p class="font-bold">
+              Be Warned
+          </p>
+        {% endif %}
+          <p>
+              {{ message }}
+          </p>
+      </div>
+      {% endfor %}
       {% endif %}
       {% block content %} 
       {% endblock content %}

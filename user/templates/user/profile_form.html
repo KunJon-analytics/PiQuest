@@ -1,4 +1,4 @@
-{% extends parent_template|default:"user/base_user.html" %}
+{% extends parent_template|default:"account/base.html" %}
 {% load tailwind_filters %}
 
 {% block title %}
@@ -7,16 +7,14 @@ Update Profile
 
 
 {% block content %}
-  <div class="row">
-    <div class="max-w-lg mx-auto">
+<div class="md:w-1/2 max-w-lg mx-auto my-24 px-4 py-5 shadow-none">
       <form
           action="{{ profile.get_update_url }}"
-          method="post">
+          method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy}}
-        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md">
+        <button type="submit" class="py-3 bg-myrtle-green text-white w-full rounded hover:bg-myrtle-green-light">
           Update Profile</button>
       </form>
-    </div>
-  </div>
+</div>
 {% endblock %}

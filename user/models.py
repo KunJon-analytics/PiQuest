@@ -32,6 +32,11 @@ class User(AbstractUser):
     def published_quizzes(self):
         return self.quizzes.filter(pub_date__lt=date.today())
 
+    def get_projects(self):
+        return self.projects.all()
+
+    
+
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
@@ -39,6 +44,8 @@ class Profile(models.Model):
     slug = models.SlugField(max_length=30, unique=True)
     about = models.TextField()
     joined = models.DateTimeField("Date Joined", auto_now_add=True)
+    wallet_address = models.CharField(max_length=35, help_text="Please ensure you submit waves address generated using waves exchange")
+    telegram_id = models.CharField(max_length=100, null=True, blank=True, default="username", help_text="please input your correct telegram username to connect with friends, fellow quiz takers, and quiz masters")
     
 
     def __str__(self):
@@ -49,6 +56,9 @@ class Profile(models.Model):
 
     def get_update_url(self):
         return reverse('piquest-auth:profile_update')
+
+    def get_telegram_url(self):
+        return f'{"t.me/"}{self.telegram_id}'
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.get_username())
