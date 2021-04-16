@@ -41,10 +41,10 @@
 			<p class="pt-8 text-sm">{{ profile.about|default:"Please update your profile"|linebreaks }}</p>
 			<div class="pt-12 pb-8">
 				<button class="bg-myrtle-green hover:bg-myrtle-green-light text-white font-bold py-2 px-4 rounded-full">
-					{% if  profile.telegram_id != "username" %}
-					<a href="https://{{ profile.get_telegram_url }}" target="_blank">Get In Touch</a>
-					{% else %}
+					{% if  profile.telegram_id == "username" and user.pk == profile.user.pk %}
 					<a href="{{ profile.get_update_url }}">Update profile</a>
+					{% else %}
+					<a href="https://{{ profile.get_telegram_url }}" target="_blank">Get In Touch</a>
 					{% endif %}
 				</button> 
 			</div>
