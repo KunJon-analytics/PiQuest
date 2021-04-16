@@ -202,11 +202,11 @@ AUTH_USER_MODEL = 'user.User'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-SERVER_EMAIL = 'contact@piquest.com'
-DEFAULT_FROM_EMAIL = 'no-reply@piquest.com'
-EMAIL_SUBJECT_PREFIX = '[PiQuest] '
+SERVER_EMAIL = 'contact@mg.piquests.com'
+DEFAULT_FROM_EMAIL = 'no-reply@mg.piquests.com'
+EMAIL_SUBJECT_PREFIX = '[PiQuests] '
 MANAGERS = (
-    ('Us', 'ourselves@piquest.com'),
+    ('Us', 'ourselves@mg.piquests.com'),
 )
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
@@ -245,3 +245,11 @@ if not DEBUG:
     X_FRAME_OPTIONS = "DENY"
 
     ALLOWED_HOSTS = ["*"]
+
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = env("EMAIL_HOST")
+    EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = env("EMAIL_PORT")
+    DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
