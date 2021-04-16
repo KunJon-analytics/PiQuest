@@ -206,7 +206,7 @@ SERVER_EMAIL = 'contact@mg.piquests.com'
 DEFAULT_FROM_EMAIL = 'no-reply@mg.piquests.com'
 EMAIL_SUBJECT_PREFIX = '[PiQuests] '
 MANAGERS = (
-    ('Us', 'ourselves@mg.piquests.com'),
+    ('Us', 'piquests@gmail.com'),
 )
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
