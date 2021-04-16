@@ -7,9 +7,12 @@ from django.views.generic import RedirectView, TemplateView
 admin.site.site_header = 'PiQuest Admin'
 admin.site.site_title = 'PiQuest Site Admin'
 
+favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
+
 urlpatterns = [
     path('', include('user.urls', namespace='piquest-auth')),
     path('', include('main.urls', namespace='main')),
+    path('favicon\.ico', favicon_view),
     path('project/', include('projects.urls', namespace='project')),
     path('contact/', include('contact.urls', namespace='contact')),
     path('quiz/', include('quiz.urls', namespace='quiz')),
@@ -23,4 +26,3 @@ if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    
