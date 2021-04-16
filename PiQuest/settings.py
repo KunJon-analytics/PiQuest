@@ -29,13 +29,13 @@ INSTALLED_APPS = [
     'contact',
 
     # Django Apps
+    'whitenoise.runserver_nostatic',
     'django.contrib.auth',
     'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.sites',
-    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
@@ -60,9 +60,9 @@ INSTALLED_APPS = [
 SITE_ID=1
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -253,3 +253,18 @@ if not DEBUG:
     EMAIL_USE_TLS = True
     EMAIL_PORT = env("EMAIL_PORT")
     DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+}
