@@ -29,26 +29,76 @@
   <body class="bg-languid-lavender"
   {% include "main/navbar.html" %}
       {% if messages %}
-      {% for message in messages %}
-      <div class="rounded-md flex items-center jusitfy-between px-5 py-4 mb-2 border border-myrtle-green text-myrtle-green">
-          <div class="w-full flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class=" w-6 h-6 mr-2" viewBox="0 0 1792 1792">
-                  <path d="M1024 1375v-190q0-14-9.5-23.5t-22.5-9.5h-192q-13 0-22.5 9.5t-9.5 23.5v190q0 14 9.5 23.5t22.5 9.5h192q13 0 22.5-9.5t9.5-23.5zm-2-374l18-459q0-12-10-19-13-11-24-11h-220q-11 0-24 11-10 7-10 21l17 457q0 10 10 16.5t24 6.5h185q14 0 23.5-6.5t10.5-16.5zm-14-934l768 1408q35 63-2 126-17 29-46.5 46t-63.5 17h-1536q-34 0-63.5-17t-46.5-46q-37-63-2-126l768-1408q17-31 47-49t65-18 65 18 47 49z">
-                  </path>
-              </svg>
-              {{message}}
-          </div>
-          <button type="button" class="-mr-1 flex-shrink-0 flex p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-myrtle-green sm:-mr-2">
-              <span class="sr-only">
-                  Dismiss
-              </span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="h-6 w-6 text-myrtle-green" viewBox="0 0 1792 1792">
-                  <path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z">
-                  </path>
-              </svg>
-          </button>
-      </div>
-      {% endfor %}
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <!-- Accent Border on the left -->
+    <div class="space-x-2 bg-blue-50 rounded flex items-start text-blue-600 my-4 mx-auto max-w-2xl shadow-lg">
+        <div class="w-1 self-stretch bg-blue-800">
+            
+        </div>
+        <div class="flex  space-x-2 p-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.5 5h3l-1 10h-1l-1-10zm1.5 14.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+            <h3 class="text-blue-800 tracking-wider flex-1">
+                {{ message }}
+            </h3>
+        </div>
+    </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <!-- Success -->
+    <div class="bg-green-50 p-4 rounded flex items-start text-green-600 my-4 shadow-lg mx-auto max-w-2xl">
+        <div class="text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.959 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591z"/></svg>
+        </div>
+        <div class=" px-3">
+            <h3 class="text-green-800 font-semibold tracking-wider">
+                Success 
+            </h3>
+            <p class="py-2 text-green-700">
+                {{ message }}
+            </p>
+            {% if user.is_authenticated %}
+            <div class="space-x-6">
+              <a href="{% url 'quiz:quiz_progress' %}"><button class="text-green-900 font-semibold tracking-wider hover:underline focus:outline-none">Previous quizzes</button></a>
+              <a href="{{ user.profile.get_update_url }}"><button class="text-green-900 font-semibold tracking-wider hover:underline focus:outline-none">Enable payments</button></a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <!-- Danger -->
+    <div class="bg-red-50 p-4 rounded flex items-start text-red-600 my-4 shadow-lg mx-auto max-w-2xl" role="alert">
+        <div class="text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.597 17.954l-4.591-4.55-4.555 4.596-1.405-1.405 4.547-4.592-4.593-4.552 1.405-1.405 4.588 4.543 4.545-4.589 1.416 1.403-4.546 4.587 4.592 4.548-1.403 1.416z"/></svg>
+        </div>
+        <div class=" px-3">
+            <h3 class="text-red-800 font-semibold tracking-wider">
+                Danger 
+            </h3>
+            <ul class="list-disc list-inside">
+                <li>{{ message }}</li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+    <!-- Warning -->
+    <div class="bg-yellow-50 p-4 rounded flex items-start text-yellow-600 my-4 shadow-lg mx-auto max-w-2xl" role="alert">
+        <div class="text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 1l-12 22h24l-12-22zm-1 8h2v7h-2v-7zm1 11.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+        </div>
+        <div class=" px-3">
+            <h3 class="text-yellow-800 font-semibold tracking-wider">
+                Warning 
+            </h3>
+            <p class="pt-2 text-yellow-700">
+                {{ message }}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
     {% endif %}
     <section class="bg-white">
   <!-- component -->

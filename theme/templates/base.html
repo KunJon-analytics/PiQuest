@@ -28,22 +28,78 @@
   <body>
     <div class="max-w-7xl mx-auto">
       {% include "main/navbar.html" %}
-      {% if messages %}    
-      {% for message in messages %}  
-      <div class="bg-green-200 border-green-600 text-green-600 border-l-4 p-4" role="alert">
-        {% if message.tags %}
-          <p class="font-bold {{ message.tags }}">
-        {% else %}
-          <p class="font-bold">
-              Be Warned
-          </p>
-        {% endif %}
-          <p>
-              {{ message }}
-          </p>
-      </div>
-      {% endfor %}
-      {% endif %}
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <!-- Accent Border on the left -->
+    <div class="space-x-2 bg-blue-50 rounded flex items-start text-blue-600 my-4 mx-auto max-w-2xl shadow-lg">
+        <div class="w-1 self-stretch bg-blue-800">
+            
+        </div>
+        <div class="flex  space-x-2 p-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.5 5h3l-1 10h-1l-1-10zm1.5 14.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+            <h3 class="text-blue-800 tracking-wider flex-1">
+                {{ message }}
+            </h3>
+        </div>
+    </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+    <!-- Success -->
+    <div class="bg-green-50 p-4 rounded flex items-start text-green-600 my-4 shadow-lg mx-auto max-w-2xl">
+        <div class="text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.959 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591z"/></svg>
+        </div>
+        <div class=" px-3">
+            <h3 class="text-green-800 font-semibold tracking-wider">
+                Success 
+            </h3>
+            <p class="py-2 text-green-700">
+                {{ message }}
+            </p>
+            {% if user.is_authenticated %}
+            <div class="space-x-6">
+              <a href="{% url 'quiz:quiz_progress' %}"><button class="text-green-900 font-semibold tracking-wider hover:underline focus:outline-none">Previous quizzes</button></a>
+              <a href="{{ user.profile.get_update_url }}"><button class="text-green-900 font-semibold tracking-wider hover:underline focus:outline-none">Enable payments</button></a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+    <!-- Danger -->
+    <div class="bg-red-50 p-4 rounded flex items-start text-red-600 my-4 shadow-lg mx-auto max-w-2xl" role="alert">
+        <div class="text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.597 17.954l-4.591-4.55-4.555 4.596-1.405-1.405 4.547-4.592-4.593-4.552 1.405-1.405 4.588 4.543 4.545-4.589 1.416 1.403-4.546 4.587 4.592 4.548-1.403 1.416z"/></svg>
+        </div>
+        <div class=" px-3">
+            <h3 class="text-red-800 font-semibold tracking-wider">
+                Danger 
+            </h3>
+            <ul class="list-disc list-inside">
+                <li>{{ message }}</li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+    <!-- Warning -->
+    <div class="bg-yellow-50 p-4 rounded flex items-start text-yellow-600 my-4 shadow-lg mx-auto max-w-2xl" role="alert">
+        <div class="text-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 1l-12 22h24l-12-22zm-1 8h2v7h-2v-7zm1 11.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+        </div>
+        <div class=" px-3">
+            <h3 class="text-yellow-800 font-semibold tracking-wider">
+                Warning 
+            </h3>
+            <p class="pt-2 text-yellow-700">
+                {{ message }}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
       {% block content %} 
       {% endblock content %}
       {% include "main/footer.html" %}
