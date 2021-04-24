@@ -34,8 +34,12 @@
         </div>
         <div class="flex border-t border-gray-200 py-2">
           <span class="text-gray-500">Master</span>
+          {% if user.is_authenticated %}
           <span class="ml-auto text-gray-900"><a href="{{ quiz.master.get_absolute_url }}">
           {{ quiz.master.profile.name }}</a></span>
+          {% else %}
+          <span class="ml-auto text-gray-900">{{ quiz.master.profile.name }}</span>
+          {% endif %}
         </div>
         <div class="flex border-t border-b mb-6 border-gray-200 py-2">
           <span class="text-gray-500">Takers</span>

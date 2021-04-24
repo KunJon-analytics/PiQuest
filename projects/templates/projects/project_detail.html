@@ -21,7 +21,11 @@
         </div>
         <div class="flex border-t border-gray-200 py-2">
           <span class="text-gray-500">Lead</span>
+          {% if user.is_authenticated %}
           <span class="ml-auto text-gray-900"><a href="{{ project.lead.get_absolute_url }}">{{ project.lead.get_short_name }}</a></span>
+          {% else %}
+          <span class="ml-auto text-gray-900">{{ project.lead.get_short_name }}</span>
+          {% endif %}
         </div>
         <div class="flex border-t border-gray-200 py-2">
           <span class="text-gray-500">Website</span>

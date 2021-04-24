@@ -100,12 +100,18 @@
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
             {% for quiz in category.quizzes.all %}
             <div class="overflow-hidden shadow-lg rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto">
-                <a href="#" class="w-full block h-full">
+                <a href="{{ quiz.get_absolute_url }}" class="w-full block h-full">
                     <img alt="quiz photo" src="{{ quiz.get_image_url }}" class="max-h-40 w-full object-cover"/>
                     <div class="bg-white dark:bg-gray-800 w-full p-4">
+                        {% if quiz.get_chosen_project %}
                         <p class="text-myrtle-green text-md font-medium hover:text-languid-lavender">
                             {{ quiz.get_chosen_project }}
                         </p>
+                        {% else %}
+                        <p class="text-myrtle-green text-md font-medium">
+                            PiQuest
+                        </p>
+                        {% endif %}
                         <p class="text-gray-800 dark:text-white text-xl font-medium mb-2">
                             <a href="{{ quiz.get_absolute_url }}">{{ quiz.title|title }}</a>
                         </p>
@@ -113,9 +119,15 @@
                             {{ quiz.description|truncatewords:20 }}
                         </p>
                         <div class="flex items-center mt-4">
+                            {% if user.is_authenticated %}
                             <a href="{{ quiz.master.get_absolute_url }}" class="block relative">
                                 <img alt="profil" src="{{ quiz.master.get_image_url }}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
                             </a>
+                            {% else %}
+                            <p class="block relative">
+                                <img alt="profil" src="{{ quiz.master.get_image_url }}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
+                            </p>
+                            {% endif %}
                             <div class="flex flex-col justify-between ml-4 text-sm">
                                 <p class="text-gray-800 dark:text-white">
                                     {{ quiz.master.get_short_name|title }}
