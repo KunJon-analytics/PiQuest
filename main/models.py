@@ -1,5 +1,6 @@
 # from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.exceptions import MultipleObjectsReturned
 from pinax.badges.base import Badge, BadgeAwarded
 from pinax.badges.registry import badges
 import quiz.models as qm
@@ -16,14 +17,16 @@ class WinnerBadge(Badge):
 
     def award(self, **state):
         user = state["user"]
-        if_passed = qm.Sitting.objects.get(user=user).check_if_passed
-        if_complete = qm.Sitting.objects.get(user=user).complete
+        try:
+            if_passed = qm.Sitting.objects.get(user=user).check_if_passed
+            if_complete = qm.Sitting.objects.get(user=user).complete
+        except MultipleObjectsReturned:
+            if_passed = qm.Sitting.objects.filter(user=user).first().check_if_passed
+            if_complete = qm.Sitting.objects.filter(user=user).first().complete
         if(if_passed and if_complete):
             return BadgeAwarded()
 
 badges.register(WinnerBadge)
-
-
 
 
 # class User(AbstractUser):
