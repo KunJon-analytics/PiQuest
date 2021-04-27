@@ -3,6 +3,46 @@
 {% block title %}Earn Crypto with your knowledge{% endblock %}
 {% block content %}
 
+{% if crypto_context %}
+<section>
+<div class="overflow-x-auto">
+        <div class="bg-gray-100 flex items-center justify-center bg-gray-100 font-sans overflow-hidden">
+            <div class="w-full lg:w-5/6">
+                <div class="bg-white shadow-md rounded my-6">
+                    <table class="min-w-max w-full table-auto">
+                        <tbody class="text-gray-600 text-sm font-light">
+                          {% for key, value in crypto_context.items %}
+                            <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                <td class="py-3 px-6 text-left whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <span class="font-medium">{{key}}</span>
+                                    </div>
+                                </td>
+                                <td class="py-3 px-6 text-left">
+                                    <div class="flex items-center">
+                                        <span>${{value.quote.USD.price|floatformat:2}}</span>
+                                    </div>
+                                </td>
+                                {% if value.quote.USD.percent_change_24h < 0 %}
+                                <td class="py-3 px-6 text-center">
+                                    <span class="bg-red-200 text-red-600 py-1 px-3 rounded-full text-xs">{{value.quote.USD.percent_change_24h|floatformat:2}}%</span>
+                                </td>
+                                {% else %}
+                                <td class="py-3 px-6 text-center">
+                                    <span class="bg-green-200 text-green-600 py-1 px-3 rounded-full text-xs">{{value.quote.USD.percent_change_24h|floatformat:2}}%</span>
+                                </td>
+                                {% endif %}
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <section class="text-gray-600 bg-gray-100 body-font">
   <div class="container mx-auto flex px-5 py-24 items-center justify-center flex-col">
     <img class="lg:w-2/6 md:w-3/6 w-5/6 mb-10 object-cover object-center rounded" alt="hero" src="{% static 'images/hero.jpg' %}">

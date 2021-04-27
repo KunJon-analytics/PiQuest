@@ -13,6 +13,7 @@ if READ_DOT_ENV_FILE:
 
 DEBUG = env('DEBUG')
 SECRET_KEY = env('SECRET_KEY')
+CMC_PRO_API_KEY = env('CMC_PRO_API_KEY')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -226,6 +227,7 @@ INTERNAL_IPS = [
     # ...
 ]
 
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -263,6 +265,8 @@ if not DEBUG:
     DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     AWS_S3_REGION_NAME = 'FRA1'
     AWS_S3_ENDPOINT_URL = 'https://fra1.digitaloceanspaces.com'
+
+    CMC_PRO_API_KEY = env('CMC_PRO_API_KEY')
 
 LOGGING = {
     'version': 1,
