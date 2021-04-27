@@ -1,5 +1,6 @@
 {% extends parent_template|default:"base.html" %} 
 {% load static %}
+{% load humanize %}
 {% block title %}Earn Crypto with your knowledge{% endblock %}
 {% block content %}
 
@@ -20,7 +21,7 @@
                                 </td>
                                 <td class="py-3 px-6 text-left">
                                     <div class="flex items-center">
-                                        <span>${{value.quote.USD.price|floatformat:2}}</span>
+                                        <span>${{ value.quote.USD.price|floatformat:2|intcomma }}</span>
                                     </div>
                                 </td>
                                 {% if value.quote.USD.percent_change_24h < 0 %}
