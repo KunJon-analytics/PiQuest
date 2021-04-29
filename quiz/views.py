@@ -22,7 +22,7 @@ from essay.models import Essay_Question
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
-    @method_decorator(permission_required('quiz.view_sittings'))
+    @method_decorator(permission_required('quiz.view_sittings', raise_exception=True))
     def dispatch(self, *args, **kwargs):
         return super(QuizMarkerMixin, self).dispatch(*args, **kwargs)
 
