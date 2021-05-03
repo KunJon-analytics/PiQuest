@@ -4,7 +4,7 @@ import json
 
 from django.db import models
 from django.core.exceptions import ValidationError, ImproperlyConfigured
-from django.core.validators import MaxValueValidator, validate_comma_separated_integer_list
+from django.core.validators import MaxValueValidator, MinValueValidator, validate_comma_separated_integer_list
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
@@ -181,7 +181,7 @@ class Quiz(models.Model):
         blank=True, default=0,
         verbose_name=_("Pass Mark"),
         help_text=_("Percentage required to pass exam."),
-        validators=[MaxValueValidator(100)])
+        validators=[MaxValueValidator(100), MinValueValidator(1)])
 
     success_text = models.TextField(
         blank=True, help_text=_("Displayed if user passes."),

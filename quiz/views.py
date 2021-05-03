@@ -50,6 +50,15 @@ class QuizDetailView(DetailView):
     model = Quiz
     slug_field = 'url'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(QuizDetailView, self).get_context_data(**kwargs)
+        self.object = self.get_object()
+        if self.object.exam_paper and self.object.single_attempt:
+            pass_value = round((self.object.pass_mark * self.object.max_questions) / 100)
+            leaders = Sitting.objects.filter(complete=True, quiz__title=self.object.title, current_score__gte=pass_value).order_by('end')[:self.object.number_of_winners]
+            context['leaderboard'] = leaders
+            return context
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
 
@@ -224,8 +233,7 @@ class QuizUserProgressView(TemplateView):
         return context
 
 
-@method_decorator([login_required, master_required], name='dispatch')
-class QuizMarkingList(SittingFilterTitleMixin, ListView):
+class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
     model = Sitting
 
     def get_queryset(self):
@@ -240,7 +248,6 @@ class QuizMarkingList(SittingFilterTitleMixin, ListView):
         return queryset
 
 
-@method_decorator([login_required, master_required], name='dispatch')
 class QuizMarkingDetail(QuizMarkerMixin, DetailView):
     model = Sitting
 
