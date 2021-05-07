@@ -8,6 +8,7 @@ from datetime import date
 
 # Create your models here.
 
+
 class User(AbstractUser):
     is_taker = models.BooleanField(default=True)
     is_master = models.BooleanField(default=False)
@@ -25,7 +26,7 @@ class User(AbstractUser):
 
     def get_short_name(self):
         return self.profile.name
-    
+
     def get_image_url(self):
         return self.profile.image.url
 
@@ -35,18 +36,23 @@ class User(AbstractUser):
     def get_projects(self):
         return self.projects.all()
 
-    
+    def completed_sittings(self):
+        return self.sittings.filter(complete=True)
+
 
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    image = models.ImageField(default='profile_default.jpg', upload_to='profile_pics')
+    image = models.ImageField(
+        default='profile_default.jpg', upload_to='profile_pics')
     slug = models.SlugField(max_length=30, unique=True)
     about = models.TextField()
     joined = models.DateTimeField("Date Joined", auto_now_add=True)
-    wallet_address = models.CharField(max_length=35, help_text="Please ensure you submit waves address generated using waves exchange")
-    telegram_id = models.CharField(max_length=100, null=True, blank=True, default="username", help_text="please input your correct telegram username to connect with friends, fellow quiz takers, and quiz masters")
-    
+    wallet_address = models.CharField(
+        max_length=35, help_text="Please ensure you submit waves address generated using waves.exchange")
+    telegram_id = models.CharField(max_length=100, null=True, blank=True, default="username",
+                                   help_text="please input your correct telegram username to connect with friends, fellow quiz takers, and quiz masters")
 
     def __str__(self):
         return self.user.get_username()
@@ -71,7 +77,3 @@ def post_user_created_signal(sender, instance, created, **kwargs):
 
 
 post_save.connect(post_user_created_signal, sender=User)
-
-
-
-

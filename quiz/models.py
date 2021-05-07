@@ -15,7 +15,7 @@ from pinax.badges.registry import badges
 from model_utils.managers import InheritanceManager
 
 import projects.models
-import user.models 
+import user.models
 
 
 class CategoryManager(models.Manager):
@@ -43,7 +43,8 @@ class Category(models.Model):
 
     description = models.TextField()
 
-    image = models.ImageField(default='category_default.jpg', upload_to='category_pic')
+    image = models.ImageField(
+        default='category_default.jpg', upload_to='category_pic')
 
     objects = CategoryManager()
 
@@ -72,7 +73,8 @@ class Category(models.Model):
         return Sitting.objects.filter(quiz__category__category=self.category)
 
     def get_total_reward(self):
-        quiz_list = Quiz.objects.filter(category__category=self.category, reward__isnull=False)
+        quiz_list = Quiz.objects.filter(
+            category__category=self.category, reward__isnull=False)
         first_sum = 0
         second_sum = 0
         for quiz in quiz_list:
@@ -82,7 +84,6 @@ class Category(models.Model):
 
     def get_image_url(self):
         return self.image.url
-
 
 
 @python_2_unicode_compatible
@@ -123,7 +124,8 @@ class Quiz(models.Model):
         verbose_name=_("Description"),
         blank=True, help_text=_("a description of the quiz"))
 
-    master = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='quizzes', on_delete=models.CASCADE)
+    master = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name='quizzes', on_delete=models.CASCADE)
 
     image = models.ImageField(default='quiz_default.jpg', upload_to='quiz_pic')
 
@@ -144,7 +146,8 @@ class Quiz(models.Model):
 
     tags = models.ManyToManyField(Category, blank=True, related_name='quizzes')
 
-    projects = models.ManyToManyField('projects.Project', blank=True, related_name='quizzes')
+    projects = models.ManyToManyField(
+        'projects.Project', blank=True, related_name='quizzes')
 
     random_order = models.BooleanField(
         blank=False, default=False,
@@ -220,7 +223,7 @@ class Quiz(models.Model):
         get_latest_by = 'pub_date'
 
     def __str__(self):
-        return "{} on {}" .format(self.title, self.pub_date.strftime('%Y-%M-%D')) 
+        return "{} on {}" .format(self.title, self.pub_date.strftime('%Y-%M-%D'))
 
     def get_absolute_url(self):
         return reverse('quiz:quiz_start_page', kwargs={'slug': self.url})
@@ -259,7 +262,6 @@ class Quiz(models.Model):
         a quiz.
         """
         return Sitting.objects.filter(quiz__title=self.title)
-
 
 
 class ProgressManager(models.Manager):
@@ -459,7 +461,7 @@ class Sitting(models.Model):
     with the answer the user gave.
     """
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sittings',
                              verbose_name=_("User"), on_delete=models.CASCADE)
 
     quiz = models.ForeignKey(Quiz, verbose_name=_(
@@ -650,8 +652,8 @@ class Question(models.Model):
                                  on_delete=models.CASCADE)
 
     sub_category = models.ManyToManyField(SubCategory,
-                                     verbose_name=_("Sub-Category"),
-                                     blank=True, related_name="question")
+                                          verbose_name=_("Sub-Category"),
+                                          blank=True, related_name="question")
 
     figure = models.ImageField(upload_to='uploads/%Y/%m/%d',
                                blank=True,
