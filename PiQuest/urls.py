@@ -4,8 +4,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView, TemplateView
 
-admin.site.site_header = 'PiQuest Admin'
-admin.site.site_title = 'PiQuest Site Admin'
+admin.site.site_header = 'PiQuests Admin'
+admin.site.site_title = 'PiQuests Site Admin'
 
 urlpatterns = [
     path('', include('user.urls', namespace='piquest-auth')),
@@ -22,4 +22,5 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

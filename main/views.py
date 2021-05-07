@@ -4,7 +4,6 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.conf import settings
 from coinmarketcapapi import CoinMarketCapAPI, CoinMarketCapAPIError
-import json
 
 
 # Create your views here.
