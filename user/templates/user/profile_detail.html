@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block title %}
-{{ block.super }} -
-{{ profile.user.get_full_name|default:"taker" }}'s Profile
+{{ block.super }}
+{{ profile.user.username }}'s Profile
 {% endblock %}
 
 {% block content %}
