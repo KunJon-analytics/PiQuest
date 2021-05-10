@@ -3,6 +3,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView, TemplateView
+from puput import urls as puput_urls
 
 admin.site.site_header = 'PiQuests Admin'
 admin.site.site_title = 'PiQuests Site Admin'
@@ -16,7 +17,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path("badges/", include("pinax.badges.urls", namespace="pinax_badges")),
-    path(r'', include('puput.urls')),
+    path(r'', include(puput_urls)),
 ]
 
 
