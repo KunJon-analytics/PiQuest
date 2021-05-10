@@ -1,4 +1,6 @@
+from django.urls import reverse_lazy
 from pathlib import Path
+from puput import PUPUT_APPS
 import os
 
 import environ
@@ -19,7 +21,6 @@ CMC_PRO_API_KEY = env('CMC_PRO_API_KEY')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -28,6 +29,23 @@ INSTALLED_APPS = [
     'main',
     'projects',
     'contact',
+    'wagtail.core',
+    'wagtail.admin',
+    'wagtail.documents',
+    'wagtail.snippets',
+    'wagtail.users',
+    'wagtail.images',
+    'wagtail.embeds',
+    'wagtail.search',
+    'wagtail.sites',
+    'wagtail.contrib.redirects',
+    'wagtail.contrib.forms',
+    'wagtail.contrib.sitemaps',
+    'wagtail.contrib.routable_page',
+    'taggit',
+    'modelcluster',
+    'django_social_share',
+    'puput',
 
     # Django Apps
     'whitenoise.runserver_nostatic',
@@ -59,7 +77,10 @@ INSTALLED_APPS = [
     'storages',
 ]
 
-SITE_ID=1
+
+SITE_ID = 1
+
+WAGTAIL_SITE_NAME = 'PiQuests'
 
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -72,6 +93,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+MIDDLEWARE_CLASSES = (
+    'wagtail.core.middleware.SiteMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+)
 
 ROOT_URLCONF = 'PiQuest.urls'
 
@@ -96,6 +122,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'PiQuest.wsgi.application'
 
@@ -215,7 +242,6 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 
 CRISPY_TEMPLATE_PACK = 'tailwind'
 
-from django.urls import reverse_lazy
 
 LOGIN_REDIRECT_URL = reverse_lazy('quiz:quiz_index')
 LOGIN_URL = reverse_lazy('account_login')
@@ -232,7 +258,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_MAX_EMAIL_ADDRESSES = 3
-ACCOUNT_USERNAME_BLACKLIST = ['activate','create','disable','login','logout','password','profile',]
+ACCOUNT_USERNAME_BLACKLIST = ['activate', 'create',
+                              'disable', 'login', 'logout', 'password', 'profile', ]
 
 
 if not DEBUG:
@@ -248,7 +275,7 @@ if not DEBUG:
     X_FRAME_OPTIONS = "DENY"
 
     ALLOWED_HOSTS = ['.piquests.com']
-    SITE_ID=2
+    SITE_ID = 2
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = env("EMAIL_HOST")
