@@ -1,6 +1,5 @@
 from django.urls import reverse_lazy
 from pathlib import Path
-from puput import PUPUT_APPS
 import os
 
 import environ
