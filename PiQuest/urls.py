@@ -16,6 +16,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path("badges/", include("pinax.badges.urls", namespace="pinax_badges")),
+    path(r'', include('puput.urls')),
 ]
 
 
