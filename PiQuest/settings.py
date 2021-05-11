@@ -273,7 +273,7 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
     X_FRAME_OPTIONS = "DENY"
 
-    ALLOWED_HOSTS = ['.piquests.com']
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.piquests.com']
     SITE_ID = 2
 
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
