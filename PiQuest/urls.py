@@ -3,6 +3,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView, TemplateView
+from wagtail.core import urls as wagtail_urls
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.documents import urls as wagtaildocs_urls
+from wagtail.contrib.sitemaps.views import sitemap
 from puput import urls as puput_urls
 
 admin.site.site_header = 'PiQuests Admin'
@@ -17,9 +21,24 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path("badges/", include("pinax.badges.urls", namespace="pinax_badges")),
+    path(
+        route='blog_admin/',
+        view=include(wagtailadmin_urls)
+    ),
+    path(
+        route='',
+        view=include(wagtail_urls)
+    ),
+    path(
+        route='documents/',
+        view=include(wagtaildocs_urls)
+    ),
+    path(
+        route='sitemap.xml',
+        view=sitemap
+    ),
     path(r'', include(puput_urls)),
 ]
-
 
 if settings.DEBUG:
     import debug_toolbar
