@@ -29,7 +29,7 @@ urlpatterns = [
         route='documents/',
         view=include(wagtaildocs_urls)
     ),
-    re_path(r'^blog/', include(puput_urls)),
+    re_path(r'', include(puput_urls)),
     re_path(
         route='',
         view=include(wagtail_urls)
