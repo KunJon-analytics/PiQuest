@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'modelcluster',
     'django_social_share',
     'puput',
+    'colorful',
 
     # Django Apps
     'whitenoise.runserver_nostatic',
