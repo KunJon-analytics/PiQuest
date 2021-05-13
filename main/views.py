@@ -21,3 +21,7 @@ class HomePageView(TemplateView):
             nested_dictionary = r.data
             context['crypto_context'] = nested_dictionary
         return context
+
+
+class PrivacyPageView(TemplateView):
+    template_name = 'main/privacy_policy.html'
