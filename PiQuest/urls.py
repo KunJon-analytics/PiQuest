@@ -20,6 +20,7 @@ urlpatterns = [
     path('quiz/', include('quiz.urls', namespace='quiz')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
+    path('todo/', include('todo.urls', namespace="todo")),
     path("badges/", include("pinax.badges.urls", namespace="pinax_badges")),
     path(
         route='blog_admin/',

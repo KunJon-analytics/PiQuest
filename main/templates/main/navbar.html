@@ -1,3 +1,4 @@
+{% load static %}
 <!-- This example requires Tailwind CSS v2.0+ -->
 <nav class="bg-myrtle-green">
   <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -34,6 +35,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" class="block lg:hidden w-auto h-10 text-myrtle-green p-2 bg-languid-lavender rounded-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
           </svg>
+          {% comment %} <img class="block lg:hidden h-40  w-auto" src="{% static 'images/navbarlogo.png' %}" alt="Workflow"> {% endcomment %}
           <svg xmlns="http://www.w3.org/2000/svg" class="hidden lg:block w-auto h-10 text-myrtle-green p-2 bg-languid-lavender rounded-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
           </svg>
@@ -90,10 +92,12 @@
             <!-- Active: "bg-gray-100", Not Active: "" -->
             {% if user.is_authenticated %}
             <a href="{% url 'piquest-auth:profile' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-            <a href="{{ user.profile.get_update_url }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Edit Profile</a>
-            <a href="{% url 'account_logout' %}?next={{ request.path }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+            {% comment %} <a href="{% url 'todo:lists' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Todo Lists</a>
+            <a href="{% url 'todo:mine' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">My Tasks</a> {% endcomment %}
+            <a href="{{ user.profile.get_update_url }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-3">Edit Profile</a>
+            <a href="{% url 'account_logout' %}?next={{ request.path }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-4">Sign out</a>
             {% else %}
-            <a href="{% url 'account_login' %}?next={{ request.path }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign in</a>
+            <a href="{% url 'account_login' %}?next={{ request.path }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-4">Sign in</a>
             {% endif %}
           </div>
         </div>

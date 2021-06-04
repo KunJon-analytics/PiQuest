@@ -1,0 +1,64 @@
+{% load tailwind_filters %}
+{# Form used by both Add Task and Edit Task views #}
+<section>
+<div class="flex h-screen bg-gray-200 items-center justify-center  mt-5 mb-10">
+<form action="" name="add_task" method="post">
+  {% csrf_token %}
+  <div class="grid bg-white rounded-lg shadow-xl w-11/12 md:w-9/12 lg:w-full">
+
+    <div class="grid grid-cols-1 mt-5 mx-7">
+      <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold" for="id_title" name="title">Task</label>
+      <input type="text" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" id="id_title" name="title" required placeholder="Task title"
+        value="{% if form.title.value %}{{ form.title.value }}{% endif %}">
+    </div>
+
+    <div class="grid grid-cols-1 mt-5 mx-7">
+      <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold" for="id_note">Description</label>
+      <textarea class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" id="id_note" name="note" rows="5"
+        aria-describedby="inputNoteHelp">{% if form.note.value %}{{ form.note.value }}{% endif %}</textarea>
+      <small id="inputNoteHelp" class="form-text text-muted">
+        Describe the task or bug. Provide steps to reproduce the issue.
+      </small>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
+      <div class="grid grid-cols-1">
+        <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold" for="id_due_date">Due Date</label>
+        <input type="date" class="py-2 px-3 rounded-lg border-2 border-purple-300 mt-1 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent" id="id_due_date" name="due_date"
+          value="{% if form.due_date.value %}{{ form.due_date.value|date:"Y-m-d" }}{% endif %}">
+      </div>
+
+      <div class="grid grid-cols-1">
+        <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold" for="id_assigned_to">Assigned To</label>
+          {# See todo.forms.AddEditTaskForm #}
+          <div class="mt-1 md:mt-2">
+          {{form.assigned_to}}
+          </div>
+      </div>
+
+
+    </div>
+
+    <div class="grid grid-cols-1 mt-5 mx-7">
+      <input name="notify" class="form-checkbox h-5 w-5 text-languid-lavender" type="checkbox" aria-describedby="inputNotifyHelp" checked="checked" id="id_notify">
+        <label class="uppercase md:text-sm text-xs text-gray-500 text-light font-semibold" for="id_notify">
+          Notify
+        </label>
+        <small id="inputNotifyHelp" class="form-text text-muted">
+          Email notifications will only be sent if task is assigned to someone other than yourself.
+        </small>
+      </div>
+
+    <input type="hidden" name="priority"
+      value="{% if form.priority.value %}{{ form.priority.value }}{% else %}999{% endif %}" id="id_priority">
+    <input type="hidden" name="task_list" value="{{ form.task_list.value }}" id="id_task_list">
+    <input type="hidden" name="completed" class="form-check-input" type="checkbox" checked="{%if task.completed%}checked{% endif %}" id="id_completed">
+
+    <div class='flex items-center justify-center  md:gap-8 gap-4 pt-5 pb-5'>
+      <input type="submit" name="add_edit_task" value="Submit" class="w-auto bg-myrtle-green hover:bg-myrtle-green-light rounded-lg shadow-xl font-medium text-white px-4 py-2">
+    </div>
+
+  </div>
+  </form>
+</div>
+</section>
