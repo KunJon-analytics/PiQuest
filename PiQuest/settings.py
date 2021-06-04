@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     'mathfilters',
     'pinax.badges',
     'storages',
-    'todo',
 ]
 
 
@@ -311,5 +310,3 @@ LOGGING = {
 }
 
 PUPUT_AS_PLUGIN = True
-
-TODO_STAFF_ONLY = False
