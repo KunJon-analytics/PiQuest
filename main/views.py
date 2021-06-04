@@ -16,7 +16,7 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         r = cmc.cryptocurrency_quotes_latest(
-            symbol='BTC,ETH,BNB,DOGE,WAVES,NSBT,ADA')
+            symbol='BTC,ETH,BNB,DOGE,WAVES,XRP,ADA')
         if not r.error:
             nested_dictionary = r.data
             context['crypto_context'] = nested_dictionary
