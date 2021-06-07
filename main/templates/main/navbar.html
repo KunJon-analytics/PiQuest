@@ -92,9 +92,9 @@
             <!-- Active: "bg-gray-100", Not Active: "" -->
             {% if user.is_authenticated %}
             <a href="{% url 'piquest-auth:profile' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-            {% comment %} <a href="{% url 'todo:lists' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Todo Lists</a>
-            <a href="{% url 'todo:mine' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">My Tasks</a> {% endcomment %}
-            <a href="{{ user.profile.get_update_url }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-3">Edit Profile</a>
+            <a href="{% url 'todo:lists' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Todo Lists</a>
+            <a href="{% url 'todo:mine' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">My Tasks</a>
+             <a href="{{ user.profile.get_update_url }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-3">Edit Profile</a>
             <a href="{% url 'account_logout' %}?next={{ request.path }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-4">Sign out</a>
             {% else %}
             <a href="{% url 'account_login' %}?next={{ request.path }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-4">Sign in</a>
