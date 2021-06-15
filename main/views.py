@@ -25,3 +25,12 @@ class HomePageView(TemplateView):
 
 class PrivacyPageView(TemplateView):
     template_name = 'main/privacy_policy.html'
+
+
+def pi_validation(request):
+    filename = "validation-key.txt"
+    content = settings.PI_VALIDATION_KEY
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = 'attachment; filename={0}'.format(
+        filename)
+    return response

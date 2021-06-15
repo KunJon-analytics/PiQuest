@@ -1,132 +1,59 @@
-{% load static %} 
-{% load i18n %}
-<!DOCTYPE html>
-<html
-  xmlns:fb="http://www.facebook.com/2008/fbml"
-  xmlns="http://www.w3.org/1999/xhtml"
-  xml:lang="en"
-  lang="en"
-  dir="ltr"
->
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>{% trans "PiQuest" %} | {% block title %}{% block head_title %}{% endblock %}{% endblock %}</title>
-    <meta name="description" content="{% block description %}{% endblock %}" />
-    <meta name="keywords" content="" />
-    <meta name="author" content="" />
+{% load i18n static %}{% load crispy_forms_tags %}{% load thumbnail %}
 
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
     <link rel="manifest" href="{% static 'images/site.webmanifest' %}">
 
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-    {% block extra_head %}
-    {% endblock %}
-  </head>
-  <body class="bg-languid-lavender"
-  {% include "main/navbar.html" %}
-      {% if messages %}
-    {% for message in messages %}
-    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-    <!-- Accent Border on the left -->
-    <div class="space-x-2 bg-blue-50 rounded flex items-start text-blue-600 my-4 mx-auto max-w-2xl shadow-lg">
-        <div class="w-1 self-stretch bg-blue-800">
-            
-        </div>
-        <div class="flex  space-x-2 p-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.5 5h3l-1 10h-1l-1-10zm1.5 14.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
-            <h3 class="text-blue-800 tracking-wider flex-1">
-                {{ message }}
-            </h3>
-        </div>
-    </div>
-    {% endif %}
-    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-    <!-- Success -->
-    <div class="bg-green-50 p-4 rounded flex items-start text-green-600 my-4 shadow-lg mx-auto max-w-2xl">
-        <div class="text-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.959 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591z"/></svg>
-        </div>
-        <div class=" px-3">
-            <h3 class="text-green-800 font-semibold tracking-wider">
-                Success 
-            </h3>
-            <p class="py-2 text-green-700">
-                {{ message }}
-            </p>
-            {% if user.is_authenticated %}
-            <div class="space-x-6">
-              <a href="{% url 'quiz:quiz_progress' %}"><button class="text-green-900 font-semibold tracking-wider hover:underline focus:outline-none">Previous quizzes</button></a>
-              <a href="{{ user.profile.get_update_url }}"><button class="text-green-900 font-semibold tracking-wider hover:underline focus:outline-none">Enable payments</button></a>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-    {% endif %}
-    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-    <!-- Danger -->
-    <div class="bg-red-50 p-4 rounded flex items-start text-red-600 my-4 shadow-lg mx-auto max-w-2xl" role="alert">
-        <div class="text-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.597 17.954l-4.591-4.55-4.555 4.596-1.405-1.405 4.547-4.592-4.593-4.552 1.405-1.405 4.588 4.543 4.545-4.589 1.416 1.403-4.546 4.587 4.592 4.548-1.403 1.416z"/></svg>
-        </div>
-        <div class=" px-3">
-            <h3 class="text-red-800 font-semibold tracking-wider">
-                Danger 
-            </h3>
-            <ul class="list-disc list-inside">
-                <li>{{ message }}</li>
-            </ul>
-        </div>
-    </div>
-    {% endif %}
-    {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-    <!-- Warning -->
-    <div class="bg-yellow-50 p-4 rounded flex items-start text-yellow-600 my-4 shadow-lg mx-auto max-w-2xl" role="alert">
-        <div class="text-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="fill-current w-5 pt-1" viewBox="0 0 24 24"><path d="M12 1l-12 22h24l-12-22zm-1 8h2v7h-2v-7zm1 11.25c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
-        </div>
-        <div class=" px-3">
-            <h3 class="text-yellow-800 font-semibold tracking-wider">
-                Warning 
-            </h3>
-            <p class="pt-2 text-yellow-700">
-                {{ message }}
-            </p>
-        </div>
-    </div>
-    {% endif %}
-    {% endfor %}
-    {% endif %}
-    <section class="bg-white">
-  <!-- component -->
+  <title>PiQuests | {% block head_title %}{% endblock %}</title>
 
-    <!-- url('/img/hero-pattern.svg') -->
-    <div class="container flex min-h-screen bg-white">
+  {% include 'account/parts/bootstrap.html' %}
 
-        <div class="w-1/2 bg-cover md:block hidden" style="background-image:  url(https://images.unsplash.com/photo-1520243947988-b7b79f7873e9?ixid=MXwxMjA3fDB8MHxzZWFyY2h8NDd8fGJsYWNrJTIwZm9yZXN0fGVufDB8fDB8eWVsbG93&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=60)"></div>
-        <!-- <div class="bg-no-repeat bg-right bg-cover max-w-max max-h-8 h-12 overflow-hidden">
-            <img src="log_in.webp" alt="hey">
-        </div> -->
-    {% block content %} 
-    {% block body %}
-    {% block account_content %}
-    {% endblock %}
-    {% endblock %}
-    {% block extra_body %}
-    {% endblock %}
-    {% endblock content %}
-    </div>
+  {% block custom_css %}
+    <link href="{% static 'accounts/allauth-bootstrap4.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/account-style.css' %}">
+  {% endblock %}
+</head>
+<body>
+{% include 'account/parts/head.html' %}
+{% for message in messages %}
+<div class="container-fluid p-0 mt-5">
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
   </div>
-  </section>
-  {% include "main/footer.html" %}
-  </body>
+</div>
+{% endfor %}
+{% block body %}
+{% endblock %}
+
+{% block endofpage %}
+{% endblock %}
+
+    <script src="{% static 'vendor/jquery/account-jquery.min.js' %}"></script>
+    <script src="{% static 'js/account-main.js' %}"></script>
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
 </html>
-    
-
-
-    
-  
-    

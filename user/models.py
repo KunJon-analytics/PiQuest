@@ -43,11 +43,12 @@ class User(AbstractUser):
 class Profile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    name = models.CharField(
+        max_length=255, help_text="Your full name")
     image = models.ImageField(
         default='profile_default.jpg', upload_to='profile_pics')
     slug = models.SlugField(max_length=30, unique=True)
-    about = models.TextField()
+    about = models.TextField(default="A brief description about me")
     joined = models.DateTimeField("Date Joined", auto_now_add=True)
     wallet_address = models.CharField(
         max_length=35, help_text="Please ensure you submit waves address generated using waves.exchange")

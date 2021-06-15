@@ -34,11 +34,12 @@ class ResendActivationEmailForm(ActivationMailFormMixin, forms.Form):
         self.send_mail(user=user, **kwargs)
         return user
 
+
 class UserCreationForm(ActivationMailFormMixin, BaseUserCreationForm):
 
     name = forms.CharField(max_length=255, help_text=(
-            "The name displayed on your "
-            "public profile."))
+        "The name displayed on your "
+        "public profile."))
 
     mail_validation_error = (
         'User created. Could not send activation '
@@ -50,7 +51,8 @@ class UserCreationForm(ActivationMailFormMixin, BaseUserCreationForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        disallowed = ('activate','create','disable','login','logout','password','profile',)
+        disallowed = ('activate', 'create', 'disable', 'login',
+                      'logout', 'password', 'profile',)
         if name in disallowed:
             raise ValidationError(
                 "A user with that name"
@@ -66,9 +68,9 @@ class UserCreationForm(ActivationMailFormMixin, BaseUserCreationForm):
             send_mail = False
         user.save()
         self.save_m2m()
-        Profile.objects.update_or_create(user=user,defaults={
+        Profile.objects.update_or_create(user=user, defaults={
             'name': self.cleaned_data['name'],
-            'slug': slugify(self.cleaned_data['name']),})
+            'slug': slugify(self.cleaned_data['name']), })
         if send_mail:
             self.send_mail(user=user, **kwargs)
         return user
@@ -77,11 +79,12 @@ class UserCreationForm(ActivationMailFormMixin, BaseUserCreationForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta():
         model = Profile
-        fields = ('name', 'about', 'image', 'wallet_address', 'telegram_id')
+        fields = ('name', 'wallet_address', 'telegram_id', 'about', 'image')
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        disallowed = ('activate','create','disable','login','logout','password','profile',)
+        disallowed = ('activate', 'create', 'disable', 'login',
+                      'logout', 'password', 'profile',)
         if name in disallowed:
             raise ValidationError(
                 "A user with that name"
@@ -91,5 +94,6 @@ class ProfileUpdateForm(forms.ModelForm):
     def clean_wallet_address(self):
         wallet_address = self.cleaned_data['wallet_address']
         if len(wallet_address) < 35:
-            raise ValidationError("Waves wallet address must be 35 characters long")
+            raise ValidationError(
+                "Waves wallet address must be 35 characters long")
         return wallet_address

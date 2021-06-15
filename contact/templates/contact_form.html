@@ -1,19 +1,22 @@
-{% extends parent_template|default:"base_contact.html" %}
-{% load tailwind_filters %}
+{% extends "account/layout_card.html" %}
 
-{% block title %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block head_title %}
 Contact Us!
 {% endblock %}
 
-{% block form_heading %}Contact Us{% endblock %}
-{% block form_sub_heading %}Fill up the form below to send us a message.{% endblock form_sub_heading %}
-
-{% block form_content %} 
+{% block content %} 
+<h5 class="card-title">
+    {% trans "Contact Us" %}
+  </h5>
+   <p>{% trans "Fill up the form below to send us a message." %}</p>
   <form action="{% url 'contact:contact' %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <div class="mb-6">
-      <button type="submit" class="w-full px-3 py-4 text-white bg-myrtle-green rounded-md hover:bg-myrtle-green-light focus:outline-none">Contact Us!</button>
+    <div class="form-actions">
+      <input type="submit" value="{% trans 'Contact Us!' %}" class="btn btn-primary"/>
     </div>
   </form>
 {% endblock %}

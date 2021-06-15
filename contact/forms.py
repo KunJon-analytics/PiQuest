@@ -14,7 +14,8 @@ class ContactForm(forms.Form):
     )
     reason = forms.ChoiceField(choices=REASON_CHOICES, initial=FEEDBACK)
     email = forms.EmailField(initial='youremail@domain.com')
-    your_message = forms.CharField(widget=forms.Textarea)
+    your_message = forms.CharField(
+        widget=forms.Textarea, initial='your message')
 
     def send_mailo(self):
         reason = self.cleaned_data.get('reason')
@@ -28,14 +29,15 @@ class ContactForm(forms.Form):
             mail_managers(full_reason, body)
         except BadHeaderError:
             self.add_error(None,
-                ValidationError(
-                    'Could Not Send Email.\n'
-                    'Extra Headers not allowed '
-                    'in email body.',
-                    code='badheader'))
+                           ValidationError(
+                               'Could Not Send Email.\n'
+                               'Extra Headers not allowed '
+                               'in email body.',
+                               code='badheader'))
             return False
         else:
             return True
+
 
 class ClientContactForm(forms.Form):
     title = forms.CharField(help_text='Your name')
@@ -51,14 +53,15 @@ class ClientContactForm(forms.Form):
         body = '{}\n\n Message From:{}\n'.format(your_message, title)
         try:
             # shortcut for send_mail
-            send_mail('Hello from PiQuests', body, 'contact@mg.piquests.com', recipient_list)
+            send_mail('Hello from PiQuests', body,
+                      'contact@mg.piquests.com', recipient_list)
         except BadHeaderError:
             self.add_error(None,
-                ValidationError(
-                    'Could Not Send Email.\n'
-                    'Extra Headers not allowed '
-                    'in email body.',
-                    code='badheader'))
+                           ValidationError(
+                               'Could Not Send Email.\n'
+                               'Extra Headers not allowed '
+                               'in email body.',
+                               code='badheader'))
             return False
         else:
             return True

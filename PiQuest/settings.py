@@ -4,6 +4,8 @@ import os
 
 import environ
 
+from django.contrib.messages import constants as messages
+
 env = environ.Env(
     DEBUG=(bool, False)
 )
@@ -46,6 +48,13 @@ INSTALLED_APPS = [
     'django_social_share',
     'puput',
     'colorful',
+    'classroom',
+    'digiwiz',
+    'ckeditor',
+    'ckeditor_uploader',
+    'classroom.templatetags.custom_tags',
+    'sorl.thumbnail',
+    'star_ratings',
 
     # Django Apps
     'whitenoise.runserver_nostatic',
@@ -78,6 +87,26 @@ INSTALLED_APPS = [
     'todo',
 ]
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'width': 1110,
+        'toolbar_Custom': [
+            ['Font', 'FontSize', 'TextColor', 'BGColor'],
+            ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript'],
+            ['Undo', 'Redo', 'JustifyLeft', 'JustifyCenter',
+                'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink', 'Image', 'Table', 'HorizontalRule', 'NumberedList',
+             'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote',
+             'BidiLtr', 'BidiRtl'],
+            ['RemoveFormat', 'Smiley', 'SpecialChar'],
+            ['Styles', 'Format'],
+            ['Youtube'],
+            ['Source']
+        ],
+        'extraPlugins': 'youtube',
+    },
+}
 
 SITE_ID = 1
 
@@ -192,6 +221,19 @@ NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
 AUTH_USER_MODEL = 'user.User'
 
+TEMPLATE_CONTEXT_PROCESSOR = 'django.core.context_processors.request'
+STAR_RATINGS_STAR_HEIGHT = 20
+
+CKEDITOR_UPLOAD_PATH = 'uploads/lessons/'
+
+# MESSAGE_TAGS = {
+#     messages.DEBUG: 'alert-secondary',
+#     messages.INFO: 'alert-info',
+#     messages.SUCCESS: 'alert-success',
+#     messages.WARNING: 'alert-warning',
+#     messages.ERROR: 'alert-danger',
+# }
+
 # Logging
 # https://docs.djangoproject.com/en/1.8/topics/logging/
 
@@ -239,9 +281,10 @@ MANAGERS = (
     ('Us', 'piquests@gmail.com'),
 )
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+# CRISPY_ALLOWED_TEMPLATE_PACKS = ('bootstrap4', 'tailwind')
 
-CRISPY_TEMPLATE_PACK = 'tailwind'
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# CRISPY_TEMPLATE_PACK = 'tailwind'
 
 
 LOGIN_REDIRECT_URL = reverse_lazy('quiz:quiz_index')
@@ -254,6 +297,7 @@ INTERNAL_IPS = [
     # ...
 ]
 
+PI_VALIDATION_KEY = env('PI_VALIDATION_KEY')
 
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
@@ -295,6 +339,7 @@ if not DEBUG:
     AWS_S3_ENDPOINT_URL = 'https://fra1.digitaloceanspaces.com'
 
     CMC_PRO_API_KEY = env('CMC_PRO_API_KEY')
+    PI_VALIDATION_KEY = env('PI_VALIDATION_KEY')
 
 LOGGING = {
     'version': 1,
@@ -313,3 +358,11 @@ LOGGING = {
 PUPUT_AS_PLUGIN = True
 
 TODO_STAFF_ONLY = False
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-secondary',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
