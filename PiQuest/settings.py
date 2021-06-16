@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     # Third-Party Apps
+    'allauth_bootstrap4',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
