@@ -1,4 +1,4 @@
-@import "lesshat";
+@import "./lesshat.less";
 
 .star-ratings-css {
     unicode-bidi: bidi-override;

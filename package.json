@@ -1,5 +1,9 @@
 {
   "dependencies": {
     "@tailwindcss/forms": "^0.3.2"
+  },
+  "devDependencies": {
+    "less": "^4.1.1",
+    "lesshat": "^4.1.0"
   }
 }
