@@ -4,9 +4,27 @@ from classroom.models import (ClassAnswer, Course, MyFile, Lesson, ClassQuestion
 from django.conf import settings
 from django import forms
 from django.contrib.auth import authenticate
+from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from django.forms.utils import ValidationError
 from django.forms.widgets import TextInput
+
+
+class AdminAddForm(UserCreationForm):
+    email = forms.EmailField()
+    last_name = forms.CharField(max_length=80)
+    first_name = forms.CharField(max_length=80)
+
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'email', 'last_name', 'first_name')
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_staff = True
+        if commit:
+            user.save()
+        return user
 
 
 class BaseAnswerInlineFormSet(forms.BaseInlineFormSet):

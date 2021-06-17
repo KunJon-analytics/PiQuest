@@ -9,32 +9,32 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, ListView, UpdateView
 from .raw_sql import get_popular_courses
 from ..decorators import staff_required, superuser_required
-from ..forms import SubjectUpdateForm
+from ..forms import AdminAddForm, SubjectUpdateForm
 from ..models import Course, ClassQuiz, Subject, UserLog
 from user.models import User
 
 
-# @method_decorator([login_required, superuser_required], name='dispatch')
-# class AdminCreateView(CreateView):
-#     model = User
-#     form_class = AdminAddForm
-#     template_name = 'classroom/staff/admin_add_form.html'
-#     extra_context = {
-#         'title': 'New Admin',
-#         'sidebar': 'admin_list'
-#     }
+@method_decorator([login_required, superuser_required], name='dispatch')
+class AdminCreateView(CreateView):
+    model = User
+    form_class = AdminAddForm
+    template_name = 'classroom/staff/admin_add_form.html'
+    extra_context = {
+        'title': 'New Admin',
+        'sidebar': 'admin_list'
+    }
 
-#     def form_valid(self, form):
-#         user = form.save(commit=False)
-#         user.save()
-#         messages.success(
-#             self.request, 'The admin account has been successfully created!')
-#         return redirect('staff:admin_list')
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.save()
+        messages.success(
+            self.request, 'The admin account has been successfully created!')
+        return redirect('staff:admin_list')
 
-#     def get_context_data(self, **kwargs):
-#         kwargs['course_request_count'] = Course.objects.values_list(
-#             'id', flat=True).filter(status='pending').count()
-#         return super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        kwargs['course_request_count'] = Course.objects.values_list(
+            'id', flat=True).filter(status='pending').count()
+        return super().get_context_data(**kwargs)
 
 
 @method_decorator([login_required, superuser_required], name='dispatch')
