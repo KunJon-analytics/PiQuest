@@ -48,7 +48,7 @@
                         <div class="not-found">404</div>
                         <h3>We couldn’t find what you were looking for</h3>
                         <div class="group-btn">
-                            <a href="{% url 'home' %}" class="btn btn-default btn-primary">BACK TO HOME</a>
+                            <a onclick="goBack()" class="btn btn-default btn-primary">PREVIOUS PAGE</a>
                         </div>
                     </div><!--/.error-page-content-->
                 </div><!--/.col-sm-8-->
@@ -67,6 +67,11 @@
     <script src="/static/js/plugins.js"></script>
     <!-- Main JS file that contents all jQuery Plugins activation. -->
     <script src="/static/js/main.js"></script>
+<script>
+function goBack() {
+  window.history.back();
+}
+</script>
 </body>
 
 <!-- Mirrored from bdevs.net/edulab/edulab/404.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 12 May 2019 04:51:17 GMT -->
