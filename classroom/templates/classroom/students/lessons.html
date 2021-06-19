@@ -10,9 +10,9 @@
                     <div class="col-md-12 col-sm-12">
                         <div class="page-heading">
                             <h2 class="page-name text-capitalize">{{ lesson.course.title }}</h2>
-                            {% if user.is_student %}
+                            {% if user.is_taker %}
                                 <a href="{% url 'course_details' lesson.course.pk %}" class="btn btn-default btn-primary">go back</a>
-                            {% elif user.is_teacher %}
+                            {% elif user.is_master %}
                                 <a href="javascript:history.back();" class="btn btn-default btn-primary">go back</a>
                             {% endif %}
                         </div><!--/.page-heading-->
@@ -31,7 +31,7 @@
                             <div class="course-details">
                                 <div class="course-title">
                                     <h2>Lesson {{ lesson.number }}: {{ lesson.title }}</h2>
-                                    {% if user.is_teacher %}
+                                    {% if user.is_master %}
                                         <a href="{% url 'teachers:lesson_edit' lesson.course.pk  lesson.pk %}" class="btn btn-primary mb-3" role="button" target="_blank">Edit Lesson</a>
                                     {% endif %}
                                 </div>

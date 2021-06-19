@@ -123,7 +123,7 @@
                                                             <p>{{ course.created_at|date:"F d, Y" }}</p>
                                                         </div>
 
-                                                        {% if user.is_student %}
+                                                        {% if user.is_taker %}
                                                             <div class="course-cat text-capitalize text-right">
                                                                 {% for taken in user.student.taken_courses.values %}
                                                                     {% if taken.course_id == course.pk %}

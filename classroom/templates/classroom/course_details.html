@@ -98,7 +98,7 @@
                                         <small>Course Code: {{ course.code }}</small>
                                     </div>
                                     <div class="col-sm-2">
-                                        {% if user.is_student %}
+                                        {% if user.is_taker %}
                                             {% if enrolled %}
                                                 <div class="course-cat text-capitalize text-right">
                                                     {% if enrolled.status == 'enrolled' %}
@@ -135,7 +135,7 @@
                                 <img src="{{ course.image.url }}" alt="" />
                             </div>
                             <div class="course-desc">
-                                {% if user.is_student or not user.is_authenticated %}
+                                {% if user.is_taker or not user.is_authenticated %}
                                     <center>
                                         {% ratings course %}
                                     </center>
@@ -181,14 +181,14 @@
                                                     <p>{{ lesson.description }}</p><br>
                                                     {% if user.is_staff %}
                                                         <a href="{% url 'course_details' course.pk %}lesson?page={{ forloop.counter }}" class="btn btn-primary mb-3" style="border-color:#f78888;" role="button">View Lesson</a>
-                                                    {% elif user.is_teacher %}
+                                                    {% elif user.is_master %}
                                                         {% if owns != None %}
                                                             <a href="{% url 'course_details' course.pk %}lesson?page={{ forloop.counter }}" class="btn btn-primary mb-3" style="border-color:#f78888;" role="button">View Lesson</a>
                                                             <a href="{% url 'teachers:lesson_edit' course.pk lesson.pk %}" class="btn btn-primary btn-takequiz mb-3" role="button">Edit</a>
                                                             <a href="#" class="btn btn-primary mb-3 delete" data-id="{{ lesson.pk }}" role="button">Delete</a>
                                                         {% endif %}
 
-                                                    {% elif user.is_student %}
+                                                    {% elif user.is_taker %}
                                                         {% if enrolled.status == 'enrolled' or enrolled.status == 'finished' %}
                                                             <a href="{% url 'course_details' course.pk %}lesson?page={{ forloop.counter }}" class="btn btn-primary mb-3" style=" border-color:#f78888;" role="button">See Lesson</a>
                                                             {% if lesson.quizzes.pk %}
@@ -223,7 +223,7 @@
                 <div class="row justify-content-md-center">
                     <div class="col-lg-8">
                         <div class="section-heading-area text-center">
-                            {% if user.is_student %}
+                            {% if user.is_taker %}
                                 <h2 class="section-heading text-capitalize">Suggested Courses</h2>
                             {% else %}
                                 <h2 class="section-heading text-capitalize">Related Courses</h2>
@@ -246,7 +246,7 @@
                                     <p style="white-space: nowrap; width: 310px; overflow: hidden; text-overflow: ellipsis">{{ related_course.description }}</p>
                                     <hr>
                                     <div class="course-reviews">
-                                        {% if user.is_student %}
+                                        {% if user.is_taker %}
                                             <center>
                                                 {% ratings related_course %}
                                             </center>
@@ -278,7 +278,7 @@
                                             <p>{{ related_course.created_at|date:"F d, Y" }}</p>
                                         </div>
 
-                                        {% if user.is_student %}
+                                        {% if user.is_taker %}
                                             <div class="course-cat text-capitalize text-right">
                                                 {% for taken in user.student.taken_courses.values %}
                                                     {% if taken.course_id == related_course.pk %}

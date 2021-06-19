@@ -10,9 +10,9 @@
                     <div class="container">
                         <div class="content-section">
                             <div class="media-body" align="middle">
-                                {% if user.is_teacher %}
+                                {% if user.is_master %}
                                     <img style="border-radius: 50%; width: 350px; height: 350px;"  src="{{ user.teacher.image.url }}" alt="{{ user.username }}">
-                                {% elif user.is_student %}
+                                {% elif user.is_taker %}
                                     <img style="border-radius: 50%; width: 350px; height: 350px;"  src="{{ user.student.image.url }}" alt="{{ user.username }}">
                                 {% endif %}
                             </div>
@@ -20,9 +20,9 @@
                             <div class="media-body" align="middle">
                                 <h2 class="account-heading">{{ user.username }}</h2>
                                 <p class="text-secondary">{{ user.email }}</p>
-                                {% if user.is_teacher %}
+                                {% if user.is_master %}
                                     <a href="{% url 'teachers:change_password' %}" class="btn btn-danger" role="button">Change my password</a>
-                                {% elif user.is_student %}
+                                {% elif user.is_taker %}
                                     <a href="{% url 'students:change_password' %}" class="btn btn-danger" role="button">Change my password</a>
                                 {% endif %}
                             </div>

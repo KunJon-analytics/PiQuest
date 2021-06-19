@@ -92,7 +92,7 @@
                                                     <p style="white-space: nowrap; width: 310px; overflow: hidden; text-overflow: ellipsis">{{ course.description }}</p>
 
                                                     <div class="course-reviews">
-                                                        {% if user.is_student %}
+                                                        {% if user.is_taker %}
 
                                                             {% ratings course %}
 
@@ -125,7 +125,7 @@
                                                             <p>{{ course.created_at|date:"F d, Y" }}</p>
                                                         </div>
 
-                                                        {% if user.is_student %}
+                                                        {% if user.is_taker %}
                                                             <div class="course-cat text-capitalize text-right">
                                                                 {% for taken in user.student.taken_courses.values %}
                                                                     {% if taken.course_id == course.pk %}

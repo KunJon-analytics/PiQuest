@@ -6,9 +6,9 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-6 col-sm-8">
                     <div class="login-form-area">
-                        {% if user.is_student %}
+                        {% if user.is_taker %}
                             <h2 class="mb-3">My Quiz Result</h2>
-                        {% elif user.is_teacher %}
+                        {% elif user.is_master %}
                             <h2 class="mb-3">Quiz Result</h2>
                             <p>Student: <b><u>{{ student_name.first_name }} {{ student_name.last_name }}</u></b></p>
                         {% endif %}
@@ -44,9 +44,9 @@
                             {% endfor %}
 
                             <center>
-                                {% if user.is_student %}
+                                {% if user.is_taker %}
                                     <a href="javascript:history.back();" class="btn btn-danger" role="button">Go Back</a>
-                                {% elif user.is_teacher %}
+                                {% elif user.is_master %}
                                     <a href="{% url 'teachers:quiz_results' taken_quiz.quiz.pk %}" class="btn btn-danger" role="button">Go Back</a>
                                 {% endif %}
                             </center>

@@ -110,7 +110,7 @@
                                 <p style="white-space: nowrap; width: 310px; overflow: hidden; text-overflow: ellipsis">{{ course.description }}</p>
 
                                 <div class="course-reviews">
-                                    {% if user.is_student %}
+                                    {% if user.is_taker %}
                                         {% ratings course %}
                                     {% else %}
                                         <div class="star-ratings-css" style="float:left">
