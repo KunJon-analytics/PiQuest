@@ -173,7 +173,7 @@
 
     <!--Mobile Menu-->
     <div class="mobile-menu">
-        <a class="mobile-logo" href="index.html"><img src="{% static 'images/piquests.png' %}" alt="logo" height="40"></a>
+        <a class="mobile-logo" href="{% url 'main:home_page' %}"><img src="{% static 'images/piquests.png' %}" alt="logo" height="40"></a>
     </div>
 </header><!--/.header-area-->
 
@@ -191,7 +191,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="copyright text-center">
-                        Copyright © 2021 <a href="https://github.com/KunJon-analytics/PiQuest" target="_blank">PiQuests</a>. All rights reserved.
+                        Copyright © 2021 <a href="{% url 'main:home_page' %}" target="_blank">PiQuests</a>. All rights reserved.
                     </div>
                 </div>
             </div><!--/.row-->

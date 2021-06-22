@@ -139,6 +139,4 @@ cython_debug/
 # node modules
 node_modules/
 
-profile_pics/
 cache/
-media/
