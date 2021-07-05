@@ -47,7 +47,7 @@
             <a href="{% url 'quiz:quiz_index' %}" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Trivia</a>
 
             <a href="{% url 'project:project_list' %}" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium">Projects</a>
-            <a href="/course" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium">Courses</a>
+            <a href="{% url 'home' %}" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium">Learn</a>
             <a href="/blog" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium">Blog</a>
           </div>
         </div>
@@ -69,7 +69,7 @@
             <button type="button" id="profile-burger" class="bg-myrtle-green flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-myrtle-green focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
               <span class="sr-only">Open user menu</span>
               {% if user.is_authenticated %}
-              <img class="h-8 w-8 rounded-full" src="{{ user.get_image_url }}" alt="">
+              <img class="h-8 w-8 rounded-full" src="{{ user.get_image_url }}" alt="{{ user.username }}">
               {% else %}
               <img class="h-8 w-8 rounded-full" alt="" src="https://piquests.com/static/images/profile_default.jpg">
               {% endif %}

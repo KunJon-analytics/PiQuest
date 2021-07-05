@@ -1,61 +1,96 @@
-{% extends parent_template|default:"projects/base_projects.html" %}
-{% load i18n %}
-{% block title %}{% trans "Project List" %}{% endblock %}
-
+{% extends 'classroom/base.html' %}
+{% load crispy_forms_tags %}
+{% load custom_tags %}
+{% load mathfilters %}
+{% load ratings %}
+{% load static %}
+{% load thumbnail %}
 {% block content %}
-<section class="text-gray-600 body-font bg-gray-100">
-    <div class="px-5 mx-auto flex flex-wrap justify-around p-5">
-        <h2 class="text-gray-700 text-3xl">{% trans "Projects" %}</h2>
-        {% include "main/content_footer.html" %}
-    </div>
-    <div class="container px-5 py-10 mx-auto">
-    <div class="flex flex-wrap -m-4">
-    {% for project in project_list %}
-    <div class="p-4 lg:w-1/2 md:w-1/3">
-    <div class="h-full max-w-sm px-4 py-3 mx-auto bg-white rounded-md shadow-md dark:bg-gray-800">
-            <div class="flex items-center justify-between">
-                <a href=""><span class="text-sm font-light text-myrtle-green hover:text-languid-lavender dark:text-gray-400">{{ project.lead.get_short_name }}</span></a>
-                {% if project.categories.all %}
-                <span class="px-3 py-1 text-xs text-myrtle-green uppercase bg-languid-lavender rounded-full dark:bg-indigo-300 dark:text-indigo-900"><p><a href="{{ project.get_chosen_category.get_absolute_url }}">{{ project.get_chosen_category }}</a></p></span>
-                {% endif %}
-            </div>
+    <!--=======Page Heading
+    ==================================-->
+    <section class="page-heading-section page-heading-one before-bg bg-image" style="background-image: url({% static 'images/header/p-header2.jpg' %});">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="page-heading">
+                        <h2 class="page-name text-capitalize">Our Partners</h2>
+                        <a href="{% url 'main:home_page' %}" class="btn btn-default btn-primary">back to home</a>
+                    </div><!--/.page-heading-->
+                </div><!--/.col-md-12-->
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.page-heading-area-->
 
-            <div>
-                <h1 class="mt-2 text-lg font-semibold text-gray-800 dark:text-white hover:text-languid-lavender hover:underline"><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></h1>
-                <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">{{ project.description|truncatewords:20 }}</p>
-            </div>
+    <div class="courses-page page-wrapper">
 
-            <div>
-                <div class="flex items-center mt-2 text-gray-700 dark:text-gray-200">
-                    <span>See more:</span>
-                    <a href="{{ project.website }}" target="_blank" class="mx-2 text-myrtle-green hover:text-languid-lavender cursor-pointer dark:text-blue-400 hover:underline">{{ project.website }}</a>
-                </div>
-
-                <div class="flex items-center justify-center mt-4">
-                    <a  href="https://{{ project.get_telegram_url }}" target="_blank" class="mr-2 text-myrtle-green cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-myrtle-green" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 512.004 512.004" style="enable-background:new 0 0 512.004 512.004;" xml:space="preserve" width="512" height="512">
-                            <path d="M508.194,20.517c-4.43-4.96-11.42-6.29-17.21-3.76l-482,211c-5.34,2.34-8.85,7.57-8.98,13.41  c-0.13,5.83,3.14,11.21,8.38,13.79l115.09,56.6l28.68,172.06c0.93,6.53,6.06,11.78,12.74,12.73c4.8,0.69,9.57-1,12.87-4.4  l90.86-90.86l129.66,92.62c4.16,2.96,9.52,3.61,14.24,1.74c4.73-1.87,8.19-6.02,9.19-11.01l90-451  C512.604,28.967,511.454,24.177,508.194,20.517z M135.354,283.967l-84.75-41.68l334.82-146.57L135.354,283.967z M182.294,328.557  l-13.95,69.75l-15.05-90.3l183.97-138.49l-150.88,151.39C184.264,323.027,182.854,325.787,182.294,328.557z M191.424,435.857  l15.74-78.67l36.71,26.22L191.424,435.857z M396.834,455.797l-176.73-126.23l252.47-253.31L396.834,455.797z"/>
-                        </svg>
-                    </a>
-
-                    <a href="mailto: {{ project.email }}" target="_blank" class="mr-2 text-myrtle-green cursor-pointer dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-        </div>
-        {% empty %}
-        <p><em>There are currently no projects available</em></p>
-        {% endfor %}
-        </div>
-    </div>
-</section>
+        <!--=======Courses Page Content
+        ==================================-->
+        <div class="courses-page-content" >
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <center>
+                            <a href="{% url 'project:project_list' %}" class="btn btn-default btn-gray" role="button">All</a>
+                            {% for category in categories %}
+                                <a href="{{ category.get_absolute_url }}" class="btn btn-{{ category.category.lower }} btn-primary-{{ category.category.lower }}">{{ category.category }}</a>
+                            {% endfor %}
+                        </center>
+                        <br>
+                        {% if not project_list %}
+                            <center><p>There are no available partners yet.</p></center>
+                        {% endif %}
+                        <div class="courses-page-content">
+                            <div class="courses-content">
+                                <div class="row">
+                                    {% for project in project_list %}
+                                        <div class="col-sm-6">
+                                            <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ project.title }}</h5>
+                                                <p class="card-text">{{ project.description|truncatewords:15 }}</p>
+                                                <a href="{{ project.get_absolute_url }}" class="btn btn-primary">See More</a>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <nav class="courses-navigation default-pager text-center">
+                                            {% if is_paginated %}
+                                                {% if previous_page_url %}
+                                                    <a href="{{ previous_page_url }}" title="Previous Page">
+                                                        <i class="fa fa-angle-left"></i>
+                                                    </a>
+                                                {% endif %}
+                                                {% if first_page_url %}
+                                                    <a href="{{ first_page_url }}" title="Page 1">
+                                                        <i class="fa fa-angle-double-left"></i>
+                                                    </a>
+                                                {% endif %}
+                                                <a href="#" title="Page {{ page_obj.number }}" style="background-color: #f78888; color: #fff">{{ page_obj.number }}</a>
+                                                {% if next_page_url %}
+                                                    <a href="{{ next_page_url }}" title="Next Page">
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </a>
+                                                {% endif %}
+                                                {% if last_page_url %}
+                                                    <a href="{{ last_page_url }}" title="Last Page">
+                                                        <i class="fa fa-angle-double-right"></i>
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                        </nav>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--/.row-->
+            </div><!--/.container-->
+        </div><!--/.courses-page-content-->
+    </div><!--/.courses-page-->
 {% endblock %}
-
-{% include "content_footer.html" %}
 
 

@@ -8,17 +8,32 @@ from user.decorators import class_login_required, require_authenticated_permissi
 from main.utils import ArticleLinkGetObjectMixin, PageLinksMixin, ProjectContextMixin
 from .models import Project, ArticleLink
 from .forms import ArticleLinkForm, ProjectForm
+from quiz.models import Category
 
 
 # Create your views here.
 class ProjectDetail(DetailView):
     model = Project
 
+    def get_context_data(self, **kwargs):
+        kwargs['title'] = self.get_object()
+        return super().get_context_data(**kwargs)
+
+
 class ProjectList(PageLinksMixin, ListView):
     page_kwarg = 'page'
-    paginate_by = 12 # 5 items per page
+    paginate_by = 12  # 5 items per page
     template_name = 'projects/project_list.html'
     model = Project
+    categories = Category.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectList, self)\
+            .get_context_data(**kwargs)
+
+        context['categories'] = self.categories
+        context['title'] = 'PiQuests Partners'
+        return context
 
 
 @method_decorator([login_required, master_required], name='dispatch')
@@ -49,7 +64,7 @@ class ArticleLinkCreate(ArticleLinkGetObjectMixin, ProjectContextMixin, CreateVi
     def get_initial(self):
         project_slug = self.kwargs.get(self.project_slug_url_kwarg)
         self.project = get_object_or_404(Project, slug__iexact=project_slug)
-        initial = {self.project_context_object_name: self.project,}
+        initial = {self.project_context_object_name: self.project, }
         initial.update(self.initial)
         return initial
 

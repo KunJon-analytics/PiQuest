@@ -33,6 +33,7 @@
     <link href="{% static 'style.css' %}" rel="stylesheet">
     <link href="{% static 'btn.css' %}" rel="stylesheet">
     <link href="{% static 'stars.css' %}" rel="stylesheet">
+    <link href="{% static 'classroom-footer.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
 
     <script src="{% static 'js/vendor/modernizr-2.8.3.min.js' %}"></script>
@@ -101,13 +102,16 @@
                                         {% endif %}
 
                                         <li><a href="{% url 'browse_courses' %}">Browse Courses</a></li>
+                                        <li><a href="{% url 'quiz:quiz_index' %}">Trivia</a></li>
+                                        <li><a href="/blog">Blog</a></li>
 <li class="dropdown-trigger">
-                                            {% thumbnail user.student.image "40x40" crop="center" as im %}
+                                            {% thumbnail user.profile.image "40x40" crop="center" as im %}
                                                 <img class="rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="course-owner">
                                             {% endthumbnail %}&nbsp;&nbsp;
-                                            <a href="#">{{ user.first_name }}</a>
+                                            <a href="#">{{ user.username }}</a>
                                             <ul class="dropdown-content">
-                                                <li><a href="{% url 'students:profile' %}">My Profile</a></li>
+                                                <li><a href="{% url 'piquest-auth:profile' %}">My Profile</a></li>
+                                                <li><a href="{% url 'todo:mine' %}">My Tasks</a></li>
                                                 <li><a href="{% url 'students:mycourses_list' %}">My Courses</a></li>
                                                 <li><a href="{% url 'students:taken_quiz_list' %}">My Quizzes</a></li>
                                                 <li class="login"><a href="{% url 'account_logout' %}">Logout</a></li>
@@ -116,6 +120,8 @@
                                     {% elif user.is_master %}
 
 
+                                        <li><a href="{% url 'quiz:quiz_index' %}">Trivia</a></li>
+                                        <li><a href="/blog">Blog</a></li>
                                         <li ><a href="{% url 'browse_courses' %}">Browse Courses</a></li>
                                         <li class="login">
                                             <a href="{% url 'teachers:enrollment_requests_list' %}">Enrollment Requests
@@ -129,17 +135,18 @@
                                             </a>
                                         </li>
                                         <li class="dropdown-trigger">
-                                            {% thumbnail user.teacher.image "40x40" crop="center" as im %}
+                                            {% thumbnail user.profile.image "40x40" crop="center" as im %}
                                                 <img class="rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="course-owner">
                                             {% endthumbnail %}&nbsp;&nbsp;
                                             <a href="#">{{ user.first_name }}</a>
 
                                             <ul class="dropdown-content">
-                                                <li><a href="{% url 'teachers:profile' %}">My Profile</a></li>
+                                                <li><a href="{% url 'piquest-auth:profile' %}">My Profile</a></li>
                                                 <li><a href="{% url 'teachers:course_change_list' %}">My Courses</a></li>
                                                 <li><a href="{% url 'teachers:lesson_list' %}">My Lessons</a></li>
                                                 <li><a href="{% url 'teachers:quiz_list' %}">My Quizzes</a></li>
                                                 <li><a href="{% url 'teachers:file_list' %}">My Files</a></li>
+                                                <li><a href="{% url 'todo:mine' %}">My Tasks</a></li>
                                                 <li class="login"><a href="{% url 'account_logout' %}">Logout</a></li>
                                             </ul>
                                         </li>
@@ -152,9 +159,10 @@
                                     </nav>
 
                                 {% else %}
-                                    <li class="login"><a href="{% url 'main:home_page' %}">Home</a></li>
+                                    <li class="login"><a href="{% url 'quiz:quiz_index' %}">Trivia</a></li>
                                     <li class="login"><a href="{% url 'browse_courses' %}">Courses</a></li>
-                                    <li class="login"><a href="{% url 'about_us' %}">About Us</a></li>
+                                    <li class="login"><a href="/blog">Blog</a></li>
+                                    {% comment %} <li class="login"><a href="{% url 'about_us' %}">About Us</a></li> {% endcomment %}
                                     <li class="login"><a href="{% url 'account_signup' %}">Register</a></li>
                                     <li class="login"><a href="{% url 'account_login' %}">Login</a></li>
                                     </ul>
@@ -169,7 +177,7 @@
         </div><!--/.container-fluid-->
     </div><!--/.headier-inner-->
 
-    <div id="sticky-header"></div><!--/#sticky-header-->
+    <div id="sticky-header"></div><!--/#sticky-header--> 
 
     <!--Mobile Menu-->
     <div class="mobile-menu">
@@ -186,17 +194,7 @@
     {% endblock %}
 
     <!-- Start footer copyright area -->
-    <div class="footer-copyright-area bg-gray">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="copyright text-center">
-                        Copyright © 2021 <a href="{% url 'main:home_page' %}" target="_blank">PiQuests</a>. All rights reserved.
-                    </div>
-                </div>
-            </div><!--/.row-->
-        </div><!--/.container-->
-    </div><!--End footer copyright area -->
+    {% include 'main/classroom-footer.html' %}
 </footer><!--End footer area -->
 
 <!-- All JS files are included here.

@@ -20,11 +20,7 @@
                             <div class="media-body" align="middle">
                                 <h2 class="account-heading">{{ user.username }}</h2>
                                 <p class="text-secondary">{{ user.email }}</p>
-                                {% if user.is_master %}
-                                    <a href="{% url 'teachers:change_password' %}" class="btn btn-danger" role="button">Change my password</a>
-                                {% elif user.is_taker %}
-                                    <a href="{% url 'students:change_password' %}" class="btn btn-danger" role="button">Change my password</a>
-                                {% endif %}
+                                    <a href="{% url 'account_change_password' %}" class="btn btn-danger" role="button">Change my password</a>
                             </div>
                         </div>
                     </div>

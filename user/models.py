@@ -39,6 +39,9 @@ class User(AbstractUser):
     def completed_sittings(self):
         return self.sittings.filter(complete=True)
 
+    def total_sittings(self):
+        return self.sittings.all()
+
 
 class Profile(models.Model):
     user = models.OneToOneField(
