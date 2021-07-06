@@ -55,6 +55,7 @@
     <link href="{% static 'blog-style.css' %}" rel="stylesheet">
     <link href="{% static 'btn.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'puput.css' %}"/>
+    <link href="{% static 'classroom-footer.css' %}" rel="stylesheet">
 
     <script src="{% static 'js/vendor/modernizr-2.8.3.min.js' %}"></script>
     <script src="{% static 'js/jquery-3.4.1.js' %}" type="text/javascript"></script>
@@ -255,18 +256,7 @@
     {% endblock %}
 
     <!-- Start footer copyright area -->
-    <div class="footer-copyright-area bg-gray">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="copyright text-center">
-                        Copyright © 2021 <a href="{% url 'main:home_page' %}" target="_blank">PiQuests</a>. All rights reserved.
-                    </div>
-                </div>
-            </div><!--/.row-->
-        </div><!--/.container-->
-    </div><!--End footer copyright area -->
-</footer><!--End footer area -->
+   {% include 'main/classroom-footer.html' %}
 
 <!-- All JS files are included here.
 ============================================== -->

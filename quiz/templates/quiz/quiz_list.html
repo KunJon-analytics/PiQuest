@@ -32,7 +32,7 @@
                         <center>
                             <a href="{% url 'quiz:quiz_index' %}" class="btn btn-default btn-gray" role="button">All</a>
                             {% for category in categories %}
-                                <a href="{% url 'quiz:quiz_category_list_matching' category.category %}" class="btn btn-{{ subject.name.lower }} btn-primary-{{ subject.name.lower }}">{{ category.category }}</a>
+                                <a href="{% url 'quiz:quiz_category_list_matching' category.category %}" class="btn btn-default btn-primary-{{ subject.name.lower }}">{{ category.category }}</a>
                             {% endfor %}
                         </center>
                         <br>
@@ -54,7 +54,6 @@
                                                 </div><!--/.course-thumb-area-->
                                                 <div class="course-content">
                                                     <h2><a href="{{ quiz.get_absolute_url }}">{{ quiz.title }}</a></h2>
-                                                    {{ quiz.category.get_html_badge }}
                                                     {% if quiz.single_attempt %}
                                                     <span class="badge badge-primary" style="background-color: #317773">single attempt</span>
                                                     {% endif %}

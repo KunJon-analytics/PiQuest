@@ -45,8 +45,6 @@ class Category(models.Model):
 
     description = models.TextField()
 
-    color = models.CharField(max_length=9, default='#007bff')
-
     image = models.ImageField(
         default='category_default.jpg', upload_to='category_pic')
 
@@ -59,12 +57,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.category.title()
-
-    def get_html_badge(self):
-        name = escape(self.category)
-        color = escape(self.color)
-        html = f'<span class="badge badge-primary" style="background-color: {color}">{name}</span>'
-        return mark_safe(html)
 
     def get_absolute_url(self):
         return reverse('main:category_detail', kwargs={'slug': self.slug})

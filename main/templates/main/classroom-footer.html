@@ -92,7 +92,7 @@
                                 </div>
                                 <ul>
                                     <li>
-                                        <a href="#">About us</a>
+                                        <a href="{% url 'about_us' %}">About us</a>
                                     </li>
                                     <li>
                                         <a href="{% url 'quiz:quiz_index' %}">Trivia</a>
@@ -115,7 +115,7 @@
                                         <a href="{% url 'main:category_list' %}">Interests</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'main:privacy_page' %}">Privacy policies</a>
+                                        <a href="{% url 'main:privacy_page' %}">Privacy Policy</a>
                                     </li>
                                 </ul>
                             </div>
@@ -159,23 +159,23 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <span>Copyright © 2019, All Right Reserved Seobin</span>
+                        <span>Copyright © 2021, All Right Reserved KunJon</span>
                     </div>
                     <!-- End Col -->
                     <div class="col-md-6">
                         <div class="copyright-menu">
                             <ul>
                                 <li>
-                                    <a href="#">Home</a>
+                                    <a href="{% url 'main:home_page' %}">Home</a>
                                 </li>
                                 <li>
-                                    <a href="#">Terms</a>
+                                    <a href="{% url 'quiz:quiz_index' %}">Trivia</a>
                                 </li>
                                 <li>
-                                    <a href="#">Privacy Policy</a>
+                                    <a href="{% url 'main:privacy_page' %}">Privacy Policy</a>
                                 </li>
                                 <li>
-                                    <a href="#">Contact</a>
+                                    <a href="{% url 'contact:contact' %}">Contact</a>
                                 </li>
                             </ul>
                         </div>

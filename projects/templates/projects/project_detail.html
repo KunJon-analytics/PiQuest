@@ -75,8 +75,6 @@
                                         <br>
                                         <small>{{ project.date_added|date:"F d, Y" }}</small>
                                         <br>
-                                        <small>Categor{{ project.categories.all|pluralize:"y,ies" }}: {% for category in project.categories.all %}{{ category.get_html_badge }}{% endfor %}</small>
-                                        <br>
                                         <small>Contact: {{ project.email|urlize }}</small>
                                     </div>
                                     <div class="col-sm-2">

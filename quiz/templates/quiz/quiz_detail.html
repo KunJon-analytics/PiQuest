@@ -87,7 +87,7 @@
                                         <br>
                                         <small>{{ quiz.pub_date|date:"F d, Y" }}</small>
                                         <br>
-                                        <small>Category: {{ quiz.category.get_html_badge }}</small>
+                                        <small>Category: <span class="badge badge-primary" style="background-color: #317773">{{ quiz.category }}</span></small>
                                         <br>
                                         <small>{% if quiz.single_attempt %}
                                                     <span class="badge badge-primary" style="background-color: #317773">single attempt</span>
