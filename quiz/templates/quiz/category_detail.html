@@ -1,152 +1,109 @@
-{% extends parent_template|default:"projects/base_projects.html" %}
+{% extends 'classroom/base.html' %}
 {% load humanize %} 
-{% block title %}{{ category.category }}{% endblock %}
+{% load static %}
+{% load thumbnail %}
+{% block extra_head %}
+  <link href="{% static 'category-detail.css' %}" rel="stylesheet"> 
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+{% endblock %}
 {% block content %}
+    <!--=======Page Heading
+    ==================================-->
+    <section class="page-heading-section page-heading-one before-bg bg-image" style="background-image: url({{ category.get_image_url}});">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="page-heading">
+                        <h2 class="page-name text-capitalize">{{ category.category }}</h2>
+                        <a href="{% url 'main:home_page' %}" class="btn btn-default btn-primary">back to home</a>
+                    </div><!--/.page-heading-->
+                </div><!--/.col-md-12-->
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.page-heading-area-->
 
-<section class="text-gray-600 body-font bg-gray-100 border-2 border-languid-lavender">
-  <div class="container px-5 py-24 mx-auto flex flex-wrap">
-    <div class="flex flex-wrap -mx-4 mt-auto mb-auto lg:w-1/2 sm:w-2/3 content-start sm:pr-10">
-      <div class="w-full sm:p-4 px-4 mb-6">
-        <h1 class="title-font font-medium text-3xl mb-2 text-myrtle-green">{{ category.category|title }}</h1>
-        <div class="leading-relaxed">{{ category.description }}</div>
-      </div>
-      <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
-        <h2 class="title-font font-medium text-3xl text-myrtle-green">{{ category.total_takers.count|intword }}</h2>
-        <p class="leading-relaxed">Takers</p>
-      </div>
-      <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
-        <h2 class="title-font font-medium text-3xl text-myrtle-green">{{ category.get_total_reward|intword }}</h2>
-        <p class="leading-relaxed">Rewards</p>
-      </div>
-      <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
-        <h2 class="title-font font-medium text-3xl text-myrtle-green">{{ category.quizzes.count|intword }}</h2>
-        <p class="leading-relaxed">Quiz{{ category.quizzes.count|pluralize:"zes" }}</p>
-      </div>
-      <div class="p-4 sm:w-1/2 lg:w-1/4 w-1/2">
-        <h2 class="title-font font-medium text-3xl text-myrtle-green">{{ category.projects.count|intword }}</h2>
-        <p class="leading-relaxed">Project{{ category.projects.count|pluralize }}</p>
-      </div>
-    </div>
-    <div class="lg:w-1/2 sm:w-1/3 w-full rounded-lg overflow-hidden mt-6 sm:mt-0">
-      <img class="object-cover object-center w-full h-full" src="{{ category.get_image_url }}" alt="{{ category.category }}">
-    </div>
-  </div>
-</section>
-{% if category.projects.all %}
-<section>
-<div class="w-full bg-white p-12">
-    <div class="header flex items-end justify-between mb-12">
-        <div class="title">
-            <p class="text-4xl font-bold text-gray-600 mb-4">
-                Latest Project{{ category.projects.count|pluralize }}
-            </p>
-            <p class="text-2xl font-light text-gray-400">
-                {{ category.category|title }} is associated with {{ category.projects.count }} project{{ category.projects.count|pluralize }}
-            </p>
-        </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
-            {% for project in category.projects.all %}
-            <div class="overflow-hidden shadow-lg rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto">
-                <a href="{{ quiz.get_chosen_project.get_absolute_url }}" class="w-full block h-full">
-                    <img alt="project photo" src="{{ project.get_image_url }}" class="max-h-40 w-full object-cover"/>
-                    <div class="bg-white dark:bg-gray-800 w-full p-4">
-                        <p class="text-indigo-500 text-md font-medium">
-                            {{ quiz.get_chosen_project }}
-                        </p>
-                        <p class="text-gray-800 dark:text-white text-xl font-medium mb-2 hover:text-languid-lavender">
-                            <a href="{{ project.get_absolute_url }}">{{ project.title|title }}</a>
-                        </p>
-                        <p class="text-gray-400 dark:text-gray-300 font-light text-md">
-                            {{ project.description|truncatewords:20 }}
-                        </p>
-                        <div class="flex items-center mt-4">
-                            <a href="{{ project.lead.get_absolute_url }}" class="block relative">
-                                <img alt="profil" src="{{ project.lead.get_image_url }}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
-                            </a>
-                            <div class="flex flex-col justify-between ml-4 text-sm">
-                                <p class="text-gray-800 dark:text-white hover:text-languid-lavender">
-                                    {{ project.lead.get_short_name|title }}
-                                </p>
-                                <p class="text-gray-400 dark:text-gray-300">
-                                    {{ project.date_added }}
-                                </p>
+    <div class="courses-page page-wrapper">
+
+        <!--=======Courses Page Content
+        ==================================-->
+        <div class="courses-page-content" >
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="courses-page-content">
+                            <div class="courses-content">
+                                <div class="container mt-5">
+                                    <div class="d-flex justify-content-between">
+                                        <div> <span class="font-weight-bold project">{{ category.category|title }}</span> </div>
+                                    </div>
+                                    <div class="bg-white border rounded mt-2">
+                                        <div class=" px-3 mt-3 d-flex flex-row justify-content-between"> <span>Statistic</span>
+                                            {% comment %} <div class="d-flex align-items-center"> <span class="border-right px-2 mr-2 text-black-50 fs-10">All Time</span> <i class="fa fa-caret-down"></i> </div> {% endcomment %}
+                                        </div>
+                                        <hr>
+                                        <div class="row px-5 mb-3">
+                                            <div class="col-md-3 mt-1">
+                                                <div class="d-flex flex-row"> <img src="{% static 'images/project-icon.png' %}" width="45">
+                                                    <div class="ml-2"> <span class="d-block font-weight-bold">{{ category.projects.count|intword }}</span> <span>Published project{{ category.projects.count|pluralize }}</span> </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-1">
+                                                <div class="d-flex flex-row"> <img src="{% static 'images/quiz-icon.png' %}" width="50">
+                                                    <div class="ml-2"> <span class="d-block font-weight-bold">{{ category.quizzes.count|intword }}</span> <span>Quiz{{ category.quizzes.count|pluralize:"zes" }}</span> </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-1">
+                                                <div class="d-flex flex-row"> <img src="{% static 'images/taker-icon.png' %}" width="50">
+                                                    <div class="ml-2"> <span class="d-block font-weight-bold">{{ category.total_takers.count|intword }}</span> <span>Takers</span> </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 mt-1">
+                                                <div class="d-flex flex-row">
+                                                    <div class="ml-5"> <span class="d-block green"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-coin" viewBox="0 0 16 16">
+                                                                    <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518l.087.02z"></path>
+                                                                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                                                                    <path fill-rule="evenodd" d="M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"></path>
+                                                                </svg> {{ category.get_total_reward|intword }}</span> <span class="text-black-50">{{ category.projects.count|intword }} Project{{ category.projects.count|pluralize }} listed</span> </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-5">
+                                        {% for quiz in category.quizzes.all %}
+                                            <div class="col-md-6 mt-3">
+                                                <div class="bg-white p-3 rounded border">
+                                                    <h6><a href="{{ quiz.get_absolute_url }}">{{ quiz.title|title }}</a></h6>
+                                                    <p class="text-black-50 content mb-5">{{ quiz.description|truncatewords:30 }}</p>
+                                                    <div class="d-flex flex-row">
+                                                        <div class="mr-4"> <span>Master</span>
+                                                            <div class="mt-1"> 
+                                                                {% thumbnail quiz.master.profile.image "40x40" crop="center" as im %}
+                                                                    <img class="rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="quiz master">
+                                                                {% endthumbnail %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="mr-4"> <span>Created</span>
+                                                            <div class="mt-2"> <span class="text-black-50">{{ quiz.pub_date }}</span> </div>
+                                                        </div>
+                                                        <div class="mr-4"> <span>Reward</span>
+                                                            <div class="mt-2"> <span class="text-black-50"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-coin" viewBox="0 0 16 16">
+                                                                    <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9H5.5zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518l.087.02z"></path>
+                                                                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                                                                    <path fill-rule="evenodd" d="M8 13.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z"></path>
+                                                                </svg>{{ quiz.reward }}</span> </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </a>
-            </div>
-        {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
+                </div><!--/.row-->
+            </div><!--/.container-->
+        </div><!--/.courses-page-content-->
+    </div><!--/.courses-page-->
 
-{% if category.quizzes.all %}
-<section class="bg-gray-100 border-2 border-languid-lavender">
-<div class="w-full bg-white p-12">
-    <div class="header flex items-end justify-between mb-12">
-        <div class="title">
-            <p class="text-4xl font-bold text-gray-600 mb-4">
-                Latest Quiz{{ category.quizzes.count|pluralize:"zes" }}
-            </p>
-            <p class="text-2xl font-light text-gray-400">
-                See various quizzes in {{category.category}}
-            </p>
-        </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-12">
-            {% for quiz in category.quizzes.all %}
-            <div class="overflow-hidden shadow-lg rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto">
-                <a href="{{ quiz.get_absolute_url }}" class="w-full block h-full">
-                    <img alt="quiz photo" src="{{ quiz.get_image_url }}" class="max-h-40 w-full object-cover"/>
-                    <div class="bg-white dark:bg-gray-800 w-full p-4">
-                        {% if quiz.get_chosen_project %}
-                        <p class="text-myrtle-green text-md font-medium hover:text-languid-lavender">
-                            {{ quiz.get_chosen_project }}
-                        </p>
-                        {% else %}
-                        <p class="text-myrtle-green text-md font-medium">
-                            PiQuest
-                        </p>
-                        {% endif %}
-                        <p class="text-gray-800 dark:text-white text-xl font-medium mb-2">
-                            <a href="{{ quiz.get_absolute_url }}">{{ quiz.title|title }}</a>
-                        </p>
-                        <p class="text-gray-400 dark:text-gray-300 font-light text-md">
-                            {{ quiz.description|truncatewords:20 }}
-                        </p>
-                        <div class="flex items-center mt-4">
-                            {% if user.is_authenticated %}
-                            <a href="{{ quiz.master.get_absolute_url }}" class="block relative">
-                                <img alt="profil" src="{{ quiz.master.get_image_url }}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
-                            </a>
-                            {% else %}
-                            <p class="block relative">
-                                <img alt="profil" src="{{ quiz.master.get_image_url }}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
-                            </p>
-                            {% endif %}
-                            <div class="flex flex-col justify-between ml-4 text-sm">
-                                <p class="text-gray-800 dark:text-white">
-                                    {{ quiz.master.get_short_name|title }}
-                                </p>
-                                <p class="text-gray-400 dark:text-gray-300">
-                                    {{ quiz.pub_date }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        {% endfor %}
-        </div>
-    </div>
-</section>
-    {% endif %}
-{% if not category.projects.all and not category.quizzes.all %}
-    <p>This category is not related to any content.</p>
-{% endif %}
-
-{% endblock content %}
+{% endblock %}

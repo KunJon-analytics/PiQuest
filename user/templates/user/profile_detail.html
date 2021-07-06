@@ -1,136 +1,201 @@
-{% extends parent_template|default:"base.html" %}
+{% extends 'classroom/base.html' %}
+{% load humanize %} 
 {% load static %}
-
-{% block title %}
-{{ block.super }}
-{{ profile.user.username }}'s Profile
+{% load thumbnail %}
+{% block extra_head %}
+  <link href="{% static 'profile.css' %}" rel="stylesheet"> 
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
-
 {% block content %}
+    <!--=======Page Heading
+    ==================================-->
+    <section class="page-heading-section page-heading-one before-bg bg-image" style="background-image: url({% static 'images/profile_background.jpg' %});">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="page-heading">
+                        <h2 class="page-name text-capitalize">{{ profile.user.username }}'s Profile</h2>
+                        <a href="{% url 'main:home_page' %}" class="btn btn-default btn-primary">back to home</a>
+                    </div><!--/.page-heading-->
+                </div><!--/.col-md-12-->
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.page-heading-area-->
 
-<body class="font-sans antialiased text-gray-900 leading-normal tracking-wider bg-cover" style="background-image:url('{% static 'images/profile_background.jpg' %}');">
+    <div class="courses-page page-wrapper">
 
+        <!--=======Courses Page Content
+        ==================================-->
+        <div class="courses-page-content" >
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="courses-page-content">
+                            <div class="courses-content">
+								<div class="container emp-profile">
+												<div class="row">
+													<div class="col-md-4">
+														<div class="profile-img">
+															<img src="{{ profile.image.url }}" alt="{{ profile.user.get_full_name }}"/>
+															<div class="file btn btn-lg btn-primary">
+																Looking Good...
+															</div>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="profile-head">
+																	<h5>
+																		{{ profile.user.get_full_name|default:"Name???"}}
+																	</h5>
+																	<h6>
+																		{{ profile.wallet_address|default:"Please add your waves exchange wallet address" }}
+																	</h6>
+																	<p class="proile-rating">Trivia : <span>{{ profile.user.completed_sittings.count }}/{{ profile.user.total_sittings.count }}</span></p>
+															<ul class="nav nav-tabs" id="myTab" role="tablist">
+																<li class="nav-item">
+																	<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+																</li>
+																{% if user.pk == profile.user.pk %}
+																<li class="nav-item">
+																	<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Settings</a>
+																</li>
+																{% endif %}
+															</ul>
+														</div>
+													</div>
+													{% if user.pk == profile.user.pk %}
+													<div class="col-md-2">
+														<a href="{{ profile.get_update_url }}"><input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/></a>
+													</div>
+													{% endif %}
+												</div>
+												<div class="row">
+													<div class="col-md-4">
+														<div class="profile-work">
+														{% if profile.user.is_project_manager and profile.user.get_projects %}
+															<p>PROJECTS</p>
+															{% for project in profile.user.get_projects %}
+															<a href="{{ project.get_absolute_url }}">{{ project.title }} </a><br/>
+															{% endfor %}
+														{% endif %}
+														{% if profile.user.completed_sittings %}
+														<p>COMPLETED TRIVIA</p>
+														{% for sittings in profile.user.completed_sittings %}
+															<a href="">{{ sittings.quiz.title }}</a><br/>
+														{% endfor %}
+														{% endif %}
+														</div>
+													</div>
+													<div class="col-md-8">
+														<div class="tab-content profile-tab" id="myTabContent">
+															<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>Name</label>
+																			</div>
+																			<div class="col-md-6">
+																				<p>{{ profile.user.get_full_name}}</p>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>Joined</label>
+																			</div>
+																			<div class="col-md-6">
+																				<p>{{ profile.joined|timesince }}</p>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>Email</label>
+																			</div>
+																			<div class="col-md-6">
+																				<p>{{ profile.user.email }}</p>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>Telegram id</label>
+																			</div>
+																			<div class="col-md-6">
+																				<a href="https://{{ profile.get_telegram_url }}" target="_blank"><p>Get in Touch</p><a>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>About</label>
+																			</div>
+																			<div class="col-md-6">
+																				<p>{{ profile.about|default:"Please update your profile"|linebreaks }}</p>
+																			</div>
+																		</div>
+															</div>
+															{% if user.pk == profile.user.pk %}
+															<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>Edit Profile</label>
+																			</div>
+																			<div class="col-md-6">
+																				<p><a href="{{ profile.get_update_url }}">click</a></p>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>My Progress</label>
+																			</div>
+																			<div class="col-md-6">
+																				<p><a href="{% url 'quiz:quiz_progress' %}">click</a></p>
+																			</div>
+																		</div>
+																		{% if request.user.is_master %}
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>My markings</label>
+																			</div>
+																			<div class="col-md-6">
+																				<p><a href="{% url 'quiz:quiz_marking' %}">click</a></p>
+																			</div>
+																		</div>
+																		{% endif %}
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>Change Password</label>
+																			</div>
+																			<div class="col-md-6">
+																				<p><a href="{% url 'account_change_password' %}">click</a></p>
+																			</div>
+																		</div>
+																		<div class="row">
+																			<div class="col-md-6">
+																				<label>Logout</label>
+																			</div>
+																			<div class="col-md-6">
+																				<p><a href="{% url 'account_logout' %}">click</a></p>
+																			</div>
+																		</div>
+																<div class="row">
+																	<div class="col-md-6">
+																		<label>Disable Account</label>
+																	</div>
+																	<div class="col-md-6">
+																		<p><a href="{% url 'piquest-auth:disable' %}">click</a></p>
+																	</div>
+																</div>
+															</div>
+															{% endif %}
+														</div>
+													</div>
+												</div>         
+										</div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--/.row-->
+            </div><!--/.container-->
+        </div><!--/.courses-page-content-->
+    </div><!--/.courses-page-->
 
-
-  <div class="max-w-4xl flex items-center h-auto lg:h-screen flex-wrap mx-auto my-32 lg:my-0">
-    
-	<!--Main Col-->
-	<div id="profile" class="w-full lg:w-3/5 rounded-lg lg:rounded-l-lg lg:rounded-r-none shadow-2xl bg-white opacity-75 mx-6 lg:mx-0">
-	
-
-		<div class="p-4 md:p-12 text-center lg:text-left">
-			<!-- Image for mobile view-->
-			<div class="block lg:hidden rounded-full shadow-xl mx-auto -mt-16 h-48 w-48 bg-cover bg-center" style="background-image: url({{ profile.image.url }})"></div>
-			
-			<h1 class="text-3xl font-bold pt-8 lg:pt-0">{{ profile.user.get_full_name }}</h1>
-			<div class="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
-			<p class="pt-4 text-base font-bold flex items-center justify-center lg:justify-start"><svg class="h-4 fill-current text-myrtle-green pr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-				<path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-			</svg>{{ profile.wallet_address }}</p>
-			<p class="pt-2 text-gray-600 text-xs lg:text-sm flex items-center justify-center lg:justify-start"><svg class="h-4 fill-current text-myrtle-green pr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-				<path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
-				</svg>Joined {{ profile.joined|timesince }} ago with {{ profile.user.completed_sittings.count }} completed quiz{{ profile.user.completed_sittings.count|pluralize:'zes' }}</p>
-			{% if profile.user.is_project_manager and profile.user.get_projects %}
-			<p class="pt-2 text-gray-600 text-xs lg:text-sm flex items-center justify-center lg:justify-start"><svg class="h-4 fill-current text-myrtle-green pr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-				<path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd" />
-				<path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" />
-			</svg>Project{{ profile.user.get_projects.count|pluralize }} managing: {% for project in profile.user.get_projects %}{{ project.title }} {% endfor %}</p>
-			{% endif %}
-			<p class="pt-8 text-sm">{{ profile.about|default:"Please update your profile"|linebreaks }}</p>
-			<div class="pt-12 pb-8">
-				<button class="bg-myrtle-green hover:bg-myrtle-green-light text-white font-bold py-2 px-4 rounded-full">
-					{% if  profile.telegram_id == "username" and user.pk == profile.user.pk %}
-					<a href="{{ profile.get_update_url }}">Update profile</a>
-					{% else %}
-					<a href="https://{{ profile.get_telegram_url }}" target="_blank">Get In Touch</a>
-					{% endif %}
-				</button> 
-			</div>
-
-      {% if user.pk == profile.user.pk %}
-			<div class="mt-6 pb-16 lg:pb-0 w-4/5 lg:w-full mx-auto flex flex-wrap items-center justify-between">
-				<a class="link" href="{{ profile.get_update_url }}" data-tippy-content="profile_edit"><svg class="h-6 fill-current text-gray-600 hover:text-myrtle-green" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-					<title>Edit Profile</title><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-					<path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
-				</svg></a>
-				<a class="link" href="{% url 'quiz:quiz_progress' %}" data-tippy-content="Your Progress"><svg class="h-6 fill-current text-gray-600 hover:text-myrtle-green" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-					<title>Your Progress</title><path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
-				</svg></a>
-				{% if request.user.is_master %}
-				<a class="link" href="{% url 'quiz:quiz_marking' %}" data-tippy-content="Quiz sittings"><svg class="h-6 fill-current text-gray-600 hover:text-myrtle-green" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-					<title>Mark your quiz</title><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-					<path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-				</svg></a>
-				{% endif %}
-				<a class="link" href="{% url 'account_change_password' %}" data-tippy-content="Change Password"><svg class="h-6 text-gray-600 hover:text-myrtle-green" role="img" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<title>Change Password</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-				</svg></a>
-				<a class="link" href="{% url 'account_logout' %}" data-tippy-content="Logout"><svg class="h-6 text-gray-600 hover:text-myrtle-green" role="img" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					<title>Logout</title><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-				</svg></a>
-				<a class="link" href="{% url 'piquest-auth:disable' %}" data-tippy-content="Deactivate Account"><svg class="h-6 text-gray-600 hover:text-languid-lavender-dark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-					<title>Deactivate Account</title><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-				</svg></a>
-				</div>
-      {% endif%}
-			
-			<!-- Use https://simpleicons.org/ to find the svg for your preferred product --> 
-
-		</div>
-
-	</div>
-	
-	<!--Img Col-->
-	<div class="w-full lg:w-2/5">
-		<!-- Big profile image for side bar (desktop) -->
-		<img src="{{ profile.image.url }}" class="rounded-none lg:rounded-lg shadow-2xl hidden lg:block">
-		<!-- Image from: http://unsplash.com/photos/MP0IUfwrn0A -->
-		
-	</div>
-	
-	
-	<!-- Pin to top right corner -->
-	  {% comment %} <div class="absolute top-0 right-0 h-12 w-18 p-4">
-		<button class="js-change-theme focus:outline-none">🌙</button>
-	  </div> {% endcomment %}
-
-</div>
-{% comment %} 
-	<script src="https://unpkg.com/popper.js@1/dist/umd/popper.min.js"></script>
-	<script src="https://unpkg.com/tippy.js@4"></script>
-	<script>
-		//Init tooltips
-		tippy('.link',{
-		  placement: 'bottom'
-		})
-
-		//Toggle mode
-		const toggle = document.querySelector('.js-change-theme');
-		const body = document.querySelector('body');
-		const profile = document.getElementById('profile');
-		
-		
-		toggle.addEventListener('click', () => {
-
-		  if (body.classList.contains('text-gray-900')) {
-			toggle.innerHTML = "☀️";
-			body.classList.remove('text-gray-900');
-			body.classList.add('text-gray-100');
-			profile.classList.remove('bg-white');
-			profile.classList.add('bg-gray-900');
-		  } else
-		  {
-			toggle.innerHTML = "🌙";
-			body.classList.remove('text-gray-100');
-			body.classList.add('text-gray-900');
-			profile.classList.remove('bg-gray-900');			
-			profile.classList.add('bg-white');
-			
-		  }
-		});
-		
-    </script> {% endcomment %}
-	
-</body>
 
 {% endblock %}

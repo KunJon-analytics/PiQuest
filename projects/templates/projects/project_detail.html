@@ -1,145 +1,119 @@
-{% extends parent_template|default:"projects/base_projects.html" %}
-{% block title %}{{ project.title }}{% endblock %}
+{% extends 'classroom/base.html' %}
+{% load mathfilters %}
+{% load custom_tags %}
+{% load static %}
+{% load ratings %}
+{% load thumbnail %}
 {% block content %}
+    <!--=======Page Heading
+    ================================-->
+    <section class="page-heading-section before-bg bg-image" style="background-image: url({% static 'images/header/p-header4.jpg' %});">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="page-heading">
+                        <h2 class="page-name text-capitalize">Project Details</h2>
+                        <a href="javascript:history.back();" class="btn btn-default btn-primary">go back</a>
+                    </div><!--/.page-heading-->
+                </div><!--/.col-md-12-->
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.page-heading-area-->
 
-<article class="bg-gray-100">
-<section class="text-gray-600 body-font overflow-hidden border-2 border-languid-lavender">
-  <div class="container px-5 py-24 mx-auto">
-    <div class="lg:w-4/5 mx-auto flex flex-wrap">
-      <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
-        <h2 class="text-sm title-font text-gray-500 tracking-widest uppercase">{{ project.get_chosen_category }}</h2>
-        <h1 class="text-gray-900 text-3xl title-font font-medium mb-4">{{ project.title }}</h1>
-        <div class="flex mb-4">
-          <a class="flex-grow text-myrtle-green border-b-2 border-languid-lavender py-2 text-lg px-1">Description</a>
-          <a href="https://{{ project.get_telegram_url }}" target="_blank" class="flex-grow hover:text-myrtle-green hover:border-languid-lavender border-b-2 border-gray-300 py-2 text-lg px-1">Community</a>
-          {% comment %} <a class="flex-grow border-b-2 border-gray-300 py-2 text-lg px-1">Statistic</a> {% endcomment %}
-        </div>
-        <p class="leading-relaxed mb-4">{{ project.description|linebreaks }}</p>
-        <div class="flex border-t border-gray-200 py-2">
-          <span class="text-gray-500">Date Added</span>
-          <span class="ml-auto text-gray-900">{{ project.date_added|date:"F jS, Y" }}</span>
-        </div>
-        <div class="flex border-t border-gray-200 py-2">
-          <span class="text-gray-500">Lead</span>
-          {% if user.is_authenticated %}
-          <span class="ml-auto text-gray-900"><a href="{{ project.lead.get_absolute_url }}">{{ project.lead.get_short_name }}</a></span>
-          {% else %}
-          <span class="ml-auto text-gray-900">{{ project.lead.get_short_name }}</span>
-          {% endif %}
-        </div>
-        <div class="flex border-t border-gray-200 py-2">
-          <span class="text-gray-500">Website</span>
-          <span class="ml-auto text-gray-900">{{ project.website|urlize }}</span>
-        </div>
-        <div class="flex border-t border-b mb-6 border-gray-200 py-2">
-          <span class="text-gray-500">Contact</span>
-          <span class="ml-auto text-gray-900">{{ project.email|urlize }}</span>
-        </div>
-        {% if user.pk == project.lead.pk %}
-        <div class="flex">
-          <button class="flex ml-auto text-white bg-myrtle-green border-0 py-2 px-6 focus:outline-none hover:bg-myrtle-green-light rounded"><a href="{{ project.get_update_url }}">Edit Project</a></button>
-          <a href="{{ project.get_articlelink_create_url }}"><button class="rounded-full w-10 h-10 bg-languid-lavende p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <title>Add articles</title><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd" />
-              <path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z" />
-            </svg>
-          </button></a>
-        </div>
-        {% endif %}
-      </div>
-      <img alt="{{ project.title }}" class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded" src="{{ project.get_image_url }}">
-    </div>
-  </div>
-</section>
+    <div class="courses-page page-wrapper">
+        <!--=======Courses Page Content
+        ==================================-->
+        <div class="courses-page-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-12">
+                        <div class="courses-sidebar">
+                            <aside class="widget widget-courses-category">
+                                <h2>Recent Articles</h2>
+                                <ul class="list-unstyled">
+                                    {% for articlelink in project.articles.all %}
+                                        {% if user.pk == project.lead.pk %}
+                                            <li><a href="{{ articlelink.get_update_url }}">{{ articlelink.title }}</a></li>
+                                        {% else %}
+                                            <li><a href="{{ articlelink.link }}" target="_blank">{{ articlelink.link }}</a></li>
+                                        {% endif %}
+                                    {% empty %}
+                                        There are no recent articles for this project.
+                                    {% endfor %}
+                                </ul>
+                            </aside>
+                            <aside class="widget widget-courses-category">
+                                <h2>Sponsored Trivia</h2>
+                                <ul class="list-unstyled">
+                                    {% for quiz in project.quizzes.all %}
+                                            <li><a href="{{ quiz.get_absolute_url }}">{{ quiz.title }}</a></li>
+                                    {% empty %}
+                                        Not sponsoring any quiz yet.
+                                    {% endfor %}
+                                </ul>
+                            </aside>
+                        </div><!--/.courses-sidebar-->
+                    </div><!--/.col-lg-3-->
 
-  {% if project.quizzes.all %}
-<section class="text-gray-600 body-font">
-  <div class="container px-5 py-10 mx-auto">
-    <div class="flex flex-col text-center w-full mb-20">
-      <h2 class="text-xs text-myrtle-green tracking-widest font-medium title-font mb-1">Project Quiz{{ project.quizzes.all|pluralize:'zes' }}</h2>
-      {% comment %} <h2 class="text-xs text-myrtle-green tracking-widest font-medium title-font mb-1"><a href="{% url 'quiz:quiz_create' %}">Add Quiz</a></h2> {% endcomment %}
-      <h1 class="sm:text-3xl text-2xl font-medium title-font text-gray-900">Test your knowledge about {{ project.title }}?</h1>
-    </div>
-    <div class="flex flex-wrap -mx-4 -my-8">
-      {% for quiz in project.quizzes.all %}
-      <div class="py-8 px-4 lg:w-1/3">
-        <div class="h-full flex items-start">
-          <div class="w-12 flex-shrink-0 flex flex-col text-center leading-none">
-            <span class="text-gray-500 pb-2 mb-2 border-b-2 border-gray-200">{{ quiz.pub_date|date:'M' }}</span>
-            <span class="font-medium text-lg text-gray-800 title-font leading-none">{{ quiz.pub_date|date:'d' }}</span>
-          </div>
-          <div class="flex-grow pl-6">
-            <h2 class="tracking-widest text-xs title-font font-medium text-myrtle-green mb-1 uppercase">{{ quiz.category }}</h2>
-            <h1 class="title-font text-xl font-medium text-gray-900 mb-3"><a href="{{ quiz.get_absolute_url }}">{{ quiz.title|title }}</a></h1>
-            <p class="leading-relaxed mb-5">{{ quiz.description|truncatewords:20 }}</p>
-            <a class="inline-flex items-center">
-              <img alt="blog" src="{{ quiz.master.get_image_url }}" class="w-8 h-8 rounded-full flex-shrink-0 object-cover object-center">
-              <span class="flex-grow flex flex-col pl-3">
-                <span class="title-font font-medium text-gray-900">{{ quiz.master.get_full_name|title }}</span>
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %} 
+                    <div class="col-lg-9">
+                        <div class="course-details">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                                        <p{% if forloop.last %} class="mb-0"{% endif %}>{{ message }}</p>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="course-title">
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <h1>{{ project.title }}</h1>
+                                        <span class="course-date">Owner: {{ project.lead.get_short_name }}</span>
+                                        <br>
+                                        <small>{{ project.date_added|date:"F d, Y" }}</small>
+                                        <br>
+                                        <small>Categor{{ project.categories.all|pluralize:"y,ies" }}: {% for category in project.categories.all %}{{ category.get_html_badge }}{% endfor %}</small>
+                                        <br>
+                                        <small>Contact: {{ project.email|urlize }}</small>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {% if user.pk == project.lead.pk %}
+                                                <div class="course-cat text-capitalize text-right">
+                                                    <button href="{{ project.get_articlelink_create_url }}" class="button" type="button" data-hover="Add article">
+                                                        <a href="{{ project.get_articlelink_create_url }}"><span>Add article</span></a>
+                                                    </button>
+                                                </div>
+                                        {% else %}
+                                            <div class="course-cat text-capitalize text-right">
+                                                <button href="https://{{ project.get_telegram_url }}" target="_blank" class="button" type="button" data-hover="Community">
+                                                        <a href="https://{{ project.get_telegram_url }}" target="_blank"><span>Community</span></a>
+                                                    </button>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="course-thumb">
+                                <img src="{{ project.get_image_url }}" alt="{{ project.title }}" />
+                            </div>
+                            <div class="course-desc">
+                                <center>
+                                  <button href="{{ project.website }}" target="_blank" class="button" type="button" data-hover="Visit Website">
+                                      <a href="{{ project.website }}" target="_blank"><span>Visit Website</span></a>
+                                  </button>
+                                </center>
+                                <br><hr>
+                                <p style="text-align: justify">{{ project.description }}</p>
+                                <hr><br>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--/.row-->
+            </div><!--/.container-->
+        </div><!--/.courses-page-content-->
+    </div><!--/.courses-page-->
 
-
-{% if project.articles.all %}
-<section class="text-gray-600 body-font border-2 border-languid-lavender">
-  <div class="container px-5 py-10 mx-auto">
-    <div class="flex flex-col text-center w-full mb-20">
-      <h2 class="text-xs text-myrtle-green tracking-widest font-medium title-font mb-1">Recent Article{{ project.articles.count|pluralize }}</h2>
-      <h1 class="sm:text-3xl text-2xl font-medium title-font text-gray-900">Learn more about {{ project.title }}</h1>
-    </div>
-    <div class="flex flex-wrap -m-4">
-    {% for articlelink in project.articles.all %}
-      <div class="p-4 md:w-1/3">
-        <div class="flex rounded-lg h-full bg-gray-100 p-8 flex-col">
-          <div class="flex items-center mb-3">
-            <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-myrtle-green text-white flex-shrink-0">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-            </div>
-            <h2 class="text-gray-900 text-lg title-font font-medium">{{ articlelink.title|title }}</h2>
-            {% if user.pk == project.lead.pk %}
-            <a href="{{ articlelink.get_update_url }}">
-              <div class="w-5 h-5 mr-3 ml-5 inline-flex items-center justify-center rounded-full text-myrtle-green flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                  </svg>
-              </div>
-            </a>
-            <a href="{{ articlelink.get_delete_url }}">
-              <div class="w-5 h-5 mr-3 inline-flex items-center justify-center rounded-full text-myrtle-green flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-              </div>
-            </a>
-            {% endif %}
-          </div>
-          <div class="flex-grow">
-            <p class="leading-relaxed text-base">{{ articlelink.summary|truncatewords:20}}</p>
-            <a href="{{ articlelink.link }}" target="_blank" class="mt-3 text-myrtle-green inline-flex items-center">Learn More
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7"></path>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
-      
-</article>
-
-
-{% endblock content %}
+{% endblock %}

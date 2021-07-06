@@ -19,7 +19,6 @@ from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
 
 
-
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
     @method_decorator(permission_required('quiz.view_sittings', raise_exception=True))
@@ -39,11 +38,20 @@ class SittingFilterTitleMixin(object):
 
 class QuizListView(ListView):
     model = Quiz
-    paginate_by = 12
+    paginate_by = 8
+    categories = Category.objects.all()
 
     def get_queryset(self):
         queryset = super(QuizListView, self).get_queryset()
         return queryset.filter(draft=False)
+
+    def get_context_data(self, **kwargs):
+        context = super(QuizListView, self)\
+            .get_context_data(**kwargs)
+
+        context['categories'] = self.categories
+        context['title'] = 'Choose from our collection of quizzes'
+        return context
 
 
 class QuizDetailView(DetailView):
@@ -54,8 +62,10 @@ class QuizDetailView(DetailView):
         context = super(QuizDetailView, self).get_context_data(**kwargs)
         self.object = self.get_object()
         if self.object.exam_paper and self.object.single_attempt:
-            pass_value = round((self.object.pass_mark * self.object.max_questions) / 100)
-            leaders = Sitting.objects.filter(complete=True, quiz__title=self.object.title, current_score__gte=pass_value).order_by('end')[:self.object.number_of_winners]
+            pass_value = round(
+                (self.object.pass_mark * self.object.max_questions) / 100)
+            leaders = Sitting.objects.filter(complete=True, quiz__title=self.object.title,
+                                             current_score__gte=pass_value).order_by('end')[:self.object.number_of_winners]
             context['leaderboard'] = leaders
             return context
 
@@ -90,7 +100,6 @@ class QuizUpdate(PostFormValidMixin, UserPassesTestMixin, UpdateView):
         return False
 
 
-
 @method_decorator([login_required, master_required], name='dispatch')
 class QuizDelete(UserPassesTestMixin, DeleteView):
 
@@ -106,18 +115,27 @@ class QuizDelete(UserPassesTestMixin, DeleteView):
         return False
 
 
-
 class CategoryDetail(DetailView):
     model = Category
     template_name = 'quiz/category_detail.html'
 
+    def get_context_data(self, **kwargs):
+        kwargs['title'] = self.get_object()
+        return super().get_context_data(**kwargs)
 
 
 class CategoriesListView(PageLinksMixin, ListView):
     model = Category
     page_kwarg = 'page'
-    paginate_by = 16 # 16 items per page
+    paginate_by = 16  # 16 items per page
     template_name = 'quiz/category_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoriesListView, self)\
+            .get_context_data(**kwargs)
+
+        context['title'] = 'See our collection of interests'
+        return context
 
 
 @method_decorator([login_required, staff_required], name='dispatch')
@@ -145,10 +163,12 @@ class QuestionListView(ListView):
     model = Question
     template_name = 'quiz/question_list.html'
 
+
 @method_decorator([login_required, master_required], name='dispatch')
 class QuestionDetailView(DetailView):
     model = Question
     template_name = 'quiz/question_detail.html'
+
 
 @method_decorator([login_required, master_required], name='dispatch')
 class QuestionCreateView(CreateView):
@@ -178,7 +198,8 @@ class QuestionUpdate(View):
 
     def get(self, request, pk):
         question = get_object_or_404(self.model, pk=pk)
-        context = {'form': self.form_class(instance=question),self.model.__name__.lower(): question,}
+        context = {'form': self.form_class(
+            instance=question), self.model.__name__.lower(): question, }
         return render(request, self.template_name, context)
 
     def post(self, request, pk):
@@ -188,7 +209,8 @@ class QuestionUpdate(View):
             new_question = bound_form.save()
             return redirect(new_question)
         else:
-            context = {'form': bound_form, self.model.__name__.lower(): question,}
+            context = {'form': bound_form,
+                       self.model.__name__.lower(): question, }
             return render(request, self.template_name, context)
 
 
@@ -243,7 +265,8 @@ class QuizMarkingList(QuizMarkerMixin, SittingFilterTitleMixin, ListView):
 
         user_filter = self.request.GET.get('user_filter')
         if user_filter:
-            queryset = queryset.filter(user__profile__name__icontains=user_filter)
+            queryset = queryset.filter(
+                user__profile__name__icontains=user_filter)
 
         return queryset
 
