@@ -71,7 +71,7 @@
                                                     <hr>
                                                     <div class="trainer-profile clearfix">
                                                         {% thumbnail quiz.master.profile.image "100x100" crop="center" as im %}
-                                                            <img class="rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="course-owner">
+                                                            <img class="rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ quiz.master.get_full_name}}">
                                                         {% endthumbnail %}
                                                         <div class="trainer-info">
                                                             <h3>{{ quiz.master.get_full_name }}</h3>

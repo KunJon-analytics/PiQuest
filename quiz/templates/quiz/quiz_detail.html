@@ -134,7 +134,9 @@
                                                       <tbody>
                                                         {% for sitting in leaderboard %}
                                                           <tr>
-                                                            <th scope="row"><div class="d-flex align-items-center"><img class="rounded-circle" src="{{ sitting.user.profile.image.url }}" width="30"><span class="ml-2">{{ sitting.user.username }}</span></div></th>
+                                                            {% thumbnail sitting.user.profile.image "40x40" crop="center" as im %}
+                                                            <th scope="row"><div class="d-flex align-items-center"><img class="rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ sitting.user.username}}"><span class="ml-2">{{ sitting.user.username }}</span></div></th>
+                                                            {% endthumbnail %}
                                                             <td>{{ sitting.end|timesince }} ago</td>
                                                             <td>{{ sitting.get_percent_correct}}%</td>
                                                           </tr>
