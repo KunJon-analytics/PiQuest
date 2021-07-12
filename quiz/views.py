@@ -1,22 +1,23 @@
 import random
 
-from django.http.response import Http404, HttpResponse
+from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.shortcuts import get_object_or_404, render, redirect, reverse
-from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
+from django.db.models import Count
 from django.utils.decorators import method_decorator
-from user.decorators import class_login_required, require_authenticated_permission, staff_required, master_required
-from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView, TemplateView, FormView, View
-from django.template import Context, loader
+from user.decorators import staff_required, master_required
+from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView, TemplateView, FormView
 
 from main.utils import PageLinksMixin, PostFormValidMixin
-from .forms import QuestionForm, EssayForm, CategoryForm, QuizCUForm
+from .forms import QuestionForm, EssayForm, CategoryForm, QuizCUForm, TriviaEditForm
 from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
+from multichoice.models import MCQuestion
+from true_false.models import TF_Question
 
 
 class QuizMarkerMixin(object):
@@ -54,6 +55,25 @@ class QuizListView(ListView):
         return context
 
 
+@method_decorator([login_required, master_required], name='dispatch')
+class TriviaListView(ListView):
+    model = Quiz
+    context_object_name = 'quizzes'
+    extra_context = {
+        'title': 'My Quizzes'
+    }
+    template_name = 'quiz/master_trivia_list.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        """Gets the quizzes that the logged in teacher owns.
+        Counts the questions and the number of students who took the quiz."""
+        queryset = Quiz.objects.filter(master=self.request.user) \
+            .annotate(questions_count=Count('question', distinct=True)) \
+            .order_by('-id')
+        return queryset
+
+
 class QuizDetailView(DetailView):
     model = Quiz
     slug_field = 'url'
@@ -67,7 +87,9 @@ class QuizDetailView(DetailView):
             leaders = Sitting.objects.filter(complete=True, quiz__title=self.object.title,
                                              current_score__gte=pass_value).order_by('end')[:self.object.number_of_winners]
             context['leaderboard'] = leaders
-            return context
+        title = self.object.title
+        context['title'] = title
+        return context
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -80,24 +102,47 @@ class QuizDetailView(DetailView):
 
 
 @method_decorator([login_required, master_required], name='dispatch')
-class QuizCreateView(PostFormValidMixin, CreateView):
+class QuizCreateView(PostFormValidMixin, SuccessMessageMixin, CreateView):
     form_class = QuizCUForm
     template_name = 'quiz/quiz_create_form.html'
     model = Quiz
+    success_message = "The quiz was successfully created. You may now add some questions."
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = "Create a new trivia"
+        context['title'] = title
+        return context
 
 
-@method_decorator([login_required, master_required], name='dispatch')
-class QuizUpdate(PostFormValidMixin, UserPassesTestMixin, UpdateView):
-    form_class = QuizCUForm
-    model = Quiz
-    slug_field = 'url'
-    template_name = 'quiz/quiz_update_form.html'
+@login_required
+@master_required
+def edit_quiz(request, slug):
+    quiz = get_object_or_404(Quiz, url=slug, master=request.user)
+    essay_question = Essay_Question.objects.filter(quiz=quiz)
+    multichoice_questions = MCQuestion.objects.filter(quiz=quiz)
+    tf_questions = TF_Question.objects.filter(quiz=quiz)
 
-    def test_func(self):
-        quiz = self.get_object()
-        if self.request.user == quiz.master:
-            return True
-        return False
+    if request.method == 'POST':
+        form = TriviaEditForm(data=request.POST, instance=quiz)
+        if form.is_valid():
+            quiz = form.save(commit=False)
+            quiz.save()
+
+            messages.success(request, 'The quiz was successfully changed.')
+            return redirect('quiz:quiz_update', quiz.url)
+    else:
+        form = TriviaEditForm(instance=quiz)
+
+    context = {
+        'title': 'Edit Quiz',
+        'quiz': quiz,
+        'essay_questions': essay_question,
+        'multichoice_questions': multichoice_questions,
+        'tf_questions': tf_questions,
+        'form': form
+    }
+    return render(request, 'quiz/quiz_update_form.html', context)
 
 
 @method_decorator([login_required, master_required], name='dispatch')
@@ -113,6 +158,12 @@ class QuizDelete(UserPassesTestMixin, DeleteView):
         if self.request.user == quiz.master:
             return True
         return False
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        title = "Delete Trivia"
+        context['title'] = title
+        return context
 
 
 class CategoryDetail(DetailView):
@@ -156,62 +207,6 @@ class CategoryDelete(DeleteView):
     model = Category
     success_url = reverse_lazy('main:category_list')
     template_name = 'main/category_confirm_delete.html'
-
-
-@method_decorator([login_required, master_required], name='dispatch')
-class QuestionListView(ListView):
-    model = Question
-    template_name = 'quiz/question_list.html'
-
-
-@method_decorator([login_required, master_required], name='dispatch')
-class QuestionDetailView(DetailView):
-    model = Question
-    template_name = 'quiz/question_detail.html'
-
-
-@method_decorator([login_required, master_required], name='dispatch')
-class QuestionCreateView(CreateView):
-    form_class = QuestionForm
-    template_name = 'quiz/question_create_form.html'
-
-
-@method_decorator([login_required, master_required], name='dispatch')
-class QuestionDelete(View):
-
-    def get(self, request, pk):
-        question = get_object_or_404(Question, pk=pk)
-        return render(request, 'project/article_confirm_delete.html', {'question': question})
-
-    def post(self, request, pk):
-        question = get_object_or_404(Question, pk=pk)
-        quiz = question.quiz
-        question.delete()
-        return redirect(quiz)
-
-
-@method_decorator([login_required, master_required], name='dispatch')
-class QuestionUpdate(View):
-    form_class = QuestionForm
-    model = Question
-    template_name = 'quiz/question_update_form.html'
-
-    def get(self, request, pk):
-        question = get_object_or_404(self.model, pk=pk)
-        context = {'form': self.form_class(
-            instance=question), self.model.__name__.lower(): question, }
-        return render(request, self.template_name, context)
-
-    def post(self, request, pk):
-        obj = get_object_or_404(self.model, pk=pk)
-        bound_form = self.form_class(request.POST, instance=question)
-        if bound_form.is_valid():
-            new_question = bound_form.save()
-            return redirect(new_question)
-        else:
-            context = {'form': bound_form,
-                       self.model.__name__.lower(): question, }
-            return render(request, self.template_name, context)
 
 
 class ViewQuizListByCategory(ListView):

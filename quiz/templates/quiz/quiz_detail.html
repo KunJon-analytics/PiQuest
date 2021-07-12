@@ -94,11 +94,19 @@
                                                     {% endif %}</small>
                                     </div>
                                     <div class="col-sm-2">
+                                            {% if user.pk == quiz.master.pk %}
                                                 <div class="course-cat text-capitalize text-right">
-                                                    <button href="{% url 'quiz:quiz_question' quiz_name=quiz.url %}" class="button" type="button" data-hover="START">
-                                                        <a href="{% url 'quiz:quiz_question' quiz_name=quiz.url %}"><span>START</span></a>
+                                                    <button href="{% url 'quiz:quiz_update' quiz.url %}" class="button" type="button" data-hover="EDIT">
+                                                        <a href="{% url 'quiz:quiz_update' quiz.url %}"><span>EDIT</span></a>
                                                     </button>
                                                 </div>
+                                            {% else %}
+                                                <div class="course-cat text-capitalize text-right">
+                                                    <button href="{{ quiz.take_quiz_url }}" class="button" type="button" data-hover="START">
+                                                        <a href="{{ quiz.take_quiz_url }}"><span>START</span></a>
+                                                    </button>
+                                                </div>
+                                            {% endif %}
                                     </div>
                                 </div>
                             </div>

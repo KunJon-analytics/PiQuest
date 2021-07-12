@@ -14,7 +14,11 @@
                 <div class="col-md-12 col-sm-12">
                     <div class="page-heading">
                         <h2 class="page-name text-capitalize">Take any quiz</h2>
+                        {% if user.is_master %}
+                        <a href="{% url 'quiz:master_trivia_list' %}" class="btn btn-default btn-primary">Manage trivia</a>
+                        {% else %}
                         <a href="{% url 'main:home_page' %}" class="btn btn-default btn-primary">back to home</a>
+                        {% endif %}
                     </div><!--/.page-heading-->
                 </div><!--/.col-md-12-->
             </div><!--/.row-->

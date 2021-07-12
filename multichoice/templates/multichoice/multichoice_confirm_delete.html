@@ -16,8 +16,8 @@
                         {% endfor %}
                     {% endif %}
                     <div class="login-form-area">
-                        <h2 class="mb-3">Are you sure you want to delete "<b>{{ quiz.title }}</b>"?</h2>
-                        <form action="{{ quiz.get_delete_url }}" method="post" novalidate>
+                        <h2 class="mb-3">Are you sure you want to delete "<b>{{ question.content|truncatewords:10 }}</b>"?</h2>
+                        <form action="{% url 'quiz:multichoice_delete' quiz.url question.pk %}" method="post" novalidate>
                             {% csrf_token %}
                             {{ form|crispy }}
                             <button type="submit" class="btn btn-danger float-right delete">Delete</button>

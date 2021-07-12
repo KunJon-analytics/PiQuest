@@ -30,12 +30,11 @@ class CategoryForm(CleanUrlMixin, forms.ModelForm):
         return self.cleaned_data['category'].lower()
 
 
-
-# quizform should validate against create, progress, marking 
+# quizform should validate against create, progress, marking
 class QuizCUForm(CleanUrlMixin, forms.ModelForm):
     class Meta:
         model = Quiz
-        exclude = ('master',)
+        exclude = ('master', 'url', 'draft')
 
     def clean_url(self):
         new_slug = (self.cleaned_data['url'].lower())
@@ -47,7 +46,14 @@ class QuizCUForm(CleanUrlMixin, forms.ModelForm):
         quiz = super().save(commit=False)
         if not quiz.pk:
             quiz.master = get_user(request)
+            quiz.draft = False
         if commit:
             quiz.save()
             self.save_m2m()
         return quiz
+
+
+class TriviaEditForm(forms.ModelForm):
+    class Meta:
+        model = Quiz
+        fields = ('title', 'description', 'image', 'success_text', 'fail_text')

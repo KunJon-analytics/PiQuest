@@ -1,9 +1,7 @@
 from user.models import User
 from classroom.models import (ClassAnswer, Course, MyFile, Lesson, ClassQuestion, ClassQuiz, Student,
                               StudentAnswer, Subject, Teacher)
-from django.conf import settings
 from django import forms
-from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from django.forms.utils import ValidationError

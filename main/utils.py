@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404
-from django.http import Http404, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 
 
 from projects.models import ArticleLink, Project
+
 
 class PageLinksMixin:
     page_kwarg = 'page'
@@ -39,10 +40,10 @@ class PageLinksMixin:
         if page is not None:
             context.update({
                 'first_page_url': self.first_page(page),
-                'previous_page_url': self.previous_page(page), 
+                'previous_page_url': self.previous_page(page),
                 'next_page_url': self.next_page(page),
                 'last_page_url': self.last_page(page),
-                })
+            })
         return context
 
 
@@ -52,11 +53,11 @@ class ProjectContextMixin():
 
     def get_context_data(self, **kwargs):
         if hasattr(self, 'project'):
-            context = {self.project_context_object_name:self.project,}
+            context = {self.project_context_object_name: self.project, }
         else:
             project_slug = self.kwargs.get(self.project_slug_url_kwarg)
             project = get_object_or_404(Project, slug__iexact=project_slug)
-            context = {self.project_context_object_name: project,}
+            context = {self.project_context_object_name: project, }
         context.update(kwargs)
         return super().get_context_data(**context)
 
@@ -74,4 +75,3 @@ class PostFormValidMixin:
     def form_valid(self, form):
         self.object = form.save(self.request)
         return HttpResponseRedirect(self.get_success_url())
-

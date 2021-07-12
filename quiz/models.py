@@ -8,8 +8,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, validat
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.timezone import now
-from django.utils.safestring import mark_safe
-from django.utils.html import escape
+from django.utils.text import slugify
 from six import python_2_unicode_compatible
 from django.conf import settings
 from pinax.badges.registry import badges
@@ -119,7 +118,7 @@ class SubCategory(models.Model):
 class Quiz(models.Model):
 
     title = models.CharField(
-        verbose_name=_("Title"),
+        verbose_name=_("Title"), unique=True,
         max_length=60, blank=False)
 
     description = models.TextField(
@@ -205,10 +204,8 @@ class Quiz(models.Model):
                     " quizzes."))
 
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
-        self.url = re.sub('\s+', '-', self.url).lower()
-
-        self.url = ''.join(letter for letter in self.url if
-                           letter.isalnum() or letter == '-')
+        if not self.url:
+            self.url = slugify(self.title)
 
         if self.single_attempt is True:
             self.exam_paper = True
@@ -229,6 +226,9 @@ class Quiz(models.Model):
 
     def get_absolute_url(self):
         return reverse('quiz:quiz_start_page', kwargs={'slug': self.url})
+
+    def take_quiz_url(self):
+        return reverse('quiz:quiz_question', kwargs={'quiz_name': self.url})
 
     def get_update_url(self):
         return reverse('quiz:quiz_update', kwargs={'slug': self.url})
