@@ -48,12 +48,24 @@ class ProjectDelete(DeleteView):
     success_url = reverse_lazy('project:project_list')
     template_name = 'projects/project_confirm_delete.html'
 
+    def get_queryset(self):
+        """This method is an implicit object-level permission management.
+        This view will only match the ids of existing projects that belongs
+        to the logged in user."""
+        return self.request.user.projects
+
 
 @method_decorator([login_required, master_required], name='dispatch')
 class ProjectUpdate(UpdateView):
     form_class = ProjectForm
     model = Project
     template_name = 'projects/project_update_form.html'
+
+    def get_queryset(self):
+        """This method is an implicit object-level permission management.
+        This view will only match the ids of existing projects that belongs
+        to the logged in user."""
+        return self.request.user.projects
 
 
 @method_decorator([login_required, master_required], name='dispatch')

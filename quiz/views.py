@@ -4,11 +4,15 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth import get_user
+from django.http.response import JsonResponse
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render, redirect
 from django.db.models import Count
+from django.utils.crypto import get_random_string
 from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
 from user.decorators import staff_required, master_required
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView, TemplateView, FormView
 
@@ -18,6 +22,7 @@ from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
 from multichoice.models import MCQuestion
 from true_false.models import TF_Question
+from user.models import Payment
 
 
 class QuizMarkerMixin(object):
@@ -102,11 +107,10 @@ class QuizDetailView(DetailView):
 
 
 @method_decorator([login_required, master_required], name='dispatch')
-class QuizCreateView(PostFormValidMixin, SuccessMessageMixin, CreateView):
+class QuizCreateView(PostFormValidMixin, CreateView):
     form_class = QuizCUForm
     template_name = 'quiz/quiz_create_form.html'
     model = Quiz
-    success_message = "The quiz was successfully created. You may now add some questions."
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -122,6 +126,8 @@ def edit_quiz(request, slug):
     essay_question = Essay_Question.objects.filter(quiz=quiz)
     multichoice_questions = MCQuestion.objects.filter(quiz=quiz)
     tf_questions = TF_Question.objects.filter(quiz=quiz)
+    publish_ready = quiz.publish_ready()
+    payment = quiz.get_total_payment()
 
     if request.method == 'POST':
         form = TriviaEditForm(data=request.POST, instance=quiz)
@@ -140,9 +146,45 @@ def edit_quiz(request, slug):
         'essay_questions': essay_question,
         'multichoice_questions': multichoice_questions,
         'tf_questions': tf_questions,
-        'form': form
+        'form': form,
+        'publish_ready': publish_ready,
+        'payment': payment
     }
     return render(request, 'quiz/quiz_update_form.html', context)
+
+
+@login_required
+@master_required
+@csrf_protect
+def publish_quiz(request, slug):
+    quiz = get_object_or_404(Quiz, url=slug, master=request.user)
+    publish_ready = quiz.publish_ready()
+    payment = quiz.get_total_payment()
+
+    if request.is_ajax():
+        quiz.draft = False
+        quiz.save()
+        user = get_user(request)
+        amount = quiz.get_total_payment()
+        payment = Payment()
+        payment.transaction_id = get_random_string(length=32)
+        payment.user = user
+        payment.amount = amount
+        payment.save()
+        data = {
+            'url': reverse_lazy('quiz:quiz_update', kwargs={'slug': quiz.url}),
+        }
+        messages.success(
+            request, 'The quiz will be published in some minutes.')
+        return JsonResponse({'data': data})
+
+    context = {
+        'title': 'Publish Quiz',
+        'quiz': quiz,
+        'publish_ready': publish_ready,
+        'payment': payment
+    }
+    return render(request, 'quiz/quiz_publish_form.html', context)
 
 
 @method_decorator([login_required, master_required], name='dispatch')

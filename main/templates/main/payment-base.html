@@ -1,4 +1,4 @@
-{% load crispy_forms_tags %}{% load static %}{% load thumbnail %}<!DOCTYPE html>
+{% load crispy_forms_tags %}{% load static %}{% load thumbnail %}{% load render_bundle from webpack_loader %}<!DOCTYPE html>
 
 <html lang="en">
 <head>
@@ -185,6 +185,16 @@
         <a class="mobile-logo" href="{% url 'main:home_page' %}"><img src="{% static 'images/piquests.png' %}" alt="logo" height="40"></a>
     </div>
 </header><!--/.header-area-->
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+            <p{% if forloop.last %} class="mb-0"{% endif %}>{{ message }}</p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
 
 {% block content %}
 {% endblock %}
@@ -211,6 +221,8 @@
 <script src="{% static 'js/plugins.js' %}"></script>
 <!-- Main JS file that contents all jQuery Plugins activation. -->
 <script src="{% static 'js/main.js' %}"></script>
+<!-- Main JS file that contents all waves code. -->
+{% render_bundle 'main' %}
 
 </body>
 </html>

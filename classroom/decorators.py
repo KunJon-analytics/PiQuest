@@ -2,7 +2,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
 
 
-def staff_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login'):
+def staff_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='account_login'):
     """Decorator for views that checks that the logged in user is a staff/admin,
     redirects to the log-in page if necessary."""
     actual_decorator = user_passes_test(
@@ -15,7 +15,7 @@ def staff_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login
     return actual_decorator
 
 
-def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login'):
+def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='account_login'):
     """Decorator for views that checks that the logged in user is a student,
     redirects to the log-in page if necessary."""
     actual_decorator = user_passes_test(
@@ -28,7 +28,7 @@ def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, log
     return actual_decorator
 
 
-def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login'):
+def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='account_login'):
     """Decorator for views that checks that the logged in user is a superuser,
     redirects to the log-in page if necessary."""
     actual_decorator = user_passes_test(
@@ -41,7 +41,7 @@ def superuser_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, l
     return actual_decorator
 
 
-def teacher_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login'):
+def teacher_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='account_login'):
     """Decorator for views that checks that the logged in user is a teacher,
     redirects to the log-in page if necessary."""
     actual_decorator = user_passes_test(

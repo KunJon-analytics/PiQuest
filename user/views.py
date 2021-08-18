@@ -1,14 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.contrib.auth import get_user, get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator as token_generator
+from django.contrib.auth.models import Group
 from django.contrib.messages import error, success
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
+from django.utils.crypto import get_random_string
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
@@ -17,8 +20,11 @@ from django.views.generic import DetailView, View, UpdateView
 from .decorators import class_login_required
 
 from .forms import ResendActivationEmailForm, UserCreationForm, ProfileUpdateForm
-from .models import Profile
+from .models import Profile, Payment
 from .utils import MailContextViewMixin, ProfileGetObjectMixin
+
+from classroom.decorators import student_required
+from classroom.models import Student, Teacher
 
 
 # Create your views here.
@@ -85,6 +91,7 @@ class CreateAccount(MailContextViewMixin, View):
                 return redirect('piquest-auth:resend_activation')
         return TemplateResponse(request, self.template_name, {'form': bound_form})
 
+
 class DisableAccount(View):
     success_url = settings.LOGIN_REDIRECT_URL
     template_name = ('user/user_confirm_delete.html')
@@ -104,17 +111,117 @@ class DisableAccount(View):
         logout(request)
         return redirect(self.success_url)
 
+
+class ToggleTeacher(View):
+    success_url = reverse_lazy('quiz:quiz_create')
+    template_name = ('user/toggle_teacher.html')
+
+    def get_context_data(self, **kwargs):
+        context = super(ToggleTeacher, self)\
+            .get_context_data(**kwargs)
+
+        context['title'] = 'Become a Master?'
+        return context
+
+    @method_decorator(csrf_protect)
+    @method_decorator(login_required)
+    def get(self, request):
+        return TemplateResponse(request, self.template_name)
+
+    @method_decorator(csrf_protect)
+    @method_decorator(login_required)
+    def post(self, request):
+        if request.is_ajax:
+            user = get_user(request)
+            if user.is_taker:
+                user.is_master = True
+                user.is_taker = False
+                user.save()
+                Teacher.objects.get_or_create(user=user)
+                try:
+                    Student.objects.get(user=user).delete()
+                except Student.DoesNotExist:
+                    pass
+                group = Group.objects.get(name='Master')
+                user.groups.add(group)
+            payment = Payment()
+            payment.transaction_id = get_random_string(length=32)
+            payment.user = user
+            payment.amount = 5000
+            payment.save()
+            data = {
+                'url': self.success_url,
+            }
+            success(
+                request,
+                'Master Activated! '
+                'You can start by creating a trivia.')
+            return JsonResponse({'data': data})
+
+
+class ToggleManager(View):
+    success_url = reverse_lazy('quiz:quiz_create')
+    template_name = ('user/toggle_project_manager.html')
+
+    def get_context_data(self, **kwargs):
+        context = super(ToggleManager, self)\
+            .get_context_data(**kwargs)
+
+        context['title'] = 'Become a Project Manager?'
+        return context
+
+    @method_decorator(csrf_protect)
+    @method_decorator(login_required)
+    def get(self, request):
+        return TemplateResponse(request, self.template_name)
+
+    @method_decorator(csrf_protect)
+    @method_decorator(login_required)
+    def post(self, request):
+        if request.is_ajax:
+            user = get_user(request)
+            user.is_master = True
+            user.is_taker = False
+            user.is_project_manager = True
+            user.save()
+            Teacher.objects.get_or_create(user=user)
+            try:
+                Student.objects.get(user=user).delete()
+            except Student.DoesNotExist:
+                pass
+            group = Group.objects.get(name='Master')
+            group2 = Group.objects.get(name='Editors')
+            user.groups.add(group)
+            user.groups.add(group2)
+            payment = Payment()
+            payment.transaction_id = get_random_string(length=32)
+            payment.user = user
+            payment.amount = 15000
+            payment.save()
+            data = {
+                'url': self.success_url,
+            }
+            success(
+                request,
+                'Project Manager Activated! '
+                'You can start by creating a trivia.')
+            return JsonResponse({'data': data})
+
+
 @class_login_required
 class ProfileDetail(ProfileGetObjectMixin, DetailView):
     model = Profile
+
 
 @class_login_required
 class ProfileUpdate(ProfileGetObjectMixin, UpdateView):
     model = Profile
     form_class = ProfileUpdateForm
 
+
 class PublicProfileDetail(DetailView):
     model = Profile
+
 
 class ResendActivationEmail(MailContextViewMixin, View):
     form_class = ResendActivationEmailForm

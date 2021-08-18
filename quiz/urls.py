@@ -7,7 +7,7 @@ from multichoice.views import add_multichoice, edit_multichoice, delete_multicho
 from true_false.views import add_true_false, edit_true_false, delete_true_false
 
 from .views import QuizListView, ViewQuizListByCategory, QuizCreateView, \
-    QuizUserProgressView, QuizMarkingList, QuizDelete, \
+    QuizUserProgressView, QuizMarkingList, QuizDelete, publish_quiz, \
     QuizMarkingDetail, QuizDetailView, QuizTake, edit_quiz, TriviaListView
 
 app_name = 'quiz'
@@ -37,6 +37,8 @@ urlpatterns = [
     path('<slug>/update/', view=edit_quiz, name='quiz_update'),
 
     path('<slug>/delete/', view=QuizDelete.as_view(), name='quiz_delete'),
+
+    path('<slug>/publish/', view=publish_quiz, name='publish_quiz'),
 
     path('essay/<slug>/question/add/',
          add_essay, name='essay_add'),

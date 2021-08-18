@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.utils.text import slugify
-from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 from datetime import date
@@ -73,6 +73,17 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.get_username())
         super().save(*args, **kwargs)
+
+
+class Payment(models.Model):
+    transaction_id = models.CharField(max_length=32)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.SET_NULL, blank=True, null=True)
+    amount = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.username
 
 
 def post_user_created_signal(sender, instance, created, **kwargs):

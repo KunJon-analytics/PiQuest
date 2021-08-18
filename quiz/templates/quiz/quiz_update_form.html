@@ -5,6 +5,19 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-md-6 col-sm-8">
+                {% if quiz.draft and publish_ready %}
+                    <div class="alert alert-primary shadow" role="alert" style="border-left:#155724 5px solid; border-radius: 0px">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true" style="color:#155724">&times;</span>
+                        </button>
+                        <div class="row">
+                            <svg width="1.25em" height="1.25em" viewBox="0 0 16 16" class="m-1 bi bi-bell-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                            </svg>
+                            <p style="font-size:18px" class="mb-0 font-weight-light"><b class="mr-1">Alert:</b>You can now  <a href="{% url 'quiz:publish_quiz' quiz.url %}">publish this quiz for {{ payment }} WART (Takers' Reward).</a></p>
+                        </div>
+                    </div>
+                {% endif %}
                     {% if messages %}
                         {% for message in messages %}
                             <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
@@ -30,6 +43,9 @@
                             {# The course field will be ignored in the backend since it is not included in LessonEditForm class #}
                             <br>
                             <button type="submit" class="btn btn-success">Save changes</button>
+                            {% if quiz.draft and publish_ready %}
+                            <a href="{% url 'quiz:publish_quiz' quiz.url %}" class="btn btn-outline-primary">Publish</a>
+                            {% endif %}
                             <a href="{% url 'quiz:master_trivia_list' %}" class="btn btn-outline-secondary" role="button">Go Back</a>
                             <a href="#" class="btn btn-danger float-right delete">Delete</a>
                         </form>

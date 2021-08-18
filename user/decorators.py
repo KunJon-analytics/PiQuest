@@ -5,7 +5,6 @@ from django.views.generic import View
 from django.contrib.auth import REDIRECT_FIELD_NAME
 
 
-    
 def class_login_required(cls):
     if (not isinstance(cls, type) or not issubclass(cls, View)):
         raise ImproperlyConfigured(
@@ -26,7 +25,8 @@ def require_authenticated_permission(permission):
                 " must be applied to subclasses "
                 "of View class.")
         check_auth = (method_decorator(login_required))
-        check_perm = (method_decorator(permission_required(permission, raise_exception=True)))
+        check_perm = (method_decorator(
+            permission_required(permission, raise_exception=True)))
         cls.dispatch = (check_auth(check_perm(cls.dispatch)))
         return cls
 

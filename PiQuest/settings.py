@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'pinax.badges',
     'storages',
     'todo',
+    'webpack_loader',
 ]
 
 CKEDITOR_CONFIGS = {
@@ -215,7 +216,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 MEDIA_URL = '/media/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-# STATICFILES_STORAGE = 'PiQuest.storage.WhiteNoiseStaticFilesStorage'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'assets'),
+)
+
 
 TAILWIND_APP_NAME = 'theme'
 
@@ -227,6 +232,7 @@ TEMPLATE_CONTEXT_PROCESSOR = 'django.core.context_processors.request'
 STAR_RATINGS_STAR_HEIGHT = 20
 
 CKEDITOR_UPLOAD_PATH = 'uploads/lessons/'
+
 
 # MESSAGE_TAGS = {
 #     messages.DEBUG: 'alert-secondary',
@@ -343,6 +349,8 @@ if not DEBUG:
     CMC_PRO_API_KEY = env('CMC_PRO_API_KEY')
     PI_VALIDATION_KEY = env('PI_VALIDATION_KEY')
 
+    COMPRESS_OFFLINE = True
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -368,3 +376,7 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)

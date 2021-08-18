@@ -9,7 +9,7 @@ import quiz.models as qm
 # Create your models here.
 class WinnerBadge(Badge):
     slug = "winnings"
-    levels = ["Winner",]
+    levels = ["Winner", ]
     events = [
         "mark_quiz_complete",
     ]
@@ -21,10 +21,12 @@ class WinnerBadge(Badge):
             if_passed = qm.Sitting.objects.get(user=user).check_if_passed
             if_complete = qm.Sitting.objects.get(user=user).complete
         except MultipleObjectsReturned:
-            if_passed = qm.Sitting.objects.filter(user=user).first().check_if_passed
+            if_passed = qm.Sitting.objects.filter(
+                user=user).first().check_if_passed
             if_complete = qm.Sitting.objects.filter(user=user).first().complete
         if(if_passed and if_complete):
             return BadgeAwarded()
+
 
 badges.register(WinnerBadge)
 
@@ -51,7 +53,6 @@ badges.register(WinnerBadge)
 
 #     def __str__(self):
 #         return self.telegram_id
-
 
 
 # class Taker(models.Model):

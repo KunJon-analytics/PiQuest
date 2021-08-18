@@ -196,7 +196,7 @@ class Quiz(models.Model):
         blank=True, help_text=_("Displayed if user fails."))
 
     draft = models.BooleanField(
-        blank=True, default=False,
+        blank=True, default=True,
         verbose_name=_("Draft"),
         help_text=_("If yes, the quiz is not displayed"
                     " in the quiz list and can only be"
@@ -239,6 +239,9 @@ class Quiz(models.Model):
     def get_questions(self):
         return self.question_set.all().select_subclasses()
 
+    def get_total_payment(self):
+        return self.number_of_winners * self.reward
+
     def get_chosen_project(self):
         return self.projects.all().first()
 
@@ -264,6 +267,17 @@ class Quiz(models.Model):
         a quiz.
         """
         return Sitting.objects.filter(quiz__title=self.title)
+
+    def publish_ready(self):
+        """
+        Finds if the total number of questions required
+        has been added.
+        """
+        added_questions = self.question_set.all().count()
+        publish_ready = False
+        if added_questions >= self.max_questions:
+            publish_ready = True
+        return publish_ready
 
 
 class ProgressManager(models.Manager):

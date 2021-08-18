@@ -99,9 +99,17 @@
                             </div>
                             <div class="course-desc">
                                 <center>
-                                  <button href="{{ project.website }}" target="_blank" class="button" type="button" data-hover="Visit Website">
-                                      <a href="{{ project.website }}" target="_blank"><span>Visit Website</span></a>
-                                  </button>
+                                    <button href="{{ project.website }}" target="_blank" class="button" type="button" data-hover="Visit Website">
+                                        <a href="{{ project.website }}" target="_blank"><span>Visit Website</span></a>
+                                    </button>
+                                    {% if user.pk == project.lead.pk %}
+                                    <button href="{{ project.get_update_url }}" class="button" type="button" data-hover="Update">
+                                        <a href="{{ project.get_update_url }}"><span>Update</span></a>
+                                    </button>
+                                    <button href="{{ project.get_delete_url }}" class="button" type="button" data-hover="Delete">
+                                        <a href="{{ project.get_delete_url }}"><span>Delete</span></a>
+                                    </button>
+                                    {% endif %}
                                 </center>
                                 <br><hr>
                                 <p style="text-align: justify">{{ project.description }}</p>

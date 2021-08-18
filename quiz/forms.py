@@ -2,6 +2,7 @@ from django import forms
 from django.forms.widgets import RadioSelect, Textarea
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user
+from django.contrib import messages
 from .models import Category, Quiz
 from projects.forms import CleanUrlMixin
 
@@ -46,10 +47,12 @@ class QuizCUForm(CleanUrlMixin, forms.ModelForm):
         quiz = super().save(commit=False)
         if not quiz.pk:
             quiz.master = get_user(request)
-            quiz.draft = False
+            quiz.draft = True
         if commit:
             quiz.save()
             self.save_m2m()
+            messages.add_message(
+                request, messages.SUCCESS, 'Quiz created successfully, you can add questions by editing the quiz.')
         return quiz
 
 
