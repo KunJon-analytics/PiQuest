@@ -49,7 +49,7 @@
     <img class="lg:w-2/6 md:w-3/6 w-5/6 mb-10 object-cover object-center rounded" alt="PiQuests" src="{% static 'images/hero.jpg' %}">
     <div class="text-center lg:w-2/3 w-full">
       <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">Test yourself. Earn Crypto.</h1>
-      <p class="mb-8 leading-relaxed">Take quizzes to get reward in crypto, and connect with your favourite businesses.</p>
+      <p class="mb-8 leading-relaxed">Earn crypto by proving your knowledge, and connecting with your favourite Businesses/Institutions.</p>
       {% if user.is_authenticated %}
       <div class="flex justify-center">
         {% if request.user.is_master %}
@@ -84,7 +84,7 @@
         </div>
         <div class="flex-grow sm:pl-6 mt-6 sm:mt-0">
           <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">SignUp/Login</h2>
-          <p class="leading-relaxed">Create a free PiQuests account to earn cryptoassets by testing your knowledge on exciting topics and projects.</p>
+          <p class="leading-relaxed">Create a free PiQuests account to start earning.</p>
         </div>
       </div>
     </div>
@@ -101,7 +101,7 @@
         </div>
         <div class="flex-grow sm:pl-6 mt-6 sm:mt-0">
           <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">Take Quiz</h2>
-          <p class="leading-relaxed">Dive into our collection of exciting quizzes that cut across various topics and categories.</p>
+          <p class="leading-relaxed">Dive into our collection of exciting quizzes that cut across various topics and projects.</p>
         </div>
       </div>
     </div>
@@ -118,7 +118,7 @@
         </div>
         <div class="flex-grow sm:pl-6 mt-6 sm:mt-0">
           <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">View Result</h2>
-          <p class="leading-relaxed">See breakdown of your performance and also the explanation of all questions taken during any quiz.</p>
+          <p class="leading-relaxed">See breakdown of your performance and also the explanation of questions taken during any quiz.</p>
         </div>
       </div>
     </div>
@@ -135,7 +135,7 @@
         </div>
         <div class="flex-grow sm:pl-6 mt-6 sm:mt-0">
           <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">Collect Rewards</h2>
-          <p class="leading-relaxed">Update your profile to enable withdrawal of rewards earned by proving your knowledge.</p>
+          <p class="leading-relaxed">Update your profile to reflect your <a href="https://waves.exchange/" target="blank">wallet address</a>, rewards are sent to that address.</p>
         </div>
       </div>
     </div>
@@ -154,7 +154,7 @@
                     </span>
                 </h1>
                 <p class="text-sm sm:text-base text-gray-700 dark:text-white">
-                    You can now reward your clients using crypto-powered trivia by becoming a PiQuests Master, or list your business by becoming a Project Manager.
+                    Test and reward your clients or friends for their knowledge as a PiQuests Master. You can also showcase your business or products, share knowledge, and so much more as a Manager.
                 </p>
                 <div class="flex mt-8">
                     <a href="{% url 'piquest-auth:toggle_teacher' %}" class="uppercase py-2 px-4 rounded-lg bg-myrtle-green border-2 border-transparent text-white text-md mr-4 hover:bg-languid-lavender">
