@@ -1,0 +1,167 @@
+{% extends 'classroom/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="login-page page-wrapper s-pd100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-6 col-sm-8">
+                {% if quiz.draft and publish_ready %}
+                    <div class="alert alert-primary shadow" role="alert" style="border-left:#155724 5px solid; border-radius: 0px">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true" style="color:#155724">&times;</span>
+                        </button>
+                        <div class="row">
+                            <svg width="1.25em" height="1.25em" viewBox="0 0 16 16" class="m-1 bi bi-bell-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                            </svg>
+                            <p style="font-size:18px" class="mb-0 font-weight-light"><b class="mr-1">Alert:</b>You can now  <a href="{% url 'quiz:publish_quiz' quiz.url %}">publish this quiz for {{ payment }} WART (Takers' Reward).</a></p>
+                        </div>
+                    </div>
+                {% endif %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                                <p{% if forloop.last %} class="mb-0"{% endif %}>{{ message }}</p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'quiz:master_trivia_list' %}">My Quizzes</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ quiz.title }}</li>
+                        </ol>
+                    </nav><br>
+                    <div class="login-form-area">
+                        <h2 class="mb-3">{{ quiz.title }}</h2>
+                        <a href="{% url 'quiz:quiz_marking' %}" class="btn btn-primary float-right">View results</a>
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                            {# The course field will be ignored in the backend since it is not included in LessonEditForm class #}
+                            <br>
+                            <button type="submit" class="btn btn-success">Save changes</button>
+                            {% if quiz.draft and publish_ready %}
+                            <a href="{% url 'quiz:publish_quiz' quiz.url %}" class="btn btn-outline-primary">Publish</a>
+                            {% endif %}
+                            <a href="{% url 'quiz:master_trivia_list' %}" class="btn btn-outline-secondary" role="button">Go Back</a>
+                            <a href="#" class="btn btn-danger float-right delete">Delete</a>
+                        </form>
+                    </div>
+                    <br><br>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-10">
+                                    <strong>Essay questions</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group list-group-flush list-group-formset">
+                            {% for question in essay_questions %}
+                                <div class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <a href="{% url 'quiz:essay_change' quiz.url question.pk %}">{{ question.content }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="list-group-item text-center">
+                                    <p class="text-muted font-italic mb-0">You haven't created any essay questions yet. Go ahead and <a href="{% url 'quiz:essay_add' quiz.url %}">add the first question</a>.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'quiz:essay_add' quiz.url %}" class="btn btn-primary btn-sm">Add essay</a>
+                        </div>
+                    </div>
+                    <div class="card mt-2">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-10">
+                                    <strong>True/False questions</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group list-group-flush list-group-formset">
+                            {% for question in tf_questions %}
+                                <div class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <a href="{% url 'quiz:true_false_change' quiz.url question.pk %}">{{ question.content }}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="list-group-item text-center">
+                                    <p class="text-muted font-italic mb-0">You haven't created any true/false questions yet. Go ahead and <a href="{% url 'quiz:true_false_add' quiz.url %}">add the first question</a>.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'quiz:true_false_add' quiz.url %}" class="btn btn-primary btn-sm">Add True/False</a>
+                        </div>
+                    </div>
+                    <div class="card mt-2">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-10">
+                                    <strong>Multichoice questions</strong>
+                                </div>
+                                <div class="col-2">
+                                    <strong>Choices</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group list-group-flush list-group-formset">
+                            {% for question in multichoice_questions %}
+                                <div class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <a href="{% url 'quiz:multichoice_change' quiz.url question.pk %}">{{ question.content }}</a>
+                                        </div>
+                                        <div class="col-2">
+                                            {{ question.answers_count }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="list-group-item text-center">
+                                    <p class="text-muted font-italic mb-0">You haven't created any multiple choice questions yet. Go ahead and <a href="{% url 'quiz:essay_add' quiz.url %}">add the first question</a>.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'quiz:multichoice_add' quiz.url %}" class="btn btn-primary btn-sm">Add multichoice</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="login-page page-wrapper s-pd100">
+        <div class="container">
+
+        </div>
+    </div>
+
+    <script>
+        $(".delete").click(function () {
+            swal({
+                title: "WARNING: Are you sure you want to delete this quiz?",
+                text: "Once you delete this, you will never recover it.",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        window.location = "{% url 'quiz:quiz_delete' quiz.url %}";
+                    }
+                });
+        });
+    </script>
+{% endblock %}

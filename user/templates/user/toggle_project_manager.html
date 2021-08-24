@@ -1,0 +1,53 @@
+{% extends 'main/payment-base.html' %}
+{% load crispy_forms_tags %}
+{% block extra_head %}
+<script>
+    const payment = 15000;
+    const paymentAttachment = 'Payment for PiQuests Project Manager';
+</script>
+{% endblock %}
+{% block content %}
+    <div class="login-page page-wrapper s-pd100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-6 col-sm-8">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Home</a></li>
+                            {% if user.is_project_manager %}
+                            <li class="breadcrumb-item active" aria-current="page">You are a Project Manager</li>
+                            {% else %}
+                            <li class="breadcrumb-item active" aria-current="page">Become a Project Manager?</li>
+                            {% endif %}
+                        </ol>
+                    </nav><br>
+                    <div id='login-form-area' class="login-form-area">
+                        {% if user.is_project_manager %}
+                        <div class="alert alert-warning shadow" role="alert" style="border-left:#856404 5px solid;  border-radius: 0px">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true" style="color:#856404">&times;</span>
+                            </button>
+                            <div class="row">
+                                <svg width="1.25em" height="1.25em" viewBox="0 0 16 16" class="m-1 bi bi-cone-striped" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.97 4.88l.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z"/>
+                                </svg>
+                                <p style="font-size:18px" class="mb-0 font-weight-light"><b class="mr-1">Warning:</b>You are already a Project manager.</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <h2 class="mb-3">A payment of 15000 WART is required!!!</h2><br>
+                        <form id='toggle-master-form' action="{% url 'piquest-auth:toggle_manager' %}" method="post">
+                            {% csrf_token %}
+                            {{ form|crispy }}<br>
+                            <center>
+                                <button type="submit" class="btn btn-success">Yes</button>
+                                <a href="{% url 'main:home_page' %}" class="btn btn-danger" role="button">Cancel</a>
+                            </center>
+                        </form>
+                    </div>
+                    <div class="success-area"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

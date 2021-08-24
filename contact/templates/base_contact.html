@@ -1,0 +1,20 @@
+{% extends parent_template|default:"base.html" %}
+{% block content %}
+ <div class="flex items-center min-h-screen bg-languid-lavender dark:bg-gray-900">
+    <div class="container mx-auto">
+        <div class="max-w-md mx-auto my-10 bg-white p-5 rounded-md shadow-sm">
+            <div class="text-center">
+                <h1 class="my-3 text-3xl font-semibold text-gray-700 dark:text-gray-200">{% block form_heading %}Contact Us{% endblock %}</h1>
+                <p class="text-gray-400 dark:text-gray-400">{% block form_sub_heading %}Fill up the form below to send us a message.{% endblock form_sub_heading %}</p>
+            </div>
+            <div class="m-7">
+                {% block form_content %}
+                
+                {% endblock form_content %}
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,145 @@
+{% load static %}
+<!-- This example requires Tailwind CSS v2.0+ -->
+<nav class="bg-myrtle-green">
+  <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+    <div class="relative flex items-center justify-between h-16">
+      <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
+        <!-- Mobile menu button-->
+        <button type="button" id="burger" class="inline-flex items-center justify-center p-2 rounded-md text-languid-lavender hover:text-light-yellow hover:bg-myrtle-green-light focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" aria-controls="mobile-menu" aria-expanded="false">
+          <span class="sr-only">Open main menu</span>
+          <!--
+            Icon when menu is closed.
+
+            Heroicon name: outline/menu
+
+            Menu open: "hidden", Menu closed: "block"
+          -->
+          <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!--
+            Icon when menu is open.
+
+            Heroicon name: outline/x
+
+            Menu open: "block", Menu closed: "hidden"
+          -->
+          <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <a href="{% url 'main:home_page' %}">
+      <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
+        <div class="flex-shrink-0 flex items-center">
+          <img class="block lg:hidden h-10  w-auto" src="{% static 'images/piquests-white.png' %}" alt="PiQuests">
+          <img class="hidden lg:block w-auto h-10" src="{% static 'images/piquests-white.png' %}" alt="PiQuests">
+          {% comment %} <svg xmlns="http://www.w3.org/2000/svg" class="hidden lg:block w-auto h-10 text-myrtle-green p-2 bg-languid-lavender rounded-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+          </svg>
+          <span class="hidden lg:block w-auto h-8 ml-3 text-xl text-white">PiQuests</span> {% endcomment %}
+        </div></a>
+        <div class="hidden sm:block sm:ml-6">
+          <div class="flex space-x-4">
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+            <a href="{% url 'quiz:quiz_index' %}" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Trivia</a>
+
+            <a href="{% url 'project:project_list' %}" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium">Projects</a>
+            <a href="{% url 'home' %}" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium">Learn</a>
+            <a href="/blog" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium">Blog</a>
+          </div>
+        </div>
+      </div>
+      <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        {% if user.is_authenticated %}
+        <button onclick="document.location='{% url 'quiz:quiz_progress' %}'" class="bg-myrtle-green p-1 rounded-full text-green-100 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-myrtle-green focus:ring-white">
+          <span class="sr-only">View sittings</span>
+          <!-- Heroicon name: outline/bell -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+          </svg>
+        </button>
+        {% endif %}
+
+        <!-- Profile dropdown -->
+        <div class="ml-3 relative">
+          <div>
+            <button type="button" id="profile-burger" class="bg-myrtle-green flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-myrtle-green focus:ring-white" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+              <span class="sr-only">Open user menu</span>
+              {% if user.is_authenticated %}
+              <img class="h-8 w-8 rounded-full" src="{{ user.get_image_url }}" alt="{{ user.username }}">
+              {% else %}
+              <img class="h-8 w-8 rounded-full" alt="" src="https://piquests.com/static/images/profile_default.jpg">
+              {% endif %}
+            </button>
+          </div>
+
+          <!--
+            Dropdown menu, show/hide based on menu state.
+
+            Entering: "transition ease-out duration-100"
+              From: "transform opacity-0 scale-95"
+              To: "transform opacity-100 scale-100"
+            Leaving: "transition ease-in duration-75"
+              From: "transform opacity-100 scale-100"
+              To: "transform opacity-0 scale-95"
+          -->
+          <div id="profile-menu" class="origin-top-right absolute hidden right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+            <!-- Active: "bg-gray-100", Not Active: "" -->
+            {% if user.is_authenticated %}
+            <a href="{% url 'piquest-auth:profile' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">My Profile</a>
+            {% if user.is_taker %}
+            <a href="{% url 'students:mycourses_list' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">My Courses</a>
+            {% elif user.is_master %}
+            <a href="{% url 'teachers:course_change_list' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">My Courses</a>
+            {% elif user.is_staff %}
+            <a href="{% url 'staff:dashboard' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Course Dashboard</a>
+            {% endif %}
+            <a href="{% url 'todo:mine' %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">My Tasks</a>
+             <a href="{{ user.profile.get_update_url }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-3">Edit Profile</a>
+            <a href="{% url 'account_logout' %}?next={{ request.path }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-4">Sign out</a>
+            {% else %}
+            <a href="{% url 'account_login' %}?next={{ request.path }}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-4">Sign in</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu, show/hide based on menu state. -->
+  <div class="sm:hidden hidden" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+      <a href="{% url 'quiz:quiz_index' %}" class="text-green-100 hover:bg-myrtle-green-light hover:text-white block px-3 py-2 rounded-md text-base font-medium">Trivia</a>
+
+      <a href="{% url 'project:project_list' %}" class="text-green-100 hover:bg-myrtle-green-light hover:text-white block px-3 py-2 rounded-md text-base font-medium">Projects</a>
+
+      <a href="/course" class="text-green-100 hover:bg-myrtle-green-light hover:text-white px-3 py-2 rounded-md text-sm font-medium">Courses</a>
+            
+      <a href="https://piquests.com/blog/" class="text-green-100 hover:bg-myrtle-green-light hover:text-white block px-3 py-2 rounded-md text-base font-medium">Blog</a>
+    </div>
+  </div>
+</nav>
+
+<script>
+const burger = document.querySelector('#burger');
+const mobileMenu = document.querySelector('#mobile-menu');
+const profileBurger = document.querySelector('#profile-burger');
+const profileMenu = document.querySelector('#profile-menu');
+
+burger.addEventListener('click', () => {
+  if (mobileMenu.classList.contains('hidden')) {
+    mobileMenu.classList.remove('hidden');
+  } else {
+    mobileMenu.classList.add('hidden')
+  }
+})
+profileBurger.addEventListener('click', () => {
+  if (profileMenu.classList.contains('hidden')) {
+    profileMenu.classList.remove('hidden');
+  } else {
+    profileMenu.classList.add('hidden')
+  }
+})
+</script>

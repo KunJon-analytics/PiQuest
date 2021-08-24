@@ -1,0 +1,25 @@
+{% extends parent_template|default:"base.html" %} 
+{% load static %}
+{% load humanize %}
+{% block title %}403 Error{% endblock %}
+{% block content %}
+  <body>
+    <div class="bg-gradient-to-r from-myrtle-green to-languid-lavender">
+      <div class="w-9/12 m-auto py-16 min-h-screen flex items-center justify-center">
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg pb-8">
+          <div class="border-t border-gray-200 text-center pt-8">
+            <h1 class="text-9xl font-bold text-myrtle-green">403</h1>
+            <h1 class="text-6xl font-medium py-8">Access Forbidden</h1>
+            <p class="text-2xl pb-8 px-12 font-medium">Oops! There is no way I'ma let you pass through</p>
+            <button class="bg-gradient-to-r from-myrtle-green to-myrtle-green-light hover:from-pink-500 hover:to-orange-500 text-white font-semibold px-6 py-3 rounded-md mr-6">
+            <a href="{% url 'main:home_page' %}">Home</a>
+            </button>
+            <button class="bg-gradient-to-r from-myrtle-green to-languid-lavender hover:from-red-500 hover:to-red-500 text-white font-semibold px-6 py-3 rounded-md">
+            <a href="{% url 'quiz:quiz_index' %}">Take Quiz</a>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+{% endblock %}

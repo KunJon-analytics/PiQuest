@@ -1,0 +1,20 @@
+{% extends parent_template|default:"account/base.html" %}
+{% load i18n %}
+
+{% block title %}
+{{ block.super }}|{% trans "Disable Account" %}
+{% endblock %}
+
+{% block content %}
+<div class="md:w-1/2 max-w-lg mx-auto my-24 px-4 py-5 shadow-none">
+
+    <div class="text-left p-0 font-sans">
+        <h1 class=" text-gray-800 text-3xl font-medium">{% trans "Disable your account?" %}</h1>
+        <h3 class="p-1 text-gray-700">{% trans "This cannot be undone." %}</h3>
+    </div>
+    <form action="{% url 'piquest-auth:disable' %}" method="post">
+      {% csrf_token %}
+      <button type="submit" class="py-3 bg-myrtle-green text-white w-full rounded hover:bg-myrtle-green-light">Disable Account</button>
+    </form>
+</div>
+{% endblock %}

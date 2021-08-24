@@ -1,0 +1,36 @@
+{% extends 'main/payment-base.html' %}
+{% load crispy_forms_tags %}
+{% block extra_head %}
+<script>
+    const payment = {{ payment }};
+    const paymentAttachment = 'Payment for Trivia rewards';
+</script>
+{% endblock %}
+{% block content %}
+    <div class="login-page page-wrapper s-pd100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-6 col-sm-8">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'main:home_page' %}">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Publish Quiz?</li>
+                        </ol>
+                    </nav><br>
+                    <div id='login-form-area' class="login-form-area">
+                        <h2 class="mb-3">A payment of {{ payment }} WART is required!!!</h2><br>
+                        <form id='toggle-master-form' action="{% url 'quiz:publish_quiz' quiz.url %}" method="post">
+                            {% csrf_token %}
+                            {{ form|crispy }}<br>
+                            <center>
+                                <button type="submit" class="btn btn-success">Yes</button>
+                                <a href="{% url 'main:home_page' %}" class="btn btn-danger" role="button">Cancel</a>
+                            </center>
+                        </form>
+                    </div>
+                    <div class="success-area mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

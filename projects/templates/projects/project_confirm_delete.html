@@ -1,0 +1,24 @@
+{% extends parent_template|default:"projects/base_projects.html" %}
+
+{% block title %}
+Delete Project
+{% endblock %}
+
+{% block content %}
+<section class="text-gray-600 body-font">
+    <div class="container px-5 py-24 mx-auto">
+        <div class="lg:w-2/3 flex flex-col sm:flex-row sm:items-center items-start mx-auto">
+            <form action="{{ project.get_delete_url }}" method="post">
+                {% csrf_token %}
+                <h1 class="flex-grow sm:pr-16 text-2xl font-medium title-font text-gray-900">Are you sure you want to delete "{{ project.title }}" project</h1>
+                <div class="inline-block mr-2 mt-2">
+                    <button type="submit" class="focus:outline-none text-red-600 text-sm py-2.5 px-5 rounded-full border border-red-600 hover:bg-red-50">Delete Project</button>
+                </div>
+                <div class="inline-block mr-2 mt-2">
+                    <button type="button" class="focus:outline-none text-myrtle-green text-sm py-2.5 px-5 rounded-md hover:bg-myrtle-green-light"><a href="{{ project.get_absolute_url }}">Cancel</a></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

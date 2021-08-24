@@ -1,0 +1,276 @@
+{% load static i18n wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags wagtailuserbar puput_tags %}
+{% load crispy_forms_tags %}{% load static %}{% load thumbnail %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title> {% block title %}PiQuests:
+            {{ blog_page.title }}{% if blog_page.description %} | {{ blog_page.description }}{% endif %}
+        {% endblock title %}</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <meta name="title"
+          content="{% block meta_title %}PiQuests |
+                        {% if blog_page.seo_title %}
+                            {{ blog_page.seo_title }}
+                        {% else %}
+                            {{ blog_page.title }}
+                        {% endif %}
+                   {% endblock meta_title %}"/>
+    <meta name="description"
+          content="{% block meta_description %}
+                        {{ blog_page.search_description }}
+                   {% endblock meta_description %}"/>
+    <meta name="keywords" content="Crypto, Bitcoin, Quiz, Design, Development, education, piquest, online cources, training, online education">
+    {% block social_share %}{% endblock social_share %}
+    <link rel="canonical" href="{% block canonical %}{% canonical_url %}{% endblock canonical %}"/>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'images/site.webmanifest' %}">
+
+    <link href='//fonts.googleapis.com/css?family=Roboto:400,300,300italic,100italic,100,400italic,500,500italic,700,900,700italic,900italic' rel='stylesheet' type='text/css'>
+    {% block css %}
+        <link rel='stylesheet' href="{% static 'puput/css/bootstrap.min.css' %}" type='text/css'/>
+        <link rel="stylesheet" href="{% static 'puput/css/font-awesome.min.css' %}">
+        <style>
+            body {
+                --main-color: {{blog_page.main_color}};
+            }
+        </style>
+        
+    {% endblock %}
+    <!--======== Font icon Css ============-->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/themify-icons.css' %}" rel="stylesheet">
+
+    <!--======= Bootstrap Main Css =============-->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!--====== Plugins Css ================-->
+    <link href="{% static 'css/plugins.css' %}" rel="stylesheet">
+
+    <!--====== Custom CSS for themes =======-->
+    <link href="{% static 'blog-style.css' %}" rel="stylesheet">
+    <link href="{% static 'btn.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'puput.css' %}"/>
+    <link href="{% static 'classroom-footer.css' %}" rel="stylesheet">
+
+    <script src="{% static 'js/vendor/modernizr-2.8.3.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.4.1.js' %}" type="text/javascript"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</head>
+<body>
+<!--====Header Area
+====================================-->
+<header id="site-header" class="header-area">
+    <div class="header-inner">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="logo-menu-wrap hidden-xs hidden-sm">
+                        <div class="logo">
+                            <a href="{% url 'main:home_page' %}">
+                                <img src="{% static 'images/piquests.png' %}" alt="logo" height="50">
+                            </a>
+                        </div><!--/.logo-->
+
+                        <nav class="menu">
+                            <ul id="nav" align="center">
+                                {% if user.is_authenticated %}
+                                    {% if user.is_taker %}
+                                        {% if title != 'Browse Courses' %}
+                                            <li>
+                                                <form class="product-search-form" method="get" action="{% url 'browse_courses' %}" style="position: absolute; left: -280px; top: 10px;" novalidate>
+                                                    <div class="form-group"style="width: 300px;  height: 50px; " >
+                                                        <input type="text" name="search" placeholder="Type keyword here" class="textinput textInput form-controllar" required id="id_search" style="height: 50px; width: 230px">
+                                                        <input type="image" src="{% static 'images/icon/search.png' %}" style="height:30px; width:30px; margin: 8px;" align="right" alt="Search" title="Search">
+                                                    </div>
+                                                </form>
+                                            </li>
+                                        {% endif %}
+
+                                        <li><a href="{% url 'browse_courses' %}">Browse Courses</a></li>
+                                        <li><a href="{% url 'quiz:quiz_index' %}">Trivia</a></li>
+                                        <li><a href="/blog">Blog</a></li>
+<li class="dropdown-trigger">
+                                            {% thumbnail user.profile.image "40x40" crop="center" as im %}
+                                                <img class="rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="course-owner">
+                                            {% endthumbnail %}&nbsp;&nbsp;
+                                            <a href="#">{{ user.username }}</a>
+                                            <ul class="dropdown-content">
+                                                <li><a href="{% url 'piquest-auth:profile' %}">My Profile</a></li>
+                                                <li><a href="{% url 'todo:mine' %}">My Tasks</a></li>
+                                                <li><a href="{% url 'students:mycourses_list' %}">My Courses</a></li>
+                                                <li><a href="{% url 'students:taken_quiz_list' %}">My Quizzes</a></li>
+                                                <li class="login"><a href="{% url 'account_logout' %}">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    {% elif user.is_master %}
+
+
+                                        <li><a href="{% url 'quiz:quiz_index' %}">Trivia</a></li>
+                                        <li><a href="/blog">Blog</a></li>
+                                        <li ><a href="{% url 'browse_courses' %}">Browse Courses</a></li>
+                                        <li class="login">
+                                            <a href="{% url 'teachers:enrollment_requests_list' %}">Enrollment Requests
+                                                {% if enrollment_request_count > 0 %}
+                                                    <sup>
+                                                            <span style="background-color: red; color: white; padding: 2px; border-radius: 3px;">
+                                                                &nbsp;<b>{{ enrollment_request_count }}</b>&nbsp;
+                                                            </span>
+                                                    </sup>
+                                                {% endif %}
+                                            </a>
+                                        </li>
+                                        <li class="dropdown-trigger">
+                                            {% thumbnail user.profile.image "40x40" crop="center" as im %}
+                                                <img class="rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="course-owner">
+                                            {% endthumbnail %}&nbsp;&nbsp;
+                                            <a href="#">{{ user.first_name }}</a>
+
+                                            <ul class="dropdown-content">
+                                                <li><a href="{% url 'piquest-auth:profile' %}">My Profile</a></li>
+                                                <li><a href="{% url 'teachers:course_change_list' %}">My Courses</a></li>
+                                                <li><a href="{% url 'teachers:lesson_list' %}">My Lessons</a></li>
+                                                <li><a href="{% url 'teachers:quiz_list' %}">My Quizzes</a></li>
+                                                <li><a href="{% url 'teachers:file_list' %}">My Files</a></li>
+                                                <li><a href="{% url 'todo:mine' %}">My Tasks</a></li>
+                                                <li class="login"><a href="{% url 'account_logout' %}">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    {% elif user.is_staff %}
+                                        <li><a>{{ user.first_name }}</a></li>
+                                        <li class="login"><a href="{% url 'account_logout' %}">Logout</a></li>
+                                    {% endif %}
+
+                                    </ul>
+                                    </nav>
+
+                                {% else %}
+                                    <li class="login"><a href="{% url 'quiz:quiz_index' %}">Trivia</a></li>
+                                    <li class="login"><a href="{% url 'browse_courses' %}">Courses</a></li>
+                                    <li class="login"><a href="/blog">Blog</a></li>
+                                    {% comment %} <li class="login"><a href="{% url 'about_us' %}">About Us</a></li> {% endcomment %}
+                                    <li class="login"><a href="{% url 'account_signup' %}">Register</a></li>
+                                    <li class="login"><a href="{% url 'account_login' %}">Login</a></li>
+                                    </ul>
+                                    </nav><!--/.menu-->
+                                    <div class="register-contact-nav pull-right">
+                                        <a class="register-contact-nav login btn btn-default " href="{% url 'contact:contact' %}" hidden>contact us</a> <a class="register-contact-nav login btn btn-default " href="{% url 'contact:contact' %}">contact us</a>
+                                    </div><!--/.register-contact-nav-->
+                                {% endif %}
+                    </div><!--/.logo-menu-wrap-->
+                </div><!--/.col-lg-12-->
+            </div><!--/.row-->
+        </div><!--/.container-fluid-->
+    </div><!--/.headier-inner-->
+
+    <div id="sticky-header"></div><!--/#sticky-header--> 
+
+    <!--Mobile Menu-->
+    <div class="mobile-menu">
+        <a class="mobile-logo" href="{% url 'main:home_page' %}"><img src="{% static 'images/piquests.png' %}" alt="logo" height="40"></a>
+    </div>
+{% block blog_header %}
+<!--=======Page Heading
+    ==================================-->
+    <section class="page-heading-section page-heading-one before-bg bg-image" style="background-image: url({% static 'images/blog.png' %});">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="page-heading">
+                        <h2 class="page-name text-capitalize">Blog</h2>
+                        <a href="{% url 'main:home_page' %}" class="btn btn-default btn-primary">back to home</a>
+                    </div><!--/.page-heading-->
+                </div><!--/.col-md-12-->
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.page-heading-area-->
+{% endblock blog_header %}
+</header><!--/.header-area-->
+
+{% wagtailuserbar %}
+<div class="container container-blog">
+    <div class="row">
+        <div class="col-sm-8 col-md-9">
+            {% block content %}{% endblock content %}
+            {% block extra_content %}{% endblock extra_content %}
+        </div>
+
+        <div class="col-sm-4 col-md-3">
+            <div class="blog_sidebar">
+                <div class="rss-sitemap">
+                    <a href="{% feeds_url blog_page %}" target="_blank" title="RSS">
+                         <i class="fa fa-rss-square"></i> <span>{% trans 'Feed RSS' %}</span>
+                    </a>
+                </div>
+                <form name="search_form" class="search_form" method="get" action="{% routablepageurl blog_page 'entries_search' %}">
+                    <div class="input-group">
+                         <input type="search" name="q" placeholder="{% trans 'Search' %}">
+                         <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                         </span>
+                    </div>
+                </form>
+
+                {% if blog_page.display_last_entries %}
+                    <ul class="sidebar">
+                        <h4>{% trans 'Last Entries' %}</h4>
+                        {% recent_entries blog_page.num_last_entries %}
+                    </ul>
+                {% endif %}
+                {% if blog_page.display_popular_entries %}
+                    <ul class="sidebar">
+                        <h4>{% trans 'Popular Entries' %}</h4>
+                        {% popular_entries blog_page.num_popular_entries %}
+                    </ul>
+                {% endif %}
+                {% if blog_page.display_categories %}
+                    <ul class="sidebar">
+                        <h4>{% trans 'Categories' %}</h4>
+                        {% categories_list %}
+                    </ul>
+                {% endif %}
+                {% if blog_page.display_tags %}
+                    <ul class="sidebar">
+                        <h4>{% trans 'Tags' %}</h4>
+                        {% tags_list %}
+                    </ul>
+                {% endif %}
+                {% if blog_page.display_archive %}
+                    <ul class="sidebar widget menu">
+                        <h4>{% trans 'Archive' %}</h4>
+                        {% archives_list %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Start footer area -->
+<footer id="footer" class="site-footer">
+    {% block join_us %}
+    {% endblock %}
+
+    <!-- Start footer copyright area -->
+   {% include 'main/classroom-footer.html' %}
+
+<!-- All JS files are included here.
+============================================== -->
+{% block js %}
+    <script src="{% static 'puput/js/jquery.min.js' %}"></script>
+    <script src="{% static 'puput/js/puput.js' %}"></script>
+{% endblock js %}
+<!-- Popper JS -->
+<script src="{% static 'js/popper.min.js' %}"></script>
+<!-- Bootstrap framework JS -->
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- All JS plugins included in this file. -->
+<script src="{% static 'js/plugins.js' %}"></script>
+<!-- Main JS file that contents all jQuery Plugins activation. -->
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

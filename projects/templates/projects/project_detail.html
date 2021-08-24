@@ -1,0 +1,125 @@
+{% extends 'classroom/base.html' %}
+{% load mathfilters %}
+{% load custom_tags %}
+{% load static %}
+{% load ratings %}
+{% load thumbnail %}
+{% block content %}
+    <!--=======Page Heading
+    ================================-->
+    <section class="page-heading-section before-bg bg-image" style="background-image: url({% static 'images/header/p-header4.jpg' %});">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="page-heading">
+                        <h2 class="page-name text-capitalize">Project Details</h2>
+                        <a href="javascript:history.back();" class="btn btn-default btn-primary">go back</a>
+                    </div><!--/.page-heading-->
+                </div><!--/.col-md-12-->
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.page-heading-area-->
+
+    <div class="courses-page page-wrapper">
+        <!--=======Courses Page Content
+        ==================================-->
+        <div class="courses-page-content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-12">
+                        <div class="courses-sidebar">
+                            <aside class="widget widget-courses-category">
+                                <h2>Recent Articles</h2>
+                                <ul class="list-unstyled">
+                                    {% for articlelink in project.articles.all %}
+                                        {% if user.pk == project.lead.pk %}
+                                            <li><a href="{{ articlelink.get_update_url }}">{{ articlelink.title }}</a></li>
+                                        {% else %}
+                                            <li><a href="{{ articlelink.link }}" target="_blank">{{ articlelink.link }}</a></li>
+                                        {% endif %}
+                                    {% empty %}
+                                        There are no recent articles for this project.
+                                    {% endfor %}
+                                </ul>
+                            </aside>
+                            <aside class="widget widget-courses-category">
+                                <h2>Sponsored Trivia</h2>
+                                <ul class="list-unstyled">
+                                    {% for quiz in project.quizzes.all %}
+                                            <li><a href="{{ quiz.get_absolute_url }}">{{ quiz.title }}</a></li>
+                                    {% empty %}
+                                        Not sponsoring any quiz yet.
+                                    {% endfor %}
+                                </ul>
+                            </aside>
+                        </div><!--/.courses-sidebar-->
+                    </div><!--/.col-lg-3-->
+
+                    <div class="col-lg-9">
+                        <div class="course-details">
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                                        <p{% if forloop.last %} class="mb-0"{% endif %}>{{ message }}</p>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="course-title">
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <h1>{{ project.title }}</h1>
+                                        <span class="course-date">Owner: {{ project.lead.get_short_name }}</span>
+                                        <br>
+                                        <small>{{ project.date_added|date:"F d, Y" }}</small>
+                                        <br>
+                                        <small>Contact: {{ project.email|urlize }}</small>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        {% if user.pk == project.lead.pk %}
+                                                <div class="course-cat text-capitalize text-right">
+                                                    <button href="{{ project.get_articlelink_create_url }}" class="button" type="button" data-hover="Add article">
+                                                        <a href="{{ project.get_articlelink_create_url }}"><span>Add article</span></a>
+                                                    </button>
+                                                </div>
+                                        {% else %}
+                                            <div class="course-cat text-capitalize text-right">
+                                                <button href="https://{{ project.get_telegram_url }}" target="_blank" class="button" type="button" data-hover="Community">
+                                                        <a href="https://{{ project.get_telegram_url }}" target="_blank"><span>Community</span></a>
+                                                    </button>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="course-thumb">
+                                <img src="{{ project.get_image_url }}" alt="{{ project.title }}" />
+                            </div>
+                            <div class="course-desc">
+                                <center>
+                                    <button href="{{ project.website }}" target="_blank" class="button" type="button" data-hover="Visit Website">
+                                        <a href="{{ project.website }}" target="_blank"><span>Visit Website</span></a>
+                                    </button>
+                                    {% if user.pk == project.lead.pk %}
+                                    <button href="{{ project.get_update_url }}" class="button" type="button" data-hover="Update">
+                                        <a href="{{ project.get_update_url }}"><span>Update</span></a>
+                                    </button>
+                                    <button href="{{ project.get_delete_url }}" class="button" type="button" data-hover="Delete">
+                                        <a href="{{ project.get_delete_url }}"><span>Delete</span></a>
+                                    </button>
+                                    {% endif %}
+                                </center>
+                                <br><hr>
+                                <p style="text-align: justify">{{ project.description }}</p>
+                                <hr><br>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--/.row-->
+            </div><!--/.container-->
+        </div><!--/.courses-page-content-->
+    </div><!--/.courses-page-->
+
+{% endblock %}

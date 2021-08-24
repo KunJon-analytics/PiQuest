@@ -1,0 +1,19 @@
+{% extends parent_template|default:"base_contact.html" %}
+{% load tailwind_filters %}
+
+{% block title %}
+Contact Us!
+{% endblock %}
+
+{% block form_heading %}Contact Client{% endblock %}
+{% block form_sub_heading %}Fill up the form below to client a message.{% endblock form_sub_heading %}
+
+{% block form_content %} 
+  <form action="{% url 'contact:client-contact' %}" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="mb-6">
+      <button type="submit" class="w-full px-3 py-4 text-white bg-myrtle-green rounded-md hover:bg-myrtle-green-light focus:outline-none">Send message</button>
+    </div>
+  </form>
+{% endblock %}

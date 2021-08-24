@@ -1,0 +1,131 @@
+{% extends parent_template|default:"quiz/base_quiz.html" %}
+{% load i18n %}
+{% load quiz_tags %}
+{% load mathfilters %}
+{% block title %}
+{% trans "Result of" %} {{ sitting.quiz.title }} {% trans "for" %} {{ sitting.user }}
+{% endblock %}
+
+
+{% block content %}
+<section class="p-8 bg-gray-100 rounded-md border-double border-8 border-languid-lavender border-opacity-25">
+<div class="flex flex-col md:flex-row justify-around mb-8">
+<div class="max-w-md w-full lg:flex">
+  <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" style="background-image: url('https://tailwindcss.com/img/card-left.jpg')" title="Woman holding a mug">
+  </div>
+  <div class="border-r border-b border-l border-grey-light lg:border-l-0 lg:border-t lg:border-grey-light bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+    <div class="mb-8">
+      <p class="text-sm text-grey-dark flex items-center">
+        <svg class="text-grey w-3 h-3 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <path d="M4 8V6a6 6 0 1 1 12 0v2h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-8c0-1.1.9-2 2-2h1zm5 6.73V17h2v-2.27a2 2 0 1 0-2 0zM7 6v2h6V6a3 3 0 0 0-6 0z" />
+        </svg>
+        Quiz Master only
+      </p>
+      <div class="text-black font-bold text-xl mb-2">{{ sitting.quiz.title }}</div>
+      <p class="text-grey-darker text-base">{{ sitting.quiz.description|truncatewords:10 }}</p>
+    </div>
+    <div class="flex items-center">
+      <img class="w-10 h-10 rounded-full mr-4" src="{{ sitting.quiz.master.get_image_url }}" alt="Avatar of {{ sitting.quiz.master }}">
+      <div class="text-sm">
+        <p class="text-black leading-none">{{ sitting.quiz.master.get_full_name }}</p>
+        <p class="text-grey-dark">{{ sitting.quiz.pub_date|date:"d M" }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+	<div class="shadow-lg rounded-xl w-full md:w-72 p-4 bg-white dark:bg-gray-800 relative overflow-hidden">
+			<div class="w-full flex items-center">
+				<a href="#" class="block relative">
+					<img alt="profil" src="{{ sitting.user.get_image_url }}" class="mx-auto object-cover rounded-full h-10 w-10 "/>
+				</a>
+				<div class="flex flex-col items-center ml-2">
+					<span class="dark:text-white">
+						{{ sitting.user.get_full_name }}
+					</span>
+					<span class="text-gray-400 text-sm dark:text-gray-300">
+						{{ sitting.end|date:"D, d M" }} {{ sitting.end|time:"h:a" }}
+					</span>
+				</div>
+			</div>
+			<div class="flex items-center justify-between my-2">
+				<p class="text-gray-300 text-sm">
+					{{ sitting.get_percent_correct }}% questions correct
+				</p>
+			</div>
+			{% with sitting.get_percent_correct as percent_correct %}
+			<div class="w-full h-2 bg-blue-200 rounded-full">
+				<div class="w-{{ percent_correct|intdiv:10 }}/10 h-full text-center text-xs text-white bg-blue-600 rounded-full">
+				</div>
+			</div>
+			{% endwith %}
+	</div>
+</div>
+
+
+
+<!-- component -->
+<article class="flex items-center justify-center">
+	<div class="container">
+		<table class="w-full flex flex-row flex-no-wrap sm:bg-white rounded-lg overflow-hidden sm:shadow-lg my-5">
+			<thead class="text-gray-400">
+				{% for question in questions %}
+				<tr class="bg-grey-400 flex flex-col flex-no wrap sm:table-row rounded-l-lg sm:rounded-none mb-2 sm:mb-0">
+					<th class="p-3 text-left">{% trans "Question" %}</th>
+					<th class="p-3 text-left">{% trans "User answer" %}</th>
+					<th class="p-3 text-left">Result</th>
+					<th class="p-3 text-left" width="110px">Mark</th>
+				</tr>
+				{% endfor %}
+			</thead>
+			<tbody class="flex-1 sm:flex-none">
+				{% for question in questions %}
+				<tr class="flex flex-col flex-no wrap sm:table-row mb-2 sm:mb-0">
+					<td class="border-grey-light border hover:bg-gray-100 p-3">{{ question.content }}
+																				{% if question.figure %}
+																				<div style="max-width: 100px;"><img src="{{ question.figure.url }}" alt="{{ question.figure }}"/></div>
+																				{% endif %}</td>
+					<td class="border-grey-light border hover:bg-gray-100 p-3">{{ question|answer_choice_to_string:question.user_answer }}</td></td>
+					<td class="border-grey-light border hover:bg-gray-100 p-3 truncate">{% if question.id in sitting.get_incorrect_questions %}
+																						<p>{% trans "incorrect" %}</p>
+																						{% else %}
+																						<p>{% trans "Correct" %}</p>
+																						{% endif %}</td>
+					<td class="border-grey-light border hover:bg-gray-100 p-3 text-red-400 hover:text-red-600 hover:font-medium cursor-pointer">
+						<form action="" method="POST">{% csrf_token %}
+		  				<input type=hidden name="qid" value="{{ question.id }}">
+		  				<button type="submit" class="btn btn-warning">{% trans "Toggle whether correct" %}</button>
+						</form>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</article>
+
+<style>
+  html,
+  article {
+    height: 100%;
+  }
+
+  @media (min-width: 640px) {
+    table {
+      display: inline-table !important;
+    }
+
+    thead tr:not(:first-child) {
+      display: none;
+    }
+  }
+
+  td:not(:last-child) {
+    border-bottom: 0;
+  }
+
+  th:not(:last-child) {
+    border-bottom: 2px solid rgba(0, 0, 0, .1);
+  }
+</style>
+
+{% endblock %}

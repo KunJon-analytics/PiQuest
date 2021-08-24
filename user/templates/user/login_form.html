@@ -1,0 +1,13 @@
+{% load tailwind_filters %}
+<div>
+    <div class="max-w-lg mx-auto">
+        <form action="{% url 'piquest-auth:login' %}" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            {% if next %}
+                <input type="hidden" name="next" value="{{ next }}">
+            {% endif %}
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 px-3 py-1 rounded-md">{{ login_button|default:'Log in' }}</button>
+        </form>
+    </div>
+</div>

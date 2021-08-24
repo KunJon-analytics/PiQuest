@@ -1,0 +1,99 @@
+{% extends 'classroom/base.html' %}
+{% load crispy_forms_tags %}
+{% load custom_tags %}
+{% load mathfilters %}
+{% load ratings %}
+{% load static %}
+{% load thumbnail %}
+{% block content %}
+    <!--=======Page Heading
+    ==================================-->
+    <section class="page-heading-section page-heading-one before-bg bg-image" style="background-image: url({% static 'images/header/p-header2.jpg' %});">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="page-heading">
+                        <h2 class="page-name text-capitalize">Our Partners</h2>
+                        <a href="{% url 'main:home_page' %}" class="btn btn-default btn-primary">back to home</a>
+                    </div><!--/.page-heading-->
+                </div><!--/.col-md-12-->
+            </div><!--/.row-->
+        </div><!--/.container-->
+    </section><!--/.page-heading-area-->
+
+    <div class="courses-page page-wrapper">
+
+        <!--=======Courses Page Content
+        ==================================-->
+        <div class="courses-page-content" >
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <center>
+                            {% if user.is_project_manager %}
+                            <a href="{% url 'project:project_create' %}" class="btn btn-default btn-gray" role="button">Add Project</a>
+                            {% endif %}
+                            <a href="{% url 'project:project_list' %}" class="btn btn-default btn-gray" role="button">All</a>
+                            {% for category in categories %}
+                                <a href="{{ category.get_absolute_url }}" class="btn btn-default btn-primary-{{ category.category.lower }}">{{ category.category }}</a>
+                            {% endfor %}
+                        </center>
+                        <br>
+                        {% if not project_list %}
+                            <center><p>There are no available partners yet.</p></center>
+                        {% endif %}
+                        <div class="courses-page-content">
+                            <div class="courses-content">
+                                <div class="row">
+                                    {% for project in project_list %}
+                                        <div class="col-sm-6">
+                                            <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ project.title }}</h5>
+                                                <p class="card-text">{{ project.description|truncatewords:15 }}</p>
+                                                <a href="{{ project.get_absolute_url }}" class="btn btn-primary">See More</a>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <nav class="courses-navigation default-pager text-center">
+                                            {% if is_paginated %}
+                                                {% if previous_page_url %}
+                                                    <a href="{{ previous_page_url }}" title="Previous Page">
+                                                        <i class="fa fa-angle-left"></i>
+                                                    </a>
+                                                {% endif %}
+                                                {% if first_page_url %}
+                                                    <a href="{{ first_page_url }}" title="Page 1">
+                                                        <i class="fa fa-angle-double-left"></i>
+                                                    </a>
+                                                {% endif %}
+                                                <a href="#" title="Page {{ page_obj.number }}" style="background-color: #f78888; color: #fff">{{ page_obj.number }}</a>
+                                                {% if next_page_url %}
+                                                    <a href="{{ next_page_url }}" title="Next Page">
+                                                        <i class="fa fa-angle-right"></i>
+                                                    </a>
+                                                {% endif %}
+                                                {% if last_page_url %}
+                                                    <a href="{{ last_page_url }}" title="Last Page">
+                                                        <i class="fa fa-angle-double-right"></i>
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                        </nav>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--/.row-->
+            </div><!--/.container-->
+        </div><!--/.courses-page-content-->
+    </div><!--/.courses-page-->
+{% endblock %}
+
+

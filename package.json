@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "@tailwindcss/forms": "^0.3.2",
+    "@waves.exchange/provider-cloud": "^1.0.2",
+    "@waves.exchange/provider-web": "^1.1.1",
+    "@waves/signer": "^1.0.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.3.1",
+    "babel": "^6.23.0",
+    "babel-loader": "^8.2.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^10.0.0",
+    "browserify": "^17.0.0",
+    "less": "^4.1.1",
+    "lesshat": "^4.1.0",
+    "node-sass": "^6.0.1",
+    "postcss-cli": "^8.3.1",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.3.5",
+    "webpack": "^5.47.0",
+    "webpack-bundle-tracker": "^1.2.0",
+    "webpack-cli": "^4.7.2"
+  },
+  "name": "piquest",
+  "version": "1.0.0",
+  "description": "A trivia app that helps businesses connect with their clients",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KunJon-analytics/PiQuest.git"
+  },
+  "author": "KunJon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KunJon-analytics/PiQuest/issues"
+  },
+  "homepage": "https://github.com/KunJon-analytics/PiQuest#readme"
+}

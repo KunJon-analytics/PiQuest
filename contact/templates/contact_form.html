@@ -1,0 +1,22 @@
+{% extends "account/layout_card.html" %}
+
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block head_title %}
+Contact Us!
+{% endblock %}
+
+{% block content %} 
+<h5 class="card-title">
+    {% trans "Contact Us" %}
+  </h5>
+   <p>{% trans "Fill up the form below to send us a message." %}</p>
+  <form action="{% url 'contact:contact' %}" method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <div class="form-actions">
+      <input type="submit" value="{% trans 'Contact Us!' %}" class="btn btn-primary"/>
+    </div>
+  </form>
+{% endblock %}

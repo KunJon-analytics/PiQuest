@@ -1,0 +1,20 @@
+{% extends 'account/base.html' %}
+{% load static %}
+
+{% block body %}
+
+        <!-- Sign up form -->
+        <section class="signup">
+            <div class="container">
+                <div class="signup-content">
+                    <div class="signup-form">
+                    {% block content %}
+                    {% endblock %}
+                    </div>
+                    <div class="signup-image">
+                        <figure><img src="{% static 'images/signup-image.jpg' %}" alt="accounts image"></figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+{% endblock %}
