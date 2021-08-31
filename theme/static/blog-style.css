@@ -1214,11 +1214,11 @@ ul.dropdown-content > .dropdown-trigger:hover > ul.dropdown-content > li:hover >
     transition: all 0.4s;
 }
 .box:hover {
-    background-color: #e2d1f9;
+    background-color: #d3d3d3;
 }
 .box:hover > .fa {
     background-color: #ffffff;
-    color: #e2d1f9;
+    color: #d3d3d3;
 }
 .box:hover > h3,
 .box:hover > p,
