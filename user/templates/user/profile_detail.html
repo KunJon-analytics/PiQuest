@@ -15,7 +15,7 @@
                 <div class="col-md-12 col-sm-12">
                     <div class="page-heading">
                         <h2 class="page-name text-capitalize">{{ profile.user.username }}'s Profile</h2>
-                        <a href="{% url 'main:home_page' %}" class="btn btn-default btn-primary">back to home</a>
+                        <a href="{% url 'main:home_page' %}" class="btn btn-default btn-primary">Home</a>
                     </div><!--/.page-heading-->
                 </div><!--/.col-md-12-->
             </div><!--/.row-->
@@ -32,163 +32,79 @@
                     <div class="col-lg-12">
                         <div class="courses-page-content">
                             <div class="courses-content">
-								<div class="container emp-profile">
-												<div class="row">
-													<div class="col-md-4">
-														<div class="profile-img">
-															<img src="{{ profile.image.url }}" alt="{{ profile.user.get_full_name }}"/>
-															<div class="file btn btn-lg btn-primary">
-																Looking Good...
-															</div>
-														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="profile-head">
-																	<h5>
-																		{{ profile.user.get_full_name|default:"Name???"}}
-																	</h5>
-																	<h6>
-																		{{ profile.wallet_address|default:"Please add your waves exchange wallet address" }}
-																	</h6>
-																	<p class="proile-rating">Trivia : <span>{{ profile.user.completed_sittings.count }}/{{ profile.user.total_sittings.count }}</span></p>
-															<ul class="nav nav-tabs" id="myTab" role="tablist">
-																<li class="nav-item">
-																	<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
-																</li>
-																{% if user.pk == profile.user.pk %}
-																<li class="nav-item">
-																	<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Settings</a>
-																</li>
-																{% endif %}
-															</ul>
-														</div>
-													</div>
-													{% if user.pk == profile.user.pk %}
-													<div class="col-md-2">
-														<a href="{{ profile.get_update_url }}"><input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/></a>
-													</div>
-													{% endif %}
+								<div class="main-content">
+									<div class="container">
+									<!-- Table -->
+									<div class="row">
+										<div class="col-xl-8 m-auto order-xl-2 mb-5 mb-xl-0">
+										<div class="card card-profile shadow">
+											<div class="row justify-content-center">
+											<div class="col-lg-3 order-lg-2">
+												<div class="card-profile-image">
+												<a href="#">
+													<img src="{{ profile.image.url }}" alt="{{ profile.user.get_full_name }}" class="rounded-circle">
+												</a>
 												</div>
-												<div class="row">
-													<div class="col-md-4">
-														<div class="profile-work">
-														{% if profile.user.is_project_manager and profile.user.get_projects %}
-															<p>PROJECTS</p>
-															{% for project in profile.user.get_projects %}
-															<a href="{{ project.get_absolute_url }}">{{ project.title }} </a><br/>
-															{% endfor %}
-														{% endif %}
-														{% if profile.user.completed_sittings %}
-														<p>COMPLETED TRIVIA</p>
-														{% for sittings in profile.user.completed_sittings %}
-															<a href="">{{ sittings.quiz.title }}</a><br/>
-														{% endfor %}
-														{% endif %}
-														</div>
+											</div>
+											</div>
+											<div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+											<div class="d-flex justify-content-between">
+											{% if user.pk == profile.user.pk %}
+												<a href="{{ profile.get_update_url }}" class="btn btn-sm btn-info mr-4">Update</a>
+												<a href="{% url 'account_change_password' %}" class="btn btn-sm btn-default float-right">Change Password</a>
+											{% else %}
+												<a href="https://{{ profile.get_telegram_url }}" target="_blank" class="btn btn-sm btn-info mr-4">Connect</a>
+											{% endif %}
+											</div>
+											</div>
+											<div class="card-body pt-0 pt-md-4">
+											<div class="row">
+												<div class="col">
+												<div class="card-profile-stats d-flex justify-content-center mt-md-5">
+													<div>
+													<span class="heading">{{ profile.user.total_sittings.count }}</span>
+													<span class="description">Total Quiz</span>
 													</div>
-													<div class="col-md-8">
-														<div class="tab-content profile-tab" id="myTabContent">
-															<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>Name</label>
-																			</div>
-																			<div class="col-md-6">
-																				<p>{{ profile.user.get_full_name}}</p>
-																			</div>
-																		</div>
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>Joined</label>
-																			</div>
-																			<div class="col-md-6">
-																				<p>{{ profile.joined|timesince }} ago...</p>
-																			</div>
-																		</div>
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>Email</label>
-																			</div>
-																			<div class="col-md-6">
-																				<p>{{ profile.user.email }}</p>
-																			</div>
-																		</div>
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>Telegram id</label>
-																			</div>
-																			<div class="col-md-6">
-																				<a href="https://{{ profile.get_telegram_url }}" target="_blank"><p>Get in Touch</p><a>
-																			</div>
-																		</div>
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>About</label>
-																			</div>
-																			<div class="col-md-6">
-																				<p>{{ profile.about|default:"Please update your profile"|linebreaks }}</p>
-																			</div>
-																		</div>
-															</div>
-															{% if user.pk == profile.user.pk %}
-															<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>Edit Profile</label>
-																			</div>
-																			<div class="col-md-6">
-																				<p><a href="{{ profile.get_update_url }}">click</a></p>
-																			</div>
-																		</div>
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>My Progress</label>
-																			</div>
-																			<div class="col-md-6">
-																				<p><a href="{% url 'quiz:quiz_progress' %}">click</a></p>
-																			</div>
-																		</div>
-																		{% if request.user.is_master %}
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>My markings</label>
-																			</div>
-																			<div class="col-md-6">
-																				<p><a href="{% url 'quiz:quiz_marking' %}">click</a></p>
-																			</div>
-																		</div>
-																		{% endif %}
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>Change Password</label>
-																			</div>
-																			<div class="col-md-6">
-																				<p><a href="{% url 'account_change_password' %}">click</a></p>
-																			</div>
-																		</div>
-																		<div class="row">
-																			<div class="col-md-6">
-																				<label>Logout</label>
-																			</div>
-																			<div class="col-md-6">
-																				<p><a href="{% url 'account_logout' %}">click</a></p>
-																			</div>
-																		</div>
-																<div class="row">
-																	<div class="col-md-6">
-																		<label>Disable Account</label>
-																	</div>
-																	<div class="col-md-6">
-																		<p><a href="{% url 'piquest-auth:disable' %}">click</a></p>
-																	</div>
-																</div>
-															</div>
-															{% endif %}
-														</div>
+													<div>
+													<span class="heading">{{ profile.user.completed_sittings.count }}</span>
+													<span class="description">Completed</span>
 													</div>
-												</div>         
+													<div>
+													<span class="heading">{{ profile.user.total_courses.count }}</span>
+													<span class="description">Courses taken</span>
+													</div>
+												</div>
+												</div>
+											</div>
+											<div class="text-center">
+												<h3>
+												{{ profile.user.get_full_name|default:"Name???"}}<span class="font-weight-light"></span>
+												</h3>
+												<div class="h5 font-weight-300">
+												<i class="ni location_pin mr-2"></i>{{ profile.joined|timesince }} ago...
+												</div>
+												<div class="h5 mt-4">
+												<i class="ni business_briefcase-24 mr-2"></i>{{ profile.wallet_address|default:"Please add your waves exchange wallet address" }}
+												</div>
+												{% comment %} <div>
+												<i class="ni education_hat mr-2"></i>University of Computer Science
+												</div> {% endcomment %}
+												<hr class="my-4">
+												<p>{{ profile.about|default:"Please update your profile"|linebreaks }}</p>
+												{% if user.pk == profile.user.pk %}
+													{% if request.user.is_taker %}
+													<a href="{% url 'quiz:quiz_progress' %}">Previous sittings</a>
+													{% else %}
+													<a href="{% url 'quiz:quiz_marking' %}">Markings</a>
+													{% endif %}
+												{% endif %}
+											</div>
+											</div>
 										</div>
-                            </div>
+										</div>
+									</div>
+									</div>
+								</div>
                             </div>
                         </div>
                     </div>

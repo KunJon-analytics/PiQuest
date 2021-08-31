@@ -94,7 +94,8 @@
 
                                                         {% if user.is_taker %}
                                                             <div class="course-cat text-capitalize text-right">
-                                                                {% for sitting in user.sittings.values %}
+                                                            {% if quiz.single_attempt %}
+                                                                {% for sitting in user.sittings.values %} 
                                                                     {% if sitting.quiz_id == quiz.pk %}
                                                                         {% if sitting.complete %}
                                                                             <a style="background-color: #5DA2D5; color: white;"><b>finished</b></a>
@@ -103,6 +104,7 @@
                                                                         {% endif %}
                                                                     {% endif %}
                                                                 {% endfor %}
+                                                                {% endif %}
                                                             </div>
                                                         {% endif %}
                                                     </div><!--/.trainer-profile-->

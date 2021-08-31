@@ -42,6 +42,9 @@ class User(AbstractUser):
     def total_sittings(self):
         return self.sittings.all()
 
+    def total_courses(self):
+        return self.student.courses.all()
+
 
 class Profile(models.Model):
     user = models.OneToOneField(
