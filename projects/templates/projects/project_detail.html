@@ -35,7 +35,7 @@
                                         {% if user.pk == project.lead.pk %}
                                             <li><a href="{{ articlelink.get_update_url }}">{{ articlelink.title }}</a></li>
                                         {% else %}
-                                            <li><a href="{{ articlelink.link }}" target="_blank">{{ articlelink.link }}</a></li>
+                                            <li><a href="{{ articlelink.link }}" target="_blank">{{ articlelink.title|truncatechars:20 }}</a></li>
                                         {% endif %}
                                     {% empty %}
                                         There are no recent articles for this project.

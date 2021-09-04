@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView, TemplateView, FormView
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from user.decorators import class_login_required, require_authenticated_permission, master_required
+from user.decorators import project_manager_required
 from main.utils import ArticleLinkGetObjectMixin, PageLinksMixin, ProjectContextMixin
 from .models import Project, ArticleLink
 from .forms import ArticleLinkForm, ProjectForm
@@ -36,13 +36,13 @@ class ProjectList(PageLinksMixin, ListView):
         return context
 
 
-@method_decorator([login_required, master_required], name='dispatch')
+@method_decorator([login_required, project_manager_required], name='dispatch')
 class ProjectCreate(CreateView):
     form_class = ProjectForm
     template_name = 'projects/project_create_form.html'
 
 
-@method_decorator([login_required, master_required], name='dispatch')
+@method_decorator([login_required, project_manager_required], name='dispatch')
 class ProjectDelete(DeleteView):
     model = Project
     success_url = reverse_lazy('project:project_list')
@@ -55,7 +55,7 @@ class ProjectDelete(DeleteView):
         return self.request.user.projects
 
 
-@method_decorator([login_required, master_required], name='dispatch')
+@method_decorator([login_required, project_manager_required], name='dispatch')
 class ProjectUpdate(UpdateView):
     form_class = ProjectForm
     model = Project
@@ -68,7 +68,7 @@ class ProjectUpdate(UpdateView):
         return self.request.user.projects
 
 
-@method_decorator([login_required, master_required], name='dispatch')
+@method_decorator([login_required, project_manager_required], name='dispatch')
 class ArticleLinkCreate(ArticleLinkGetObjectMixin, ProjectContextMixin, CreateView):
     form_class = ArticleLinkForm
     template_name = 'projects/article_create_form.html'
@@ -81,7 +81,7 @@ class ArticleLinkCreate(ArticleLinkGetObjectMixin, ProjectContextMixin, CreateVi
         return initial
 
 
-@method_decorator([login_required, master_required], name='dispatch')
+@method_decorator([login_required, project_manager_required], name='dispatch')
 class ArticleUpdate(ArticleLinkGetObjectMixin, ProjectContextMixin, UpdateView):
     form_class = ArticleLinkForm
     model = ArticleLink
@@ -89,7 +89,7 @@ class ArticleUpdate(ArticleLinkGetObjectMixin, ProjectContextMixin, UpdateView):
     slug_url_kwarg = 'articlelink_slug'
 
 
-@method_decorator([login_required, master_required], name='dispatch')
+@method_decorator([login_required, project_manager_required], name='dispatch')
 class ArticleDelete(ArticleLinkGetObjectMixin, ProjectContextMixin, DeleteView):
     model = ArticleLink
     template_name = 'projects/article_confirm_delete.html'
