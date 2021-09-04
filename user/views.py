@@ -212,6 +212,10 @@ class ToggleManager(View):
 class ProfileDetail(ProfileGetObjectMixin, DetailView):
     model = Profile
 
+    def get_context_data(self, **kwargs):
+        kwargs['title'] = self.get_object()
+        return super().get_context_data(**kwargs)
+
 
 @class_login_required
 class ProfileUpdate(ProfileGetObjectMixin, UpdateView):

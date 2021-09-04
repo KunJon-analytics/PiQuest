@@ -42,7 +42,9 @@
 											<div class="col-lg-3 order-lg-2">
 												<div class="card-profile-image">
 												<a href="#">
-													<img src="{{ profile.image.url }}" alt="{{ profile.user.get_full_name }}" class="rounded-circle">
+													{% thumbnail profile.image "200x200" crop="center" as im %}
+                                        <				<img class="rounded-circle" src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}" alt="{{ profile.user.get_full_name }}">
+                                    				{% endthumbnail %}
 												</a>
 												</div>
 											</div>
