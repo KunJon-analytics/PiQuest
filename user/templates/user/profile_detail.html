@@ -67,6 +67,7 @@
 													<span class="heading">{{ profile.user.total_sittings.count }}</span>
 													<span class="description">Total Quiz</span>
 													</div>
+													{% if request.user.is_taker %}
 													<div>
 													<span class="heading">{{ profile.user.completed_sittings.count }}</span>
 													<span class="description">Completed</span>
@@ -75,6 +76,16 @@
 													<span class="heading">{{ profile.user.total_courses.count }}</span>
 													<span class="description">Courses taken</span>
 													</div>
+													{% else %}
+													<div>
+													<span class="heading">{{ profile.user.published_quizzes.count }}</span>
+													<span class="description">Trivia created</span>
+													</div>
+													<div>
+													<span class="heading">{{ profile.user.courses_created.count }}</span>
+													<span class="description">Courses created</span>
+													</div>
+													{% endif %}
 												</div>
 												</div>
 											</div>
