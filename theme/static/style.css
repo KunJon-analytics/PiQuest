@@ -1158,29 +1158,30 @@ ul.dropdown-content > .dropdown-trigger:hover > ul.dropdown-content > li:hover >
 # Contact Section
 ===============================*/
 .contact-form-area {
-    background-color: rgba(243, 210, 80, 0.9);
+    background-color: #e2d1f9;
     padding: 90px 70px;
+    color: #000;
 }
 .contact-form-area h3 {
-    color: #fff;
+    color: #317773;
     font-size: 20px;
     font-weight: 600;
     margin: 15px 0 35px;
 }
 .contact-form-area .form-control {
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid #317773;
     padding: 10px 0;
-    color: #fff;
+    color: #317773;
 }
 .contact-form-area .btn-default {
-    background-color: #fff;
+    background-color: #317773;
     padding: 20px 60px;
     margin-left: 30px;
     margin-top: 40px;
 }
 .contact-form-area .btn-default:hover {
-    color: #ffffff;
-    border-color: #ffffff;
+    color: #317773;
+    border-color: #317773;
     background-color: transparent;
 }
 .box {
@@ -1192,7 +1193,7 @@ ul.dropdown-content > .dropdown-trigger:hover > ul.dropdown-content > li:hover >
 .box > .fa {
     background-color: #317773;
     border-radius: 50%;
-    color: #ffffff;
+    color: #e2d1f9;
     font-size: 20px;
     height: 70px;
     line-height: 70px;
@@ -1217,13 +1218,13 @@ ul.dropdown-content > .dropdown-trigger:hover > ul.dropdown-content > li:hover >
     background-color: #317773;
 }
 .box:hover > .fa {
-    background-color: #ffffff;
+    background-color: #e2d1f9;
     color: #317773;
 }
 .box:hover > h3,
 .box:hover > p,
 .box > p > a:hover {
-    color: #fff;
+    color: #e2d1f9;
 }
 
 /*=============================

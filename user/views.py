@@ -3,12 +3,14 @@ from django.conf import settings
 from django.contrib.auth import get_user, get_user_model, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator as token_generator
+from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.messages import error, success
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
+from django.core.mail import send_mail
 from django.utils.decorators import method_decorator
 from django.utils.encoding import force_text
 from django.utils.crypto import get_random_string
@@ -16,10 +18,10 @@ from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
-from django.views.generic import DetailView, View, UpdateView
+from django.views.generic import DetailView, View, UpdateView, TemplateView
 from .decorators import class_login_required
 
-from .forms import ResendActivationEmailForm, UserCreationForm, ProfileUpdateForm
+from .forms import ResendActivationEmailForm, UserCreationForm, ProfileUpdateForm, CampusAmbassadorForm
 from .models import Profile, Payment
 from .utils import MailContextViewMixin, ProfileGetObjectMixin
 
@@ -250,3 +252,44 @@ class ResendActivationEmail(MailContextViewMixin, View):
                 return TemplateResponse(request, self.template_name, {'form': bound_form})
         success(request, 'Activation Email Sent!')
         return redirect(self.success_url)
+
+
+class CampusAmbassadorsiew(TemplateView):
+    template_name = 'user/campus_ambassador.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Apply to become our Campus Ambassador"
+        return context
+
+# def campus_ambassador(request):
+#     form = None
+#     if request.method == 'POST':
+#         form = CampusAmbassadorForm(request.POST)
+#         if form.is_valid():
+#             name = form.cleaned_data['name']
+#             subject = form.cleaned_data['subject']
+#             message = form.cleaned_data['message']
+#             sender = form.cleaned_data['email']
+#             cc_myself = form.cleaned_data['cc_myself']
+
+#             recipients = ['piquests@gmail.com']
+#             if cc_myself:
+#                 recipients.append(sender)
+
+#             try:
+#                 send_mail(subject, message, sender, recipients)
+
+#                 messages.success(request, 'You successfully sent an email to us. '
+#                                             'Please wait for a response in your email, thank you.')
+
+#                 return redirect('piquest-auth:campus_ambassador')
+#             except Exception:
+#                 messages.error(
+#                     request, 'An unexpected error has occurred. Please try again.')
+
+#                 return redirect('piquest-auth:campus_ambassador')
+#     else:
+#         form = CampusAmbassadorForm()
+
+#     return render(request, 'user/campus_ambassador.html', {'title': 'PiQuests Ambassador Program Application', 'form': form})

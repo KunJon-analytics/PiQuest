@@ -97,3 +97,11 @@ class ProfileUpdateForm(forms.ModelForm):
             raise ValidationError(
                 "Waves wallet address must be 35 characters long")
         return wallet_address
+
+
+class CampusAmbassadorForm(forms.Form):
+    name = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}), max_length=100)
+    email = forms.EmailField(widget=forms.TextInput(attrs={'autocomplete': 'off'}))
+    subject = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}), max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
+    cc_myself = forms.BooleanField(required=False)

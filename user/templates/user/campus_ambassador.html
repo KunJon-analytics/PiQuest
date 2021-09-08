@@ -4,12 +4,12 @@
 {% block content %}
     <!--=======Page Heading 
     ==================================-->
-    <section class="page-heading-section bg-image before-bg" style="background-image: url({% static 'images/header/p-header1.jpg' %});">
+    <section class="page-heading-section bg-image before-bg" style="background-image: url({% static 'images/header/campus-ambassador.jpg' %});">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="page-heading">
-                        <h2 class="page-name text-capitalize">contact us</h2>
+                        <h2 class="page-name text-capitalize">Campus Ambassador Application</h2>
                     </div><!--/ .page-heading-->
                 </div><!--/.col-md-12-->
             </div><!--/.row-->
@@ -23,7 +23,7 @@
             <div class="container">
                 <div class="row justify-content-md-center">
                     <div class="col-md-10">
-                        <form class="contact-form-area border-radius" id="contact-form" method="post" novalidate>
+                        <div class="contact-form-area border-radius" id="contact-form" method="post" novalidate>
                             {% if messages %}
                                 {% for message in messages %}
                                     <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
@@ -35,11 +35,9 @@
                                 {% endfor %}
                             {% endif %}
 
-                            <h3>Direct Message</h3>
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                            <button type="submit" class="btn btn-default "style="margin-left:600px;  ">Submit</button>
-                        </form><!--/.contact-form-area-->
+                            <h3>Apply Now!!!</h3>
+                           <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdEMO8mSKacs0njjOOFxS_nw3Y8xASh4Bk1-C9P1XLMEiAB0w/viewform?embedded=true" width="640" height="1196" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+                        </div><!--/.contact-form-area-->
                     </div><!--/.col-md-10-->
                 </div><!--/.row-->
             </div><!--/.container-->
@@ -52,7 +50,7 @@
                         <div class="single-contact-info box bg-gray text-center border-radius">
                             <span class="fa fa-envelope"></span>
                             <h3>Email</h3>
-                            <p><a href="http://bdevs.net/cdn-cgi/l/email-protection#533a3d353c1320243f3231207d303c3e"><span class="__cf_email__" data-cfemail="4821262e27083b3f24292a3b662b2725">piquests@gmail.com</span></a></p>
+                            <p><a href = "mailto: piquests@gmail.com"><span class="__cf_email__" data-cfemail="4821262e27083b3f24292a3b662b2725">piquests@gmail.com</span></a></p>
                         </div><!--/.single-contact-info-->
                     </div><!--/.col-lg-3-->
                     <div class="col-lg-3 col-md-6 col-6">
