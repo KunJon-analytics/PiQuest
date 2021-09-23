@@ -60,7 +60,7 @@ class Profile(models.Model):
     about = models.TextField(default="A brief description about me")
     joined = models.DateTimeField("Date Joined", auto_now_add=True)
     wallet_address = models.CharField(
-        max_length=35, help_text="Please ensure you submit waves address generated using waves.exchange")
+        max_length=35, help_text="Please ensure you submit waves address generated using AMADI wallet")
     telegram_id = models.CharField(max_length=100, null=True, blank=True, default="username",
                                    help_text="please input your correct telegram username to connect with friends, fellow quiz takers, and quiz masters")
 
