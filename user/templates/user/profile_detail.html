@@ -97,7 +97,7 @@
 												<i class="ni location_pin mr-2"></i>{{ profile.joined|timesince }} ago...
 												</div>
 												<div class="h5 mt-4">
-												<i class="ni business_briefcase-24 mr-2"></i>{{ profile.wallet_address|default:"Please add your waves exchange wallet address" }} ({{ wallet_balance|intcomma }})
+												<i class="ni business_briefcase-24 mr-2"></i>{{ profile.wallet_address|default:"Please add your Amadi wallet address" }} ({{ wallet_balance|intcomma|default:0 }})
 												</div>
 												{% comment %} <div>
 												<i class="ni education_hat mr-2"></i>University of Computer Science
