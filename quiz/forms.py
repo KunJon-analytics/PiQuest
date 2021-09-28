@@ -35,7 +35,7 @@ class CategoryForm(CleanUrlMixin, forms.ModelForm):
 class QuizCUForm(CleanUrlMixin, forms.ModelForm):
     class Meta:
         model = Quiz
-        exclude = ('master', 'url', 'draft')
+        exclude = ('master', 'url', 'draft', 'single_attempt', 'exam_paper')
 
     def clean_url(self):
         new_slug = (self.cleaned_data['url'].lower())
@@ -48,6 +48,7 @@ class QuizCUForm(CleanUrlMixin, forms.ModelForm):
         if not quiz.pk:
             quiz.master = get_user(request)
             quiz.draft = True
+            quiz.single_attempt = True
         if commit:
             quiz.save()
             self.save_m2m()

@@ -336,6 +336,8 @@ class QuizTake(FormView):
     template_name = 'question.html'
     result_template_name = 'result.html'
     single_complete_template_name = 'single_complete.html'
+    no_wart_template_name = 'no_wart.html'
+    wrong_public_key_template_name = 'wrong_public_key.html'
 
     def dispatch(self, request, *args, **kwargs):
         self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
@@ -355,6 +357,14 @@ class QuizTake(FormView):
 
         if self.sitting is False:
             return render(request, self.single_complete_template_name)
+
+        if self.quiz.single_attempt:
+            balance = request.user.get_wallet_balance() 
+            if balance < 0:
+                return render(request, self.wrong_public_key_template_name)
+            if balance < 20:
+                return render(request, self.no_wart_template_name)
+
 
         return super(QuizTake, self).dispatch(request, *args, **kwargs)
 

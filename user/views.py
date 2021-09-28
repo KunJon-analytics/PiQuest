@@ -215,7 +215,9 @@ class ProfileDetail(ProfileGetObjectMixin, DetailView):
     model = Profile
 
     def get_context_data(self, **kwargs):
-        kwargs['title'] = self.get_object()
+        title = self.get_object()
+        kwargs['title'] = title.user.username
+        kwargs['wallet_balance'] = title.user.get_wallet_balance()
         return super().get_context_data(**kwargs)
 
 

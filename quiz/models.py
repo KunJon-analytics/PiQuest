@@ -571,6 +571,15 @@ class Sitting(models.Model):
         self.end = now()
         self.save()
         badges.possibly_award_badge("mark_quiz_complete", user=self.user)
+        pass_value = round(
+                (self.quiz.pass_mark * self.quiz.max_questions) / 100)
+        if self.quiz.single_attempt and self.current_score >= pass_value:
+            leaders = Winner.objects.filter(quiz__title=self.quiz.title)
+            if leaders.count() <= self.quiz.number_of_winners:
+                winner = Winner()
+                winner.quiz = self.quiz
+                winner.user = self.user
+                winner.save()
 
     def add_incorrect_question(self, question):
         """
@@ -707,3 +716,20 @@ class Question(models.Model):
 
     def get_delete_url(self):
         return reverse('quiz:question_delete', kwargs={'pk': self.id})
+
+
+class Winner(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.SET_NULL, blank=True, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    paid = models.BooleanField(default=False)
+    wallet_address = models.CharField(max_length=35, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.user)
+
+    def save(self, *args, **kwargs):
+        if not self.wallet_address:
+            self.wallet_address = self.user.profile.wallet_address
+
+        super(Winner, self).save(*args, **kwargs)

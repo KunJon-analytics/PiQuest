@@ -5,9 +5,11 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 from datetime import date
+import pywaves as pw
 
 # Create your models here.
 
+WART = "4kXACcTnNJa14Zbs19irgg48G6jR5nWp8SgPndFWY5av" 
 
 class User(AbstractUser):
     is_taker = models.BooleanField(default=True)
@@ -16,7 +18,7 @@ class User(AbstractUser):
     email = models.EmailField('email address', max_length=254, unique=True)
 
     def __str__(self):
-        return self.email
+        return self.username
 
     def get_absolute_url(self):
         return self.profile.get_absolute_url()
@@ -26,6 +28,14 @@ class User(AbstractUser):
 
     def get_short_name(self):
         return self.profile.name
+
+    def get_wallet_balance(self):
+        try:
+            userAddress = pw.Address(self.profile.wallet_address)
+            return int(userAddress.balance(WART))/10**8
+        except ValueError:
+                return -1
+        
 
     def get_image_url(self):
         return self.profile.image.url
@@ -60,7 +70,7 @@ class Profile(models.Model):
     about = models.TextField(default="A brief description about me")
     joined = models.DateTimeField("Date Joined", auto_now_add=True)
     wallet_address = models.CharField(
-        max_length=35, help_text="Please ensure you submit waves address generated using AMADI wallet")
+        max_length=35, help_text="Please ensure you submit waves address generated using AMADI wallet", unique=True)
     telegram_id = models.CharField(max_length=100, null=True, blank=True, default="username",
                                    help_text="please input your correct telegram username to connect with friends, fellow quiz takers, and quiz masters")
 
