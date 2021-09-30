@@ -8,7 +8,7 @@ from true_false.views import add_true_false, edit_true_false, delete_true_false
 
 from .views import QuizListView, ViewQuizListByCategory, QuizCreateView, \
     QuizUserProgressView, QuizMarkingList, QuizDelete, publish_quiz, \
-    QuizMarkingDetail, QuizDetailView, QuizTake, edit_quiz, TriviaListView
+    QuizMarkingDetail, QuizDetailView, QuizTake, edit_quiz, TriviaListView, pay_quiz_winners
 
 app_name = 'quiz'
 
@@ -39,6 +39,8 @@ urlpatterns = [
     path('<slug>/delete/', view=QuizDelete.as_view(), name='quiz_delete'),
 
     path('<slug>/publish/', view=publish_quiz, name='publish_quiz'),
+
+    path('<slug>/pay-winners/', view=pay_quiz_winners, name='pay_quiz_winners'),
 
     path('essay/<slug>/question/add/',
          add_essay, name='essay_add'),

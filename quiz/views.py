@@ -1,4 +1,7 @@
 import random
+from django.contrib.messages.api import error
+
+import pywaves as pw
 
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
@@ -18,11 +21,11 @@ from django.views.generic import DetailView, ListView, CreateView, DeleteView, U
 
 from main.utils import PageLinksMixin, PostFormValidMixin
 from .forms import QuestionForm, EssayForm, CategoryForm, QuizCUForm, TriviaEditForm
-from .models import Quiz, Category, Progress, Sitting, Question
+from .models import Quiz, Category, Progress, Sitting, Question, Winner
 from essay.models import Essay_Question
 from multichoice.models import MCQuestion
 from true_false.models import TF_Question
-from user.models import Payment
+from user.models import Payment, piquestsAddress, WART_ASSET
 
 
 class QuizMarkerMixin(object):
@@ -127,6 +130,7 @@ def edit_quiz(request, slug):
     multichoice_questions = MCQuestion.objects.filter(quiz=quiz)
     tf_questions = TF_Question.objects.filter(quiz=quiz)
     publish_ready = quiz.publish_ready()
+    payment_ready = quiz.winners_payment_ready()
     payment = quiz.get_total_payment()
 
     if request.method == 'POST':
@@ -148,9 +152,46 @@ def edit_quiz(request, slug):
         'tf_questions': tf_questions,
         'form': form,
         'publish_ready': publish_ready,
+        'payment_ready': payment_ready,
         'payment': payment
     }
     return render(request, 'quiz/quiz_update_form.html', context)
+
+
+@login_required
+@master_required
+@csrf_protect
+def pay_quiz_winners(request, slug):
+    winners = Winner.objects.filter(quiz__url=slug, paid=False)
+    quiz = get_object_or_404(Quiz, url=slug, master=request.user)
+    number_of_winners = quiz.number_of_winners
+    payment = quiz.get_total_payment()
+    attachment = 'Payment for {quiz} trivia winners on PiQuests'.format(quiz=str(quiz.title))
+
+    if winners.count() == number_of_winners:
+        transfers = list(winners.values('recipient', 'amount'))
+        for d in transfers:
+            int_amount = (int(d['amount']))
+            d['amount'] = int_amount * 10**8
+        tx = piquestsAddress.massTransferAssets(transfers, WART_ASSET, attachment=attachment)
+        if "error" not in pw.tx(tx["id"]):
+            winners.update(paid=True)
+            quiz.single_attempt = False
+            quiz.exam_paper = False
+            quiz.save()
+            user = get_user(request)
+            amount = quiz.get_total_payment()
+            payment = Payment()
+            payment.transaction_id = tx["id"]
+            payment.user = user
+            payment.amount = amount
+            payment.save()
+            messages.success(
+                request, '{amount} WART have been sent to {number_of_winners} winners. Transaction ID: {txid}'.format(amount=amount, number_of_winners=number_of_winners, txid=tx["id"]))
+        else:
+            messages.error(
+                request, '{error}'.format(error=pw.tx(tx["id"])))     
+    return redirect('quiz:quiz_update', quiz.url)
 
 
 @login_required

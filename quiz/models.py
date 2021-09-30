@@ -279,6 +279,17 @@ class Quiz(models.Model):
             publish_ready = True
         return publish_ready
 
+    def winners_payment_ready(self):
+        """
+        Finds if the total number of winners required
+        for reward payment have been gotten.
+        """
+        number_of_winners = Winner.objects.filter(quiz__title = self.title, paid=False).count()
+        payment_ready = False
+        if number_of_winners == self.number_of_winners:
+            payment_ready = True
+        return payment_ready
+
 
 class ProgressManager(models.Manager):
 
@@ -724,6 +735,8 @@ class Winner(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
     wallet_address = models.CharField(max_length=35, blank=True, null=True)
+    recipient = models.CharField(max_length=35, blank=True, null=True)
+    amount = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return str(self.user)
@@ -731,5 +744,11 @@ class Winner(models.Model):
     def save(self, *args, **kwargs):
         if not self.wallet_address:
             self.wallet_address = self.user.profile.wallet_address
+        
+        if not self.recipient:
+            self.recipient = self.user.profile.wallet_address
+
+        if not self.amount:
+            self.amount = self.quiz.reward
 
         super(Winner, self).save(*args, **kwargs)
