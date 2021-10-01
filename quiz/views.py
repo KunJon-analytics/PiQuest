@@ -1,4 +1,5 @@
 import random
+from time import sleep
 from django.contrib.messages.api import error
 
 import pywaves as pw
@@ -27,6 +28,7 @@ from multichoice.models import MCQuestion
 from true_false.models import TF_Question
 from user.models import Payment, piquestsAddress, WART_ASSET
 
+WVS = 10**8
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
@@ -171,9 +173,11 @@ def pay_quiz_winners(request, slug):
     if winners.count() == number_of_winners:
         transfers = list(winners.values('recipient', 'amount'))
         for d in transfers:
-            int_amount = (int(d['amount']))
-            d['amount'] = int_amount * 10**8
+            float_amount = float(d['amount'])
+            d['amount'] = int(float_amount*WVS)
+            print(d['amount'])
         tx = piquestsAddress.massTransferAssets(transfers, WART_ASSET, attachment=attachment)
+        sleep(0.6)
         if "error" not in pw.tx(tx["id"]):
             winners.update(paid=True)
             quiz.single_attempt = False
