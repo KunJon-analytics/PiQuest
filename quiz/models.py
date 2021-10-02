@@ -15,6 +15,7 @@ from pinax.badges.registry import badges
 
 from model_utils.managers import InheritanceManager
 
+from main.bot import post_new_winner_on_telegram
 import projects.models
 import user.models
 
@@ -591,6 +592,7 @@ class Sitting(models.Model):
                 winner.quiz = self.quiz
                 winner.user = self.user
                 winner.save()
+                post_new_winner_on_telegram(winner=winner)
 
     def add_incorrect_question(self, question):
         """

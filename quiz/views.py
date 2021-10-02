@@ -21,6 +21,7 @@ from user.decorators import staff_required, master_required
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView, TemplateView, FormView
 
 from main.utils import PageLinksMixin, PostFormValidMixin
+from main.bot import post_published_quiz_on_telegram, post_rewards_sent_on_telegram
 from .forms import QuestionForm, EssayForm, CategoryForm, QuizCUForm, TriviaEditForm
 from .models import Quiz, Category, Progress, Sitting, Question, Winner
 from essay.models import Essay_Question
@@ -190,6 +191,7 @@ def pay_quiz_winners(request, slug):
             payment.user = user
             payment.amount = amount
             payment.save()
+            post_rewards_sent_on_telegram(payment=payment, quiz=quiz)
             messages.success(
                 request, '{amount} WART have been sent to {number_of_winners} winners. Transaction ID: {txid}'.format(amount=amount, number_of_winners=number_of_winners, txid=tx["id"]))
         else:
@@ -219,6 +221,7 @@ def publish_quiz(request, slug):
         data = {
             'url': reverse_lazy('quiz:quiz_update', kwargs={'slug': quiz.url}),
         }
+        post_published_quiz_on_telegram(quiz=quiz)
         messages.success(
             request, 'The quiz will be published in some minutes.')
         return JsonResponse({'data': data})
@@ -407,7 +410,7 @@ class QuizTake(FormView):
             balance = request.user.get_wallet_balance() 
             if balance < 0:
                 return render(request, self.wrong_public_key_template_name)
-            if balance < 20:
+            if balance < 10:
                 return render(request, self.no_wart_template_name)
 
 

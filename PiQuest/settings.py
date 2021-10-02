@@ -309,6 +309,11 @@ PI_VALIDATION_KEY = env('PI_VALIDATION_KEY')
 
 PIQUESTS_PK = env('PIQUESTS_PK')
 
+TELEGRAM = {
+    'bot_token': env('PIQUESTS_BOT'),
+    'channel_name': 'PiQuestsAnnouncements',
+}
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
