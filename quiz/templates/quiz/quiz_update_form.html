@@ -32,7 +32,7 @@
                         </div>
                     </div>
 
-                    <div class="alert alert-primary shadow mt-5" role="alert" style="border-left:#155724 5px solid; border-radius: 0px">
+                    {% comment %} <div class="alert alert-primary shadow mt-5" role="alert" style="border-left:#155724 5px solid; border-radius: 0px">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                             <span aria-hidden="true" style="color:#155724">&times;</span>
                         </button>
@@ -42,7 +42,7 @@
                             </svg>
                             <p style="font-size:18px" class="mb-0 font-weight-light"><b class="mr-1">Alert:</b>You can now  <a href="{% url 'quiz:get_old_quiz_winners' quiz.url %}">include the {{ quiz.number_of_winners }} old winners.</a></p>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 {% endif %}
                     {% if messages %}
                         {% for message in messages %}

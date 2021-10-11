@@ -642,22 +642,22 @@ def anon_session_score(session, to_add=0, possible=0):
     return session["session_score"], session["session_score_possible"]
 
 
-@login_required
-@master_required
-@csrf_protect
-def get_old_quiz_winners(request, slug):
-    quiz = get_object_or_404(Quiz, url=slug, master=request.user)
-    pass_value = round(
-                (quiz.pass_mark * quiz.max_questions) / 100)
-    leaders = Sitting.objects.filter(complete=True, quiz__title=quiz.title,
-                                             current_score__gte=pass_value).order_by('end')[:quiz.number_of_winners]
-    for sitting in leaders:
-        winner = Winner()
-        winner.quiz = sitting.quiz
-        winner.user = sitting.user
-        winner.save()
-        post_new_winner_on_telegram(winner=winner)
-        sleep(0.1)
-    messages.success(
-            request, '{number_of_winners} winners have being added to the winners list for winning {quiz}.'.format(number_of_winners=quiz.number_of_winners, quiz=quiz.title))     
-    return redirect('quiz:quiz_update', quiz.url)
+# @login_required
+# @master_required
+# @csrf_protect
+# def get_old_quiz_winners(request, slug):
+#     quiz = get_object_or_404(Quiz, url=slug, master=request.user)
+#     pass_value = round(
+#                 (quiz.pass_mark * quiz.max_questions) / 100)
+#     leaders = Sitting.objects.filter(complete=True, quiz__title=quiz.title,
+#                                              current_score__gte=pass_value).order_by('end')[:quiz.number_of_winners]
+#     for sitting in leaders:
+#         winner = Winner()
+#         winner.quiz = sitting.quiz
+#         winner.user = sitting.user
+#         winner.save()
+#         post_new_winner_on_telegram(winner=winner)
+#         sleep(0.1)
+#     messages.success(
+#             request, '{number_of_winners} winners have being added to the winners list for winning {quiz}.'.format(number_of_winners=quiz.number_of_winners, quiz=quiz.title))     
+#     return redirect('quiz:quiz_update', quiz.url)
