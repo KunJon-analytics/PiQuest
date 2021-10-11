@@ -21,7 +21,7 @@ from user.decorators import staff_required, master_required
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView, TemplateView, FormView
 
 from main.utils import PageLinksMixin, PostFormValidMixin
-from main.bot import post_published_quiz_on_telegram, post_rewards_sent_on_telegram
+from main.bot import post_published_quiz_on_telegram, post_rewards_sent_on_telegram, post_new_winner_on_telegram
 from .forms import QuestionForm, EssayForm, CategoryForm, QuizCUForm, TriviaEditForm
 from .models import Quiz, Category, Progress, Sitting, Question, Winner
 from essay.models import Essay_Question
@@ -618,7 +618,7 @@ class QuizTake(FormView):
         return render(self.request, 'result.html', results)
 
 
-def anon_session_score(session, to_add=0, possible=0):
+def anon_session_score(session, to_add=0, possible=0): 
     """
     Returns the session score for non-signed in users.
     If number passed in then add this to the running total and
@@ -640,3 +640,24 @@ def anon_session_score(session, to_add=0, possible=0):
         session["session_score_possible"] += possible
 
     return session["session_score"], session["session_score_possible"]
+
+
+@login_required
+@master_required
+@csrf_protect
+def get_old_quiz_winners(request, slug):
+    quiz = get_object_or_404(Quiz, url=slug, master=request.user)
+    pass_value = round(
+                (quiz.pass_mark * quiz.max_questions) / 100)
+    leaders = Sitting.objects.filter(complete=True, quiz__title=quiz.title,
+                                             current_score__gte=pass_value).order_by('end')[:quiz.number_of_winners]
+    for sitting in leaders:
+        winner = Winner()
+        winner.quiz = sitting.quiz
+        winner.user = sitting.user
+        winner.save()
+        post_new_winner_on_telegram(winner=winner)
+        sleep(0.1)
+    messages.success(
+            request, '{number_of_winners} winners have being added to the winners list for winning {quiz}.'.format(number_of_winners=quiz.number_of_winners, quiz=quiz.title))     
+    return redirect('quiz:quiz_update', quiz.url)
