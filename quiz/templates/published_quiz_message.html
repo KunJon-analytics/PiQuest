@@ -1,4 +1,4 @@
-<a href="{{ quiz.get_absolute_url }}">New quiz</a>
+<a href="https://piquests.com/quiz/{{ quiz.url }}/">New quiz</a>
 Title: {{ quiz.title }}
 Description: {{ quiz.description|truncatewords:15 }}
 <strong>Reward:</strong> {{ quiz.reward }} WART for {{ quiz.number_of_winners }} taker{{ quiz.number_of_winners|pluralize }}

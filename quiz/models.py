@@ -587,7 +587,7 @@ class Sitting(models.Model):
                 (self.quiz.pass_mark * self.quiz.max_questions) / 100)
         if self.quiz.single_attempt and self.current_score >= pass_value:
             leaders = Winner.objects.filter(quiz__title=self.quiz.title)
-            if leaders.count() <= self.quiz.number_of_winners:
+            if leaders.count() < self.quiz.number_of_winners:
                 winner = Winner()
                 winner.quiz = self.quiz
                 winner.user = self.user
