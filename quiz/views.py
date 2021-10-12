@@ -178,7 +178,7 @@ def pay_quiz_winners(request, slug):
             d['amount'] = int(float_amount*WVS)
             print(d['amount'])
         tx = piquestsAddress.massTransferAssets(transfers, WART_ASSET, attachment=attachment)
-        sleep(0.6)
+        sleep(5.0)
         if "error" not in pw.tx(tx["id"]):
             winners.update(paid=True)
             quiz.single_attempt = False
