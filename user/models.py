@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Sum
 from django.urls import reverse
 from datetime import date
 import pywaves as pw
@@ -38,6 +39,9 @@ class User(AbstractUser):
         except ValueError:
                 return -1
         
+    def get_rewards_won(self):
+        reward_dict = self.winner_set.all().aggregate(Sum('amount'))
+        return reward_dict['amount__sum']
 
     def get_image_url(self):
         return self.profile.image.url
