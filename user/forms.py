@@ -4,10 +4,13 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
 
 from .models import Profile
 from .utils import ActivationMailFormMixin
+
+import pywaves as pw
 
 
 logger = logging.getLogger(__name__)
@@ -93,9 +96,11 @@ class ProfileUpdateForm(forms.ModelForm):
 
     def clean_wallet_address(self):
         wallet_address = self.cleaned_data['wallet_address']
-        if len(wallet_address) < 35:
+        if pw.validateAddress(wallet_address) != True:
             raise ValidationError(
-                "Waves wallet address must be 35 characters long")
+                _('%(wallet_address)s is not a valid Waves address'),
+                params={'wallet_address': wallet_address},
+            )
         return wallet_address
 
 
