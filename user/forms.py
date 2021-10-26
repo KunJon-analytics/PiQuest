@@ -6,8 +6,9 @@ from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
+from django.core import validators
 
-from .models import Profile
+from .models import Profile, WART, Payment
 from .utils import ActivationMailFormMixin
 
 import pywaves as pw
@@ -104,9 +105,38 @@ class ProfileUpdateForm(forms.ModelForm):
         return wallet_address
 
 
-class CampusAmbassadorForm(forms.Form):
-    name = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}), max_length=100)
-    email = forms.EmailField(widget=forms.TextInput(attrs={'autocomplete': 'off'}))
-    subject = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}), max_length=100)
-    message = forms.CharField(widget=forms.Textarea)
-    cc_myself = forms.BooleanField(required=False)
+class ClaimRewardForm(forms.Form):
+    transaction_id = forms.CharField(max_length=50, help_text=(
+        "The transaction id of the "
+        "transfer sent to PiQuests."))
+
+    def clean_transaction_id(self):
+        transaction_id = self.cleaned_data['transaction_id']
+        transaction_details = pw.tx(transaction_id)
+        if "error" in transaction_details:
+            raise ValidationError(
+                _('%(transaction_id)s is not a valid transaction'),
+                params={'transaction_id': transaction_id},
+            )
+        elif transaction_details['recipient'] != '3PQc55HLEe2s8eFxz2qy5TjQk6YwGVDLD1T':
+            raise ValidationError(
+                _('%(transaction_id)s is not a valid payment to PiQuests account'),
+                params={'transaction_id': transaction_id},
+            )
+        elif transaction_details['assetId'] != WART:
+            raise ValidationError(
+                _('%(transaction_id)s is not a WART payment to PiQuests'),
+                params={'transaction_id': transaction_id},
+            )
+        elif transaction_details['amount'] != 12000000000:
+            raise ValidationError(
+                _('%(transaction_id)s is not a PiQuests trivia claim payment'),
+                params={'transaction_id': transaction_id},
+            )
+        elif Payment.objects.filter(transaction_id=transaction_id).exists():
+            raise ValidationError(
+                _('%(transaction_id)s reward has already been claimed'),
+                params={'transaction_id': transaction_id},
+            )
+        return transaction_id
+    

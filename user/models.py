@@ -32,6 +32,9 @@ class User(AbstractUser):
     def get_short_name(self):
         return self.profile.name
 
+    def get_wallet_address(self):
+        return self.profile.wallet_address
+
     def get_wallet_balance(self):
         try:
             userAddress = pw.Address(self.profile.wallet_address)

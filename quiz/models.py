@@ -736,6 +736,7 @@ class Winner(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     paid = models.BooleanField(default=False)
+    claimed = models.BooleanField(default=False)
     wallet_address = models.CharField(max_length=35, blank=True, null=True)
     recipient = models.CharField(max_length=35, blank=True, null=True)
     amount = models.FloatField(null=True, blank=True)

@@ -23,6 +23,15 @@ def post_rewards_sent_on_telegram(payment, quiz):
     bot.send_message(chat_id="@%s" % telegram_settings['channel_name'],
         text=message_html, parse_mode=telegram.ParseMode.HTML)
 
+def post_claim_rewards_sent_on_telegram(payment):
+    message_html = render_to_string('claim_payment_sent_out_message.html', {
+        'payment': payment
+    })
+    telegram_settings = settings.TELEGRAM
+    bot = telegram.Bot(token=telegram_settings['bot_token'])
+    bot.send_message(chat_id="@%s" % telegram_settings['channel_name'],
+        text=message_html, parse_mode=telegram.ParseMode.HTML)
+
 def post_new_winner_on_telegram(winner):
     message_html = render_to_string('new_winner_message.html', {
         'winner': winner

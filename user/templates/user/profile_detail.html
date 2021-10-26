@@ -52,7 +52,11 @@
 											<div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
 											<div class="d-flex justify-content-between">
 											{% if user.pk == profile.user.pk %}
-												<a href="{{ profile.get_update_url }}" class="btn btn-sm btn-info mr-4">Update</a>
+												{% if profile.user.get_rewards_won >= 120 %}
+													<a href="{% url 'piquest-auth:claim_reward' %}" class="btn btn-sm btn-info mr-4">Claim</a>
+												{% else %}
+													<a href="{{ profile.get_update_url }}" class="btn btn-sm btn-info mr-4">Update</a>
+												{% endif %}
 												<a href="{% url 'account_change_password' %}" class="btn btn-sm btn-default float-right">Change Password</a>
 											{% else %}
 												<a href="https://{{ profile.get_telegram_url }}" target="_blank" class="btn btn-sm btn-info mr-4">Connect</a>

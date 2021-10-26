@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import AuthenticationForm
 from django.views.generic import RedirectView, TemplateView
 
-from .views import (ActivateAccount, DisableAccount, ProfileDetail, ToggleManager,
+from .views import (ActivateAccount, DisableAccount, ProfileDetail, ToggleManager, ClaimReward,
                     PublicProfileDetail, ProfileUpdate, ToggleTeacher, CampusAmbassadorsiew)
 
 
@@ -15,6 +15,7 @@ urlpatterns = [
     path('accounts/', RedirectView.as_view(pattern_name=('piquest-auth:profile'), permanent=False)),
     path('disable/', DisableAccount.as_view(), name='disable'),
     path('profile/', ProfileDetail.as_view(), name='profile'),
+    path('claim-reward/', ClaimReward.as_view(), name='claim_reward'),
     path('toggle-master/', ToggleTeacher.as_view(), name='toggle_teacher'),
     path('toggle-manager/', ToggleManager.as_view(), name='toggle_manager'),
     path('profile/edit/', ProfileUpdate.as_view(), name='profile_update'),

@@ -176,7 +176,6 @@ def pay_quiz_winners(request, slug):
         for d in transfers:
             float_amount = float(d['amount'])
             d['amount'] = int(float_amount*WVS)
-            print(d['amount'])
         tx = piquestsAddress.massTransferAssets(transfers, WART_ASSET, attachment=attachment)
         sleep(5.0)
         if "error" not in pw.tx(tx["id"]):

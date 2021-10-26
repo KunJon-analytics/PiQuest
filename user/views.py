@@ -1,3 +1,5 @@
+from time import sleep
+
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.contrib.auth import get_user, get_user_model, logout
@@ -6,7 +8,7 @@ from django.contrib.auth.tokens import default_token_generator as token_generato
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.contrib.messages import error, success
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
@@ -19,15 +21,19 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import DetailView, View, UpdateView, TemplateView
+from django.db.models import Sum
 from .decorators import class_login_required
 
-from .forms import ResendActivationEmailForm, UserCreationForm, ProfileUpdateForm, CampusAmbassadorForm
-from .models import Profile, Payment
+from .forms import ResendActivationEmailForm, UserCreationForm, ProfileUpdateForm, ClaimRewardForm
+from .models import Profile, Payment, WART, piquestsAddress
 from .utils import MailContextViewMixin, ProfileGetObjectMixin
 
 from classroom.decorators import student_required
 from classroom.models import Student, Teacher
+from quiz.models import Winner
+from main.bot import post_claim_rewards_sent_on_telegram
 
+import pywaves as pw
 
 # Create your views here.
 class ActivateAccount(View):
@@ -230,6 +236,51 @@ class ProfileUpdate(ProfileGetObjectMixin, UpdateView):
 class PublicProfileDetail(DetailView):
     model = Profile
 
+class ClaimReward(View): 
+    title = "Claim your rewards"
+    @method_decorator(login_required)
+    def get(self, request) :
+        form = ClaimRewardForm()
+        ctx = {'form' : form, 'title' : self.title}
+        return render(request, 'user/claim_reward_form.html', ctx)
+
+    @method_decorator(login_required)
+    def post(self, request) :
+        form = ClaimRewardForm(request.POST)
+        if not form.is_valid():
+            ctx = {'form' : form, 'title' : self.title}
+            return render(request, 'user/claim_reward_form.html', ctx)
+
+        # business logic for reward claim
+        unclaimed_wins = Winner.objects.filter(master=request.user, paid=True, claimed=False)
+        unclaimed_wins_dict = unclaimed_wins.aggregate(Sum('amount'))
+        unclaimed_wins_total = int(float(unclaimed_wins_dict['amount__sum']))
+        if unclaimed_wins_total >= 120:
+            tx = piquestsAddress.sendWaves(recipient = pw.Address(request.user.get_wallet_address()),
+                    amount = 100000000)
+            sleep(15.0)
+            if "error" not in pw.tx(tx["id"]):
+                unclaimed_wins.update(claimed=True)
+                user = get_user(request)
+                amount = 120
+                payment = Payment()
+                payment.transaction_id = tx["id"]
+                payment.user = user
+                payment.amount = amount
+                payment.save()
+                post_claim_rewards_sent_on_telegram(payment=payment)
+                messages.success(
+                    request, '{amount} WAVES have been sent to your wallet. Transaction ID: {txid}'.format(amount=1, txid=tx["id"]))
+            else:
+                messages.error(
+                    request, 'Please try again in a few minutes. {error}'.format(error=pw.tx(tx["error"]))) 
+        else:
+            messages.error(
+                request, 'You are not eligible for buyback yet. you only have {balance} $WART'.format(balance=unclaimed_wins_total))
+        
+        x = reverse('piquest-auth:profile')
+        return redirect(x)
+
 
 class ResendActivationEmail(MailContextViewMixin, View):
     form_class = ResendActivationEmailForm
@@ -264,34 +315,3 @@ class CampusAmbassadorsiew(TemplateView):
         context['title'] = "Apply to become our Campus Ambassador"
         return context
 
-# def campus_ambassador(request):
-#     form = None
-#     if request.method == 'POST':
-#         form = CampusAmbassadorForm(request.POST)
-#         if form.is_valid():
-#             name = form.cleaned_data['name']
-#             subject = form.cleaned_data['subject']
-#             message = form.cleaned_data['message']
-#             sender = form.cleaned_data['email']
-#             cc_myself = form.cleaned_data['cc_myself']
-
-#             recipients = ['piquests@gmail.com']
-#             if cc_myself:
-#                 recipients.append(sender)
-
-#             try:
-#                 send_mail(subject, message, sender, recipients)
-
-#                 messages.success(request, 'You successfully sent an email to us. '
-#                                             'Please wait for a response in your email, thank you.')
-
-#                 return redirect('piquest-auth:campus_ambassador')
-#             except Exception:
-#                 messages.error(
-#                     request, 'An unexpected error has occurred. Please try again.')
-
-#                 return redirect('piquest-auth:campus_ambassador')
-#     else:
-#         form = CampusAmbassadorForm()
-
-#     return render(request, 'user/campus_ambassador.html', {'title': 'PiQuests Ambassador Program Application', 'form': form})
