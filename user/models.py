@@ -46,6 +46,10 @@ class User(AbstractUser):
         reward_dict = self.winner_set.all().aggregate(Sum('amount'))
         return reward_dict['amount__sum']
 
+    def get_claimmable_rewards(self):
+        reward_dict = self.winner_set.filter(paid=True, claimed=False).aggregate(Sum('amount'))
+        return reward_dict['amount__sum']
+
     def get_image_url(self):
         return self.profile.image.url
 
