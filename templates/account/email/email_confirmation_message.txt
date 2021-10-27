@@ -19,3 +19,5 @@ Thank you!
 {{ site_domain }}
 {% endblocktrans %}
 
+You can join our community to get the latest information and connect with other members who are earning as they create and learn:
+https://t.me/PiQuests
