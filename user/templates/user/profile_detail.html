@@ -52,7 +52,7 @@
 											<div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
 											<div class="d-flex justify-content-between">
 											{% if user.pk == profile.user.pk %}
-												{% if profile.user.get_rewards_won >= 120 %}
+												{% if profile.user.get_claimmable_rewards >= 120 %}
 													<a href="{% url 'piquest-auth:claim_reward' %}" class="btn btn-sm btn-info mr-4">Claim</a>
 												{% else %}
 													<a href="{{ profile.get_update_url }}" class="btn btn-sm btn-info mr-4">Update</a>
