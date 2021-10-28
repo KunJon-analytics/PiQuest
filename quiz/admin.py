@@ -103,9 +103,9 @@ class EssayQuestionAdmin(admin.ModelAdmin):
     filter_horizontal = ('quiz',)
 
 class WinnerAdmin(admin.ModelAdmin):
-    list_display = ('quiz', 'wallet_address', 'paid', )
+    list_display = ('quiz', 'wallet_address', 'paid', 'claimed', )
     list_filter = ('paid',)
-    fields = ('quiz', 'wallet_address', 'paid', 'user', )
+    fields = ('quiz', 'wallet_address', 'paid', 'claimed', 'user', )
     search_fields = ('quiz', 'wallet_address')
 
 admin.site.register(Quiz, QuizAdmin)
