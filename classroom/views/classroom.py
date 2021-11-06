@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView
 from random import sample
@@ -13,7 +13,7 @@ from ..models import (Course, Lesson, MyFile, ClassQuiz, Student,
                       Subject, TakenQuiz, UserLog)
 from user.models import User
 from projects.models import Project
-from quiz.models import Quiz
+from quiz.models import Quiz, Winner
 
 
 def do_paginate(data_list, page_number, results_per_page):
@@ -139,15 +139,15 @@ def about(request):
             return redirect('teachers:course_change_list')
         elif request.user.is_taker:
             return redirect('students:mycourses_list')
+    reward_dict = Winner.objects.filter(paid=True, claimed=False).aggregate(Sum('amount'))
 
     context = {
         'title': 'About Us',
         'courses': Course.objects.values_list('id', flat=True)
                                  .filter(status__iexact='approved').count(),
         'users': User.objects.values_list('id', flat=True)
-        .filter(is_taker=True, is_active=True).count(),
-        'projects': Project.objects.values_list('id', flat=True)
-        .all().count(),
+        .filter(is_active=True).count(),
+        'rewards': reward_dict['amount__sum'],
         'classquiz': ClassQuiz.objects.values_list('id', flat=True)
         .all().count(),
         'trivia': Quiz.objects.values_list('id', flat=True)
