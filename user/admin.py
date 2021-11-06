@@ -9,7 +9,10 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('is_master',)
     search_fields = ('username',)
 
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'wallet_address', 'telegram_id', )
+    search_fields = ('user', 'wallet_address')
 
 admin.site.register(User, UserAdmin)
-admin.site.register(Profile)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Payment)

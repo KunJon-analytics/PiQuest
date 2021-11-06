@@ -102,6 +102,8 @@ class ProfileUpdateForm(forms.ModelForm):
                 _('%(wallet_address)s is not a valid Waves address'),
                 params={'wallet_address': wallet_address},
             )
+        elif Profile.objects.filter(wallet_address=wallet_address).count() > 0:
+              raise ValidationError("We have a user with this wallet address")
         return wallet_address
 
 
