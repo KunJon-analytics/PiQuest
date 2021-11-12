@@ -1,10 +1,31 @@
 {% extends parent_template|default:"base.html" %} 
 {% load static %}
 {% load humanize %}
+{% load pinax_announcements_tags %}
 {% block title %}Earn Crypto with your knowledge{% endblock %}
+{% block extrahead %}
+<!--fonts-->
+<link href='https://fonts.googleapis.com/css?family=Telex' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static 'css/announcements.css' %}" />
+{% endblock extrahead %}
 {% block content %}
 
 {% if crypto_context %}
+
+{% announcements as announcement_list %}
+
+{% if announcement_list %}
+
+
+<div class="marquee2">
+	<div class="fade-left"></div>
+	<div class="fade-right"></div>
+	<span class="marquee-message">{% for announcement in announcement_list %}<strong>{{ announcement.title|title }}:</strong> {{ announcement.content }}&nbsp &nbsp &nbsp{% endfor %}</span>
+</div>
+
+ {% endif %}
+   
+
 <section>
 <div class="overflow-x-auto">
         <div class="bg-gray-100 flex items-center justify-center bg-gray-100 font-sans overflow-hidden">
@@ -174,3 +195,7 @@
 
 
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/announcements.js' %}"></script>
+{% endblock extra_js %}

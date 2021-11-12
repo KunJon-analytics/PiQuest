@@ -25,6 +25,7 @@ urlpatterns = [
     path('todo/', include('todo.urls', namespace="todo")),
     path('course/', include(course)),
     path("badges/", include("pinax.badges.urls", namespace="pinax_badges")),
+    path("announcements/", include("pinax.announcements.urls", namespace="pinax_announcements")),
     path(
         route='blog_admin/',
         view=include(wagtailadmin_urls)

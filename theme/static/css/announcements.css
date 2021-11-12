@@ -1,0 +1,57 @@
+@charset "UTF-8";
+
+body,
+html,
+div.marquee,
+div.fade-left,
+div.fade-right,
+span.marquee-message {
+	margin: 0;
+	padding: 0;
+}
+
+div.marquee,
+div.marquee2 {
+	width: 100%;
+	background: #222222;
+	position: relative;
+	overflow: hidden;
+	height: 40px;
+	-moz-box-shadow:    1px 1px 1px #434343;
+	-webkit-box-shadow: 1px 1px 1px #434343;
+	box-shadow:         1px 1px 1px #434343;
+}
+
+span.marquee-message {
+	color: #ffffff;
+	font-family: 'Telex';
+	white-space: nowrap;
+	margin: 10px 0 0 0;
+	display: inline-block;
+}
+
+div.fade-left {
+	background: -moz-linear-gradient( left, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	background: -webkit-gradient( linear, left top, right top, color-stop(12%,rgba(0,0,0,1)), color-stop(100%,rgba(0,0,0,0)) );
+	background: -webkit-linear-gradient( left, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	background: -o-linear-gradient( left, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	background: -ms-linear-gradient( left, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	background: linear-gradient( to right, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	position: absolute;
+	left: 0;
+	height: 40px;
+	width: 10%;
+}
+
+div.fade-right {
+	background: -moz-linear-gradient( right, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	background: -webkit-gradient( linear, right top, right top, color-stop(12%,rgba(0,0,0,1)), color-stop(100%,rgba(0,0,0,0)) );
+	background: -webkit-linear-gradient( right, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	background: -o-linear-gradient( right, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	background: -ms-linear-gradient( right, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	background: linear-gradient( to left, rgba(0,0,0,1) 12%, rgba(0,0,0,0) 100% );
+	position: absolute;
+	right: 0;
+	height: 40px;
+	width: 10%;
+}

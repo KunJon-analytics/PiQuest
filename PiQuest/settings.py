@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'guardian',
     'mathfilters',
     'pinax.badges',
+    'pinax.announcements',
     'storages',
     'todo',
     'webpack_loader',
