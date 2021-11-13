@@ -2,6 +2,8 @@
 {% load static %}
 {% load humanize %}
 {% load pinax_announcements_tags %}
+{% load pinax_events_tags %}
+
 {% block title %}Earn Crypto with your knowledge{% endblock %}
 {% block extrahead %}
 <!--fonts-->
@@ -162,6 +164,71 @@
     </div>
   </div>
 </section>
+
+    {% events as event_items %}
+
+
+<section class="event-list">
+<div class="flex flex-wrap w-full mb-5 flex-col items-center text-center">
+      <h1 class="sm:text-3xl text-2xl font-medium title-font mb-2 text-gray-900">PiQuests Events</h1>
+      <p class="lg:w-1/2 w-full leading-relaxed text-gray-500">Our various events planned to increase PiQuests reach and help takers obtain some WART to get them started on earning.</p>
+    </div>
+{% comment %} <div class="min-h-screen bg-gray-100 space-y-12 py-10"> {% endcomment %}
+<div class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5">
+{% for event in event_items %}
+  <div class="container mx-auto">
+    <div class="bg-white max-w-sm mx-auto rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition duration-500 transform hover:scale-105 cursor-pointer">
+      <a href="{{ event.url }}">
+      <div class="h-20 bg-{% cycle 'red-500' 'green-500' 'yellow-500' 'blue-500' %} flex items-center justify-between">
+        <h1 class="text-white ml-4 border-2 py-2 px-4 rounded-full">{{ event.pk }}</h1>
+        <p class="mr-20 text-white text-lg">{{ event.title }}</p>
+        <p class="mr-4 text-white font-thin text-lg">{{ event.where }}</p>
+      </div>
+
+      <p class="py-6 text-lg tracking-wide ml-16">{{ event.what_html|safe }}</p>
+      <!-- <hr > -->
+      <div class="flex justify-between px-5 mb-2 text-sm text-gray-600">
+      <p><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+          </svg> {{ event.start_date|date:"jS M" }}</p>
+        <p><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg> {{ event.end_date|date:"jS M" }}</p>
+      </div>
+      </a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+    
+        {% comment %} <article class="event" style="{% if event.secondary_image_thumb %}background-image:url({% static event.secondary_image_thumb.url %});{% endif %}">
+            <section class="event-img">
+                <a href="{{ event.url }}">
+                    {% if event.image_thumb %}<img src="{{ event.image_thumb.url }}" width="200" />{% endif %}
+                </a>
+            </section>
+            <ul class="event-details">
+                <li>
+                    <h2><a href="{{ event.url }}">{{ event.title }}</a></h2>
+                </li>
+                <li class="meta">
+                    <span>
+                        Where: {{ event.where }}
+                    </span>
+                    <span>
+                        When: {{ event.start_date }}&endash;{{ event.end_start }}
+                    </span>
+                </li>
+                <li class="event-description">
+                    {{ event.what_html|safe }}
+                </li>
+            </ul>
+        </article> {% endcomment %}
+
+</section>
+
+
+
 
 <div class="bg-white dark:bg-gray-800 flex relative z-20 items-center overflow-hidden">
         <div class="container mx-auto px-6 flex relative py-16">

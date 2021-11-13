@@ -85,6 +85,8 @@ INSTALLED_APPS = [
     'mathfilters',
     'pinax.badges',
     'pinax.announcements',
+    'imagekit',
+    'pinax.events',
     'storages',
     'todo',
     'webpack_loader',
